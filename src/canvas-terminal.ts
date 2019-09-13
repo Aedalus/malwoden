@@ -35,7 +35,12 @@ export class CanvasTerminal extends RenderableTerminal {
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
-  static CanvasTerminal(width: number, height: number, font: Font, canvas?: HTMLCanvasElement) {
+  static CanvasTerminal(
+    width: number,
+    height: number,
+    font: Font,
+    canvas?: HTMLCanvasElement
+  ): CanvasTerminal {
     const display = new Display(width, height);
     if (!canvas) {
       canvas = window.document.createElement("canvas");
@@ -71,6 +76,7 @@ export class CanvasTerminal extends RenderableTerminal {
     this.context.font = `${this.font.size * this.scale}px ${this.font.family}, monospace`;
 
     this.display.render((x, y, glyph) => {
+      // console.log(x, y, glyph);
       // Fill the background
       this.context.fillStyle = glyph.back.cssColor();
       this.context.fillRect(
@@ -81,7 +87,9 @@ export class CanvasTerminal extends RenderableTerminal {
       );
 
       // Dont bother drawing empty characters
-      if (glyph.char == 0 || " ".charCodeAt(0)) return;
+      if (glyph.char === 0 || " ".charCodeAt(0) === glyph.char) {
+        return;
+      }
 
       // Fill the char
       this.context.fillStyle = glyph.fore.cssColor();

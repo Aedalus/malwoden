@@ -25,10 +25,10 @@ export class Display {
   setGlyph(x: number, y: number, glyph: Glyph) {
     if (x < 0 || x >= this.width) return;
     if (y < 0 || y >= this.height) return;
-
     if (glyph.isEqual(this.glyphs.get(x, y))) {
       this.changedGlyphs.set(x, y, undefined);
     } else {
+      // console.log(x, y, glyph);
       this.changedGlyphs.set(x, y, glyph);
     }
   }
@@ -37,7 +37,7 @@ export class Display {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         const glyph = this.changedGlyphs.get(x, y);
-
+        console.log(glyph);
         if (!glyph) continue;
         callback(x, y, glyph);
 

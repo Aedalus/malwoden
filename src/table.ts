@@ -15,6 +15,7 @@ export class Table<T> {
 
   set(x: number, y: number, item: T | undefined): void {
     const index = y * this.width + x;
-    delete this.items[index];
+    if (item) this.items[index] = item;
+    else delete this.items[index];
   }
 }
