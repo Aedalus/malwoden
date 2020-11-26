@@ -1,7 +1,8 @@
 import React from "react";
 import "./App.css";
 
-import Sample1 from "./example-1";
+// import Sample1 from "./example-1";
+import Sample1 from "./example-2";
 
 function App() {
   return (
