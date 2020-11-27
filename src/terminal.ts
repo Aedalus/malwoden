@@ -112,7 +112,7 @@ export abstract class RenderableTerminal extends Terminal {
 export class PortTerminal extends Terminal {
   readonly _x: number;
   readonly _y: number;
-  readonly size: Vector2;
+  readonly portsize: Vector2;
 
   readonly root: Terminal;
 
@@ -120,7 +120,7 @@ export class PortTerminal extends Terminal {
     super({ width: size.x, height: size.y });
     this._x = x;
     this._y = y;
-    this.size = size;
+    this.portsize = size;
     this.root = root;
   }
 
