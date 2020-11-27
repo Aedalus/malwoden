@@ -180,5 +180,5 @@ export const unicodeMap: { [index: number]: number } = {
   [CharCode.squareRoot]: 251,
   [CharCode.superscriptLatinSmallLetterN]: 252,
   [CharCode.superscriptTwo]: 253,
-  [CharCode.blackSquare]: 254
+  [CharCode.blackSquare]: 254,
 };

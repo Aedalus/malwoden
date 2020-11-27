@@ -5,9 +5,9 @@ import { Color } from "./color";
 import { Glyph } from "./glyph";
 import { unicodeMap } from "./unicodemap";
 import { CharCode } from "./char-code";
-import { Vector2 } from "./vector";
+import { Vector2 } from "../util/vector";
 
-export class RetroTerminal extends RenderableTerminal {
+export class Retro extends RenderableTerminal {
   private readonly _display: Display;
 
   private readonly _canvas: HTMLCanvasElement;
@@ -40,7 +40,7 @@ export class RetroTerminal extends RenderableTerminal {
     charWidth: number,
     charHeight: number,
     canvas?: HTMLCanvasElement
-  ): RetroTerminal {
+  ): Retro {
     let scale = devicePixelRatio;
 
     // Create a canvas if not define
@@ -62,7 +62,7 @@ export class RetroTerminal extends RenderableTerminal {
 
     const img = new Image();
     img.src = imageURL;
-    return new RetroTerminal(display, charWidth, charHeight, canvas, img, scale);
+    return new Retro(display, charWidth, charHeight, canvas, img, scale);
   }
 
   constructor(
@@ -138,7 +138,7 @@ export class RetroTerminal extends RenderableTerminal {
   pixelToChar(pixel: Vector2): Vector2 {
     return {
       x: Math.floor(pixel.x / this._charWidth),
-      y: Math.floor(pixel.y / this._charHeight)
+      y: Math.floor(pixel.y / this._charHeight),
     };
   }
 

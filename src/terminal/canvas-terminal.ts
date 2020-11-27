@@ -1,7 +1,7 @@
 import { RenderableTerminal } from "./terminal";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
-import { Vector2 } from "./vector";
+import { Vector2 } from "../util/vector";
 
 export class Font {
   readonly family: string;
@@ -28,32 +28,27 @@ export class Font {
   }
 }
 
-export class CanvasTerminal extends RenderableTerminal {
+export class Canvas extends RenderableTerminal {
   readonly display: Display;
   readonly canvas: HTMLCanvasElement;
   readonly context: CanvasRenderingContext2D;
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
-  static CanvasTerminal(
-    width: number,
-    height: number,
-    font: Font,
-    canvas?: HTMLCanvasElement
-  ): CanvasTerminal {
+  static New(width: number, height: number, font: Font, canvas?: HTMLCanvasElement): Canvas {
     const display = new Display(width, height);
     if (!canvas) {
       canvas = window.document.createElement("canvas");
       window.document.body.appendChild(canvas);
     }
 
-    return new CanvasTerminal(display, font, canvas);
+    return new Canvas(display, font, canvas);
   }
 
   constructor(display: Display, font: Font, canvas: HTMLCanvasElement) {
     super({
       height: display.height,
-      width: display.width
+      width: display.width,
     });
     this.display = display;
     this.font = font;
@@ -104,7 +99,7 @@ export class CanvasTerminal extends RenderableTerminal {
   pixelToChar(pixel: Vector2): Vector2 {
     return {
       x: Math.floor(pixel.x / this.font.charWidth),
-      y: Math.floor(pixel.y / this.font.lineHeight)
+      y: Math.floor(pixel.y / this.font.lineHeight),
     };
   }
 }

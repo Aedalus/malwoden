@@ -1,9 +1,10 @@
 import React from "react";
-import { Font, CanvasTerminal } from "cacti-term";
+import { Terminal } from "cacti-term";
 
 export default class Example1 extends React.Component {
   componentDidMount() {
-    const terminal = CanvasTerminal.CanvasTerminal(10, 10, new Font("Courier", 24, 15, 24, 1, 24));
+    const font = new Terminal.Font("Courier", 24, 15, 24, 1, 24);
+    const terminal = Terminal.Canvas.New(10, 10, font);
     // const terminal = CanvasTerminal.CanvasTerminal(10, 10, new Font("Courier", 24, 15, 24, 1, 22));
     terminal.clear();
     terminal.writeAt({

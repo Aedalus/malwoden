@@ -1,4 +1,4 @@
-import { Vector2 } from "./vector";
+import { Vector2 } from "../util/vector";
 import { Color } from "./color";
 import { Glyph } from "./glyph";
 
@@ -9,7 +9,7 @@ export interface TerminalConfig {
   backColor?: Color;
 }
 
-export abstract class Terminal {
+export abstract class BaseTerminal {
   readonly width: number;
   readonly height: number;
 
@@ -23,10 +23,10 @@ export abstract class Terminal {
     this.backColor = config.backColor || Color.black;
   }
 
-  get size(): Vector2 {
+  size(): Vector2 {
     return {
       x: this.width,
-      y: this.height
+      y: this.height,
     };
   }
 
@@ -35,7 +35,7 @@ export abstract class Terminal {
       x: 0,
       y: 0,
       width: this.width,
-      height: this.height
+      height: this.height,
     });
   }
 
@@ -44,7 +44,7 @@ export abstract class Terminal {
     y,
     width,
     height,
-    color = this.backColor
+    color = this.backColor,
   }: {
     x: number;
     y: number;
@@ -65,7 +65,7 @@ export abstract class Terminal {
     y,
     text,
     fore = this.foreColor,
-    back = this.backColor
+    back = this.backColor,
   }: {
     x: number;
     y: number;
@@ -89,7 +89,7 @@ export abstract class Terminal {
     y,
     charCode,
     fore = this.foreColor,
-    back = this.backColor
+    back = this.backColor,
   }: {
     x: number;
     y: number;
@@ -103,24 +103,24 @@ export abstract class Terminal {
   abstract drawGlyph(x: number, y: number, glyph: Glyph): void;
 }
 
-export abstract class RenderableTerminal extends Terminal {
+export abstract class RenderableTerminal extends BaseTerminal {
   abstract render(): void;
 
   abstract pixelToChar(pixel: Vector2): Vector2;
 }
 
-export class PortTerminal extends Terminal {
+export class PortTerminal extends BaseTerminal {
   readonly _x: number;
   readonly _y: number;
-  readonly portsize: Vector2;
+  readonly portSize: Vector2;
 
-  readonly root: Terminal;
+  readonly root: BaseTerminal;
 
-  constructor(x: number, y: number, size: Vector2, root: Terminal) {
+  constructor(x: number, y: number, size: Vector2, root: BaseTerminal) {
     super({ width: size.x, height: size.y });
     this._x = x;
     this._y = y;
-    this.portsize = size;
+    this.portSize = size;
     this.root = root;
   }
 

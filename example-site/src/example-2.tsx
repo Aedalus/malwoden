@@ -1,7 +1,13 @@
 import React from "react";
-import { RetroTerminal, Terminal, Glyph, CharCode } from "cacti-term";
+import { Terminal, Glyph, CharCode } from "cacti-term";
 
-function drawDoubleBox(terminal: Terminal, x1: number, x2: number, y1: number, y2: number) {
+function drawDoubleBox(
+  terminal: Terminal.BaseTerminal,
+  x1: number,
+  x2: number,
+  y1: number,
+  y2: number
+) {
   // Corners
   terminal.drawGlyph(x1, y1, Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndRight));
   terminal.drawGlyph(x2, y1, Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndLeft));
@@ -22,8 +28,7 @@ function drawDoubleBox(terminal: Terminal, x1: number, x2: number, y1: number, y
 }
 export default class Example1 extends React.Component {
   componentDidMount() {
-    debugger;
-    const terminal = RetroTerminal.fromURL(80, 50, "font_16.png", 16, 16);
+    const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     terminal.clear();
     terminal.writeAt({
       x: 1,

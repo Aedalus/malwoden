@@ -1,5 +1,5 @@
 import { Glyph } from "./glyph";
-import { Vector2 } from "./vector";
+import { Vector2 } from "../util/vector";
 import { Table } from "./table";
 
 type RenderGlyph = (x: number, y: number, glyph: Glyph) => any;
