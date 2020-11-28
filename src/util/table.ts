@@ -6,6 +6,14 @@ export class Table<T> {
   constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
+    // ToDo - Initialize empty array
+  }
+
+  fill(value: T) {
+    const size = this.width * this.height;
+    for (let i = 0; i < size; i++) {
+      this.items[i] = value;
+    }
   }
 
   get(x: number, y: number): T | undefined {

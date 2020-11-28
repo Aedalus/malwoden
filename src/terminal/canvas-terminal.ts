@@ -71,7 +71,6 @@ export class Canvas extends RenderableTerminal {
     this.context.font = `${this.font.size * this.scale}px ${this.font.family}, monospace`;
 
     this.display.render((x, y, glyph) => {
-      // console.log(x, y, glyph);
       // Fill the background
       this.context.fillStyle = glyph.back.cssColor();
       this.context.fillRect(
