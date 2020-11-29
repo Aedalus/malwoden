@@ -26,4 +26,11 @@ export class Table<T> {
     if (item) this.items[index] = item;
     else delete this.items[index];
   }
+  isInBounds(x: number, y: number) {
+    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
