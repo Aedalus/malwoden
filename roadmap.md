@@ -1,4 +1,6 @@
 - Input module
+  - Keyboard
+  - Mouse
 - Seeded Random Generator
 - Generation
   - BSP Tree

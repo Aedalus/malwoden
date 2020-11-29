@@ -37,23 +37,24 @@ export default class extends Example {
 
     // Keyboard
     const keyboard = new Input.KeyboardHandler();
-    const movement = new Input.KeyboardContext();
-    movement.onDown(Input.KeyCode.DownArrow, () => {
-      player.y++;
-      console.log("Down!");
-    });
-    movement.onDown(Input.KeyCode.LeftArrow, () => {
-      player.x--;
-      console.log("Left!");
-    });
-    movement.onDown(Input.KeyCode.RightArrow, () => {
-      player.x++;
-      console.log("Right!");
-    });
-    movement.onDown(Input.KeyCode.UpArrow, () => {
-      player.y--;
-      console.log("Up!");
-    });
+    const movement = new Input.KeyboardContext()
+      .onDown(Input.KeyCode.DownArrow, () => {
+        player.y++;
+        console.log("Down!");
+      })
+      .onDown(Input.KeyCode.LeftArrow, () => {
+        player.x--;
+        console.log("Left!");
+      })
+      .onDown(Input.KeyCode.RightArrow, () => {
+        player.x++;
+        console.log("Right!");
+      })
+      .onDown(Input.KeyCode.UpArrow, () => {
+        player.y--;
+        console.log("Up!");
+      });
+
     keyboard.setContext(movement);
 
     // Generate Map

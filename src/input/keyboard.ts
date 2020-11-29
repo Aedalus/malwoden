@@ -35,11 +35,13 @@ export class KeyboardContext {
   private _onDown = new Map<number, ContextCallback>();
   private _onUp = new Map<number, ContextCallback>();
 
-  onDown(key: KeyCode | number, callback: ContextCallback) {
+  onDown(key: KeyCode | number, callback: ContextCallback): KeyboardContext {
     this._onDown.set(key, callback);
+    return this;
   }
-  onUp(key: KeyCode | number, callback: ContextCallback) {
+  onUp(key: KeyCode | number, callback: ContextCallback): KeyboardContext {
     this._onUp.set(key, callback);
+    return this;
   }
 
   fireOnDown(key: KeyCode | number) {
