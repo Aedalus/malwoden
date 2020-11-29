@@ -1,25 +1,30 @@
 import React from "react";
-import "./App.css";
 
-// import Sample1 from "./example-1";
-import Sample1 from "./example-2";
+import HelloWorld from "./examples/hello-world";
+import BasicWorld from "./examples/basic-world";
+import { Example } from "./example";
+
+const examples = [
+  { name: "Hello World", ex: new HelloWorld() },
+  { name: "Basic World", ex: new BasicWorld() },
+];
 
 function App() {
+  function mountNewExample(example: Example) {
+    const previous = document.querySelectorAll("canvas");
+    previous.forEach((x) => {
+      if (x.parentElement) {
+        x.parentElement.removeChild(x);
+      }
+    });
+    example.Run();
+  }
   return (
     <div className="App">
-      <Sample1 />
       <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {examples.map((x) => (
+          <button onClick={() => mountNewExample(x.ex)}>{x.name}</button>
+        ))}
       </header>
     </div>
   );

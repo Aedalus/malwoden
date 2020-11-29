@@ -283,5 +283,5 @@ export enum CharCode {
   squareRoot = 0x221a,
   superscriptLatinSmallLetterN = 0x207f,
   superscriptTwo = 0x00b2,
-  blackSquare = 0x25a0
+  blackSquare = 0x25a0,
 }

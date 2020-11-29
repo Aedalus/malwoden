@@ -1,6 +1,6 @@
 import { Glyph } from "./glyph";
-import { Vector2 } from "./vector";
-import { Table } from "./table";
+import { Vector2 } from "../util/vector";
+import { Table } from "../util/table";
 
 type RenderGlyph = (x: number, y: number, glyph: Glyph) => any;
 
@@ -28,7 +28,6 @@ export class Display {
     if (glyph.isEqual(this.glyphs.get(x, y))) {
       this.changedGlyphs.set(x, y, undefined);
     } else {
-      // console.log(x, y, glyph);
       this.changedGlyphs.set(x, y, glyph);
     }
   }
@@ -37,7 +36,6 @@ export class Display {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         const glyph = this.changedGlyphs.get(x, y);
-        console.log(glyph);
         if (!glyph) continue;
         callback(x, y, glyph);
 
