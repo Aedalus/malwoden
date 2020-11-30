@@ -4,11 +4,13 @@ import HelloWorld from "./examples/hello-world";
 import BasicWorld from "./examples/basic-world";
 import CellGeneration from "./examples/basic-generation";
 import { Example } from "./example";
+import DrunkWalk from "./examples/drunk-walk";
 
 const examples = [
   { name: "Hello World", ex: new HelloWorld() },
   { name: "Basic World", ex: new BasicWorld() },
-  { name: "Generation", ex: new CellGeneration() }
+  { name: "Generation", ex: new CellGeneration() },
+  { name: "Drunk Walk", ex: new DrunkWalk() }
 ];
 
 function App() {
