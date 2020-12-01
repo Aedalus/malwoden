@@ -15,7 +15,7 @@ export class Retro extends RenderableTerminal {
   private readonly _font: HTMLImageElement;
 
   // A cache of the tinted font images. Each key is a color, and the image is the font in that color.
-  private readonly _fontColorCache = new Map<Color, HTMLCanvasElement>();
+  private readonly _fontColorCache = new Map<string, HTMLCanvasElement>();
 
   // Drawing scale, used for retina displays
   private readonly _scale: number;
@@ -144,7 +144,9 @@ export class Retro extends RenderableTerminal {
 
   private getColorFont(color: Color): HTMLCanvasElement {
     // If cached return
-    const cached = this._fontColorCache.get(color);
+    const colorName = color.cssColor();
+    const cached = this._fontColorCache.get(colorName);
+    console.log(this._fontColorCache.size);
     if (cached) return cached;
 
     // Create a font using the given color.
@@ -162,7 +164,7 @@ export class Retro extends RenderableTerminal {
     context.fillStyle = color.cssColor();
     context.fillRect(0, 0, this._font.width, this._font.height);
 
-    this._fontColorCache.set(color, tint);
+    this._fontColorCache.set(colorName, tint);
     return tint;
   }
 }

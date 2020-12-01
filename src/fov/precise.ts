@@ -1,4 +1,4 @@
-import { Vector2 } from "../../util";
+import { Vector2 } from "../util";
 export function getRing(originX: number, originY: number, range: number): Vector2[] {
   if (range === 0) {
     return [
@@ -16,22 +16,22 @@ export function getRing(originX: number, originY: number, range: number): Vector
   const minY = originY - range;
 
   // Top right arc
-  for (let x = maxX, y = originY; x > originX; x--, y++) {
+  for (let x = maxX, y = originY; x > originX; x--, y--) {
     ring.push({ x, y });
   }
 
   // Top left arc
-  for (let x = originX, y = maxY; x > minX; x--, y--) {
+  for (let x = originX, y = minY; x > minX; x--, y++) {
     ring.push({ x, y });
   }
 
   // Bottom left arc
-  for (let x = minX, y = originY; x < originX; x++, y--) {
+  for (let x = minX, y = originY; x < originX; x++, y++) {
     ring.push({ x, y });
   }
 
   // Bottom right arc
-  for (let x = originX, y = minY; x < maxX; x++, y++) {
+  for (let x = originX, y = maxY; x < maxX; x++, y--) {
     ring.push({ x, y });
   }
 
@@ -109,29 +109,28 @@ export class PreciseShadowcasting {
     }
   }
 
-  private checkVisibility(
+  checkVisibility(
     A1: RationalNum,
     A2: RationalNum,
     blocks: boolean,
-    shadows: RationalNum[]
+    SHADOWS: RationalNum[]
   ): number {
-    // Case where we shifted
     if (A1[0] > A2[0]) {
-      // Split into two subarcs, return average lighting
-      let v1 = this.checkVisibility(A1, [A1[1], A1[1]], blocks, shadows);
-      let v2 = this.checkVisibility([0, 1], A2, blocks, shadows);
+      /* split into two sub-arcs */
+      let v1 = this.checkVisibility(A1, [A1[1], A1[1]], blocks, SHADOWS);
+      let v2 = this.checkVisibility([0, 1], A2, blocks, SHADOWS);
       return (v1 + v2) / 2;
     }
 
-    // Climb up the shadows index until we find one that we're greater than
-    // Anywhere we compare index % 2, we're seeing if it's the final angle in an arc
-    let index1 = 0;
-    let edge1 = false;
-    while (index1 < shadows.length) {
-      const old = shadows[index1];
-      const diff = diffRationalNums(old, A1);
+    /* index1: first shadow >= A1 */
+    let index1 = 0,
+      edge1 = false;
+    while (index1 < SHADOWS.length) {
+      let old = SHADOWS[index1];
+      let diff = old[0] * A1[1] - A1[0] * old[1];
       if (diff >= 0) {
-        if (diff === 0 && !(index1 % 2)) {
+        /* old >= A1 */
+        if (diff == 0 && !(index1 % 2)) {
           edge1 = true;
         }
         break;
@@ -139,12 +138,14 @@ export class PreciseShadowcasting {
       index1++;
     }
 
-    let index2 = shadows.length;
-    let edge2 = false;
+    /* index2: last shadow <= A2 */
+    let index2 = SHADOWS.length,
+      edge2 = false;
     while (index2--) {
-      const old = shadows[index2];
-      const diff = diffRationalNums(A1, old);
+      let old = SHADOWS[index2];
+      let diff = A2[0] * old[1] - old[0] * A2[1];
       if (diff >= 0) {
+        /* old <= A2 */
         if (diff == 0 && index2 % 2) {
           edge2 = true;
         }
@@ -154,61 +155,162 @@ export class PreciseShadowcasting {
 
     let visible = true;
     if (index1 == index2 && (edge1 || edge2)) {
-      // subset of existing shadow, one of the edged matches
+      /* subset of existing shadow, one of the edges match */
       visible = false;
-    } else if (edge1 && edge2 && index1 + 1 === index2 && index2 % 2) {
-      // Completely equivalent
+    } else if (edge1 && edge2 && index1 + 1 == index2 && index2 % 2) {
+      /* completely equivalent with existing shadow */
       visible = false;
     } else if (index1 > index2 && index1 % 2) {
-      // Subset of existing shadow, not touching
+      /* subset of existing shadow, not touching */
       visible = false;
     }
 
-    // Fast case, not visible
-    if (visible === false) {
+    if (!visible) {
       return 0;
-    }
+    } /* fast case: not visible */
 
-    let visibleLength = 0;
-    // Get the number of items to remove
+    let visibleLength;
+
+    /* compute the length of visible arc, adjust list of shadows (if blocking) */
     let remove = index2 - index1 + 1;
-
     if (remove % 2) {
-      // Only one edge exists in the shadows
       if (index1 % 2) {
-        // First edge exists in the shadows
-        let P = shadows[index1];
+        /* first edge within existing shadow, second outside */
+        let P = SHADOWS[index1];
         visibleLength = (A2[0] * P[1] - P[0] * A2[1]) / (P[1] * A2[1]);
         if (blocks) {
-          shadows.splice(index1, remove, A2);
-        } else {
-          // Only second edge exists in shadows
-          let P = shadows[index2];
-          visibleLength = (P[0] * A1[1] - A1[0] * P[1]) / (A1[1] * P[1]);
-          if (blocks) {
-            shadows.splice(index1, remove, A1);
-          }
+          SHADOWS.splice(index1, remove, A2);
+        }
+      } else {
+        /* second edge within existing shadow, first outside */
+        let P = SHADOWS[index2];
+        visibleLength = (P[0] * A1[1] - A1[0] * P[1]) / (A1[1] * P[1]);
+        if (blocks) {
+          SHADOWS.splice(index1, remove, A1);
         }
       }
     } else {
       if (index1 % 2) {
         /* both edges within existing shadows */
-        let P1 = shadows[index1];
-        let P2 = shadows[index2];
+        let P1 = SHADOWS[index1];
+        let P2 = SHADOWS[index2];
         visibleLength = (P2[0] * P1[1] - P1[0] * P2[1]) / (P1[1] * P2[1]);
         if (blocks) {
-          shadows.splice(index1, remove);
+          SHADOWS.splice(index1, remove);
         }
       } else {
         /* both edges outside existing shadows */
         if (blocks) {
-          shadows.splice(index1, remove, A1, A2);
+          SHADOWS.splice(index1, remove, A1, A2);
         }
         return 1; /* whole arc visible! */
       }
     }
 
     let arcLength = (A2[0] * A1[1] - A1[0] * A2[1]) / (A1[1] * A2[1]);
+
     return visibleLength / arcLength;
   }
+  // private checkVisibility(
+  //   A1: RationalNum,
+  //   A2: RationalNum,
+  //   blocks: boolean,
+  //   shadows: RationalNum[]
+  // ): number {
+  //   // Case where we shifted
+  //   if (A1[0] > A2[0]) {
+  //     // Split into two subarcs, return average lighting
+  //     let v1 = this.checkVisibility(A1, [A1[1], A1[1]], blocks, shadows);
+  //     let v2 = this.checkVisibility([0, 1], A2, blocks, shadows);
+  //     return (v1 + v2) / 2;
+  //   }
+
+  //   // Climb up the shadows index until we find one that we're greater than
+  //   // Anywhere we compare index % 2, we're seeing if it's the final angle in an arc
+  //   let index1 = 0;
+  //   let edge1 = false;
+  //   while (index1 < shadows.length) {
+  //     const old = shadows[index1];
+  //     const diff = diffRationalNums(old, A1);
+  //     if (diff >= 0) {
+  //       if (diff === 0 && !(index1 % 2)) {
+  //         edge1 = true;
+  //       }
+  //       break;
+  //     }
+  //     index1++;
+  //   }
+
+  //   let index2 = shadows.length;
+  //   let edge2 = false;
+  //   while (index2--) {
+  //     const old = shadows[index2];
+  //     const diff = diffRationalNums(A2, old);
+  //     if (diff >= 0) {
+  //       if (diff == 0 && index2 % 2) {
+  //         edge2 = true;
+  //       }
+  //       break;
+  //     }
+  //   }
+
+  //   let visible = true;
+  //   if (index1 == index2 && (edge1 || edge2)) {
+  //     // subset of existing shadow, one of the edged matches
+  //     visible = false;
+  //   } else if (edge1 && edge2 && index1 + 1 === index2 && index2 % 2) {
+  //     // Completely equivalent
+  //     visible = false;
+  //   } else if (index1 > index2 && index1 % 2) {
+  //     // Subset of existing shadow, not touching
+  //     visible = false;
+  //   }
+
+  //   // Fast case, not visible
+  //   if (visible === false) {
+  //     return 0;
+  //   }
+
+  //   let visibleLength = 0;
+  //   // Get the number of items to remove
+  //   let remove = index2 - index1 + 1;
+
+  //   if (remove % 2) {
+  //     // Only one edge exists in the shadows
+  //     if (index1 % 2) {
+  //       // First edge exists in the shadows
+  //       let P = shadows[index1];
+  //       visibleLength = (A2[0] * P[1] - P[0] * A2[1]) / (P[1] * A2[1]);
+  //       if (blocks) {
+  //         shadows.splice(index1, remove, A2);
+  //       } else {
+  //         // Only second edge exists in shadows
+  //         let P = shadows[index2];
+  //         visibleLength = (P[0] * A1[1] - A1[0] * P[1]) / (A1[1] * P[1]);
+  //         if (blocks) {
+  //           shadows.splice(index1, remove, A1);
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     if (index1 % 2) {
+  //       /* both edges within existing shadows */
+  //       let P1 = shadows[index1];
+  //       let P2 = shadows[index2];
+  //       visibleLength = (P2[0] * P1[1] - P1[0] * P2[1]) / (P1[1] * P2[1]);
+  //       if (blocks) {
+  //         shadows.splice(index1, remove);
+  //       }
+  //     } else {
+  //       /* both edges outside existing shadows */
+  //       if (blocks) {
+  //         shadows.splice(index1, remove, A1, A2);
+  //       }
+  //       return 1; /* whole arc visible! */
+  //     }
+  //   }
+
+  //   let arcLength = (A2[0] * A1[1] - A1[0] * A2[1]) / (A1[1] * A2[1]);
+  //   return visibleLength / arcLength;
+  // }
 }

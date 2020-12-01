@@ -23,7 +23,7 @@ export class Table<T> {
 
   set(x: number, y: number, item: T | undefined): void {
     const index = y * this.width + x;
-    if (item) this.items[index] = item;
+    if (item !== undefined) this.items[index] = item;
     else delete this.items[index];
   }
   isInBounds(x: number, y: number) {
