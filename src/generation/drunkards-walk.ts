@@ -17,16 +17,15 @@ export class DrunkardsWalk<T> {
     const newMap = new Table<T>(this.table.width, this.table.height);
     this.table.set(xInitial, yInitial, this.CurrentPosition);
     for (let step = 0; step < stepsToTake; step++) {
+      console.log("step is ", step);
       const oldMap = this.table;
       for (let x = 0; x < oldMap.width; x++) {
         for (let y = 0; y < oldMap.height; y++) {
           if (oldMap.get(x, y) === this.CurrentPosition) {
-            const ranNum = Math.floor(Math.random() * 3);
-            console.log(ranNum);
-            // 0 = north
-            // 1 = south
-            // 2 = west
-            // 3 = east
+            const ranNum = Math.floor(Math.random() * 4);
+
+            // 0 = north ---  1 = south --- 2 = west --- 3 = east
+
             switch (ranNum) {
               case 0:
                 newMap.set(x, y - 1, this.CurrentPosition);
@@ -43,15 +42,14 @@ export class DrunkardsWalk<T> {
               case 3:
                 newMap.set(x - 1, y, this.CurrentPosition);
                 newMap.set(x, y, this.Traversed);
-                break;
             }
-            console.log("ended switch.");
+            //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
+            x = 9999;
+            y = 9999;
           }
         }
         this.table = newMap;
       }
-
-      //wrap this in a for loop for the length of steps to take at the end.
     }
   }
 }
