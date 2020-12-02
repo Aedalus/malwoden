@@ -19,8 +19,8 @@ export class DrunkardsWalk<T> {
     for (let step = 0; step < stepsToTake; step++) {
       console.log("step is ", step);
       const oldMap = this.table;
-      for (let x = 0; x < oldMap.width; x++) {
-        for (let y = 0; y < oldMap.height; y++) {
+      loop1: for (let x = 0; x < oldMap.width; x++) {
+        loop2: for (let y = 0; y < oldMap.height; y++) {
           if (oldMap.get(x, y) === this.CurrentPosition) {
             const ranNum = Math.floor(Math.random() * 4);
 
@@ -44,8 +44,7 @@ export class DrunkardsWalk<T> {
                 newMap.set(x, y, this.Traversed);
             }
             //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
-            x = 9999;
-            y = 9999;
+            break loop1;
           }
         }
         this.table = newMap;
