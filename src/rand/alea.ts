@@ -63,6 +63,7 @@ export class AleaRNG implements RNG {
     this.s1 = this.s2;
     return (this.s2 = t - (this.c = t | 0));
   }
+
   // Returns between [0,1)
   private nextRand(): number {
     return this.step() + ((this.step() * 0x200000) | 0) * 1.1102230246251565e-16; // 2^-53
