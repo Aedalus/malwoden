@@ -5,8 +5,9 @@ export default class extends Example {
   Run() {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const map = new Generation.DrunkardsWalk(80, 50, 2, 1, 1);
-    map.doSimulationStep(10, 10, 3);
     terminal.clear();
+    map.doSimulationStep(10, 10, 4);
+
     for (let x = 0; x < map.table.width; x++) {
       for (let y = 0; y < map.table.height; y++) {
         if (map.table.get(x, y) === 2) {

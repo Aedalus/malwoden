@@ -12,32 +12,46 @@ export class DrunkardsWalk<T> {
     this.Traversed = Traversed;
     this.Steps = Steps;
   }
-  walk(x: number, y: number) {
-    const newMap = new Table<T>(this.table.width, this.table.height);
-    console.log("we are walking", x, y);
-    const ronNum = Math.floor(Math.random() * Math.floor(4));
-    newMap.set(20, 20, this.CurrentPosition);
-    newMap.set(19, 20, this.Traversed);
-    return newMap;
-  }
 
   doSimulationStep(xInitial: number, yInitial: number, stepsToTake = 1) {
-    const oldMap = this.table;
-    oldMap.set(xInitial, yInitial, this.CurrentPosition);
+    const newMap = new Table<T>(this.table.width, this.table.height);
+    this.table.set(xInitial, yInitial, this.CurrentPosition);
     for (let step = 0; step < stepsToTake; step++) {
-      //this just renames the table to prevent 'this' all over the place.
-
+      const oldMap = this.table;
       for (let x = 0; x < oldMap.width; x++) {
         for (let y = 0; y < oldMap.height; y++) {
           if (oldMap.get(x, y) === this.CurrentPosition) {
-            this.table = this.walk(x, y);
-          } else {
-            console.log("we could not find an initial position.");
+            const ranNum = Math.floor(Math.random() * 3);
+            console.log(ranNum);
+            // 0 = north
+            // 1 = south
+            // 2 = west
+            // 3 = east
+            switch (ranNum) {
+              case 0:
+                newMap.set(x, y - 1, this.CurrentPosition);
+                newMap.set(x, y, this.Traversed);
+                break;
+              case 1:
+                newMap.set(x, y + 1, this.CurrentPosition);
+                newMap.set(x, y, this.Traversed);
+                break;
+              case 2:
+                newMap.set(x + 1, y, this.CurrentPosition);
+                newMap.set(x, y, this.Traversed);
+                break;
+              case 3:
+                newMap.set(x - 1, y, this.CurrentPosition);
+                newMap.set(x, y, this.Traversed);
+                break;
+            }
+            console.log("ended switch.");
           }
         }
+        this.table = newMap;
       }
-    }
 
-    //wrap this in a for loop for the length of steps to take at the end.
+      //wrap this in a for loop for the length of steps to take at the end.
+    }
   }
 }
