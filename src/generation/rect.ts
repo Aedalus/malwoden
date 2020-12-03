@@ -1,4 +1,4 @@
-import { getRandInt } from "../rand";
+import { AleaRNG, RNG } from "../rand";
 import { IRect, Rect } from "../util/rect";
 
 interface SubRectOptions {
@@ -6,6 +6,7 @@ interface SubRectOptions {
   maxWidth: number;
   minHeight: number;
   maxHeight: number;
+  rng?: RNG;
 }
 
 export class RectGen {
@@ -15,15 +16,17 @@ export class RectGen {
     if (r1.height() < config.minHeight)
       throw new Error("error generating sub rect: height too small");
 
+    const rng = config.rng || new AleaRNG();
+
     // ToDo - Implement
-    const width = getRandInt(config.minWidth, config.maxWidth);
-    const height = getRandInt(config.minHeight, config.maxHeight);
+    const width = rng.nextInt(config.minWidth, config.maxWidth);
+    const height = rng.nextInt(config.minHeight, config.maxHeight);
 
     const x1Max = rect.x2 - width;
     const y1Max = rect.y2 - height;
 
-    const x1 = getRandInt(rect.x1, x1Max);
-    const y1 = getRandInt(rect.y1, y1Max);
+    const x1 = rng.nextInt(rect.x1, x1Max);
+    const y1 = rng.nextInt(rect.y1, y1Max);
 
     return Rect.fromWidthHeight(x1, y1, width, height);
   }
