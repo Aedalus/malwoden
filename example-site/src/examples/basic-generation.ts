@@ -4,7 +4,7 @@ import { Terminal, Glyph, CharCode, Input, Color, Generation, Util } from "cacti
 export default class extends Example {
   Run() {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
-    const map = new Generation.CellularAutomata(80, 50, 1, 0);
+    const map = new Generation.CellularAutomata(80, 50);
     map.randomize();
     map.doSimulationStep(3);
 
@@ -17,7 +17,7 @@ export default class extends Example {
             x: x,
             y: y,
             charCode: CharCode.blackSpadeSuit,
-            fore: Math.random() > 0.5 ? Color.green : Color.darkGreen
+            fore: Math.random() > 0.5 ? Color.green : Color.darkGreen,
           });
         }
       }

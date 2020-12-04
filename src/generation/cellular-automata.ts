@@ -1,18 +1,33 @@
 import { Table } from "../util";
+import { RNG, AleaRNG } from "../rand";
+
+interface CellularAutomataOptions<T> {
+  aliveValue: T;
+  deadValue: T;
+  rng: RNG;
+}
 
 export class CellularAutomata<T> {
   table: Table<T>;
+
   readonly aliveValue: T;
   readonly deadValue: T;
-  constructor(width: number, height: number, aliveValue: T, deadValue: T) {
-    this.table = new Table(width, height);
-    this.aliveValue = aliveValue;
-    this.deadValue = deadValue;
+
+  private rng: RNG;
+
+  constructor(width: number, height: number, options: Partial<CellularAutomataOptions<T>> = {}) {
+    this.table = new Table<T>(width, height);
+
+    // Set up defaults
+    this.aliveValue = options.aliveValue === undefined ? (1 as any) : options.aliveValue;
+    this.deadValue = options.deadValue === undefined ? (0 as any) : options.deadValue;
+    this.rng = options.rng === undefined ? new AleaRNG() : options.rng;
   }
+
   randomize(isAliveChance = 0.6) {
     for (let x = 0; x < this.table.width; x++) {
       for (let y = 0; y < this.table.height; y++) {
-        const isAlive = Math.random() > isAliveChance;
+        const isAlive = this.rng.next() > isAliveChance;
         if (isAlive) {
           this.table.set(x, y, this.aliveValue);
         } else {
