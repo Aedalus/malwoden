@@ -6,7 +6,7 @@ export default class extends Example {
   Run() {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const explored = new Util.Table<boolean>(80, 50);
-    const map = new Generation.CellularAutomata(80, 50, 1, 0);
+    const map = new Generation.CellularAutomata(80, 50);
     map.randomize(0.6);
     map.doSimulationStep(3);
 
