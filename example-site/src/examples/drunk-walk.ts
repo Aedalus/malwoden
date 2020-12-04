@@ -4,10 +4,10 @@ import { Terminal, Glyph, CharCode, Input, Color, Generation, Util } from "cacti
 export default class extends Example {
   Run() {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
-    const map = new Generation.DrunkardsWalk(80, 50, 2, 1, 1);
+    const map = new Generation.DrunkardsWalk(80, 50);
 
     map.doSimulationStep(10, 20, 50);
-    map.doSimulationStep(30, 40, 10);
+    // map.doSimulationStep(30, 40, 10);
 
     terminal.clear();
     for (let x = 0; x < map.table.width; x++) {

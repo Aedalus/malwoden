@@ -7,14 +7,17 @@ export class DrunkardsWalk {
     this.table = new Table(width, height);
   }
 
+  private checkStep(historicalRecord: [], coveredTileCount: number) {}
+
   doSimulationStep(xInitial: number, yInitial: number, stepsToTake = 1) {
     //constants
     const Map = new Table<number>(this.table.width, this.table.height);
-    const currentPosition = 1337;
+    const currentPosition = 2; //these numbers don't really matter. They need need to hold a num position.
+    const Traversed = 1; //these numbers don't really matter. They need need to hold a num position.
     let coveredTileCount = 0;
     let historicalRecord = [];
     //initial set for the drunk's position.
-    this.table.set(xInitial, yInitial, currentPosition);
+    Map.set(xInitial, yInitial, currentPosition);
 
     for (let step = 0; step < stepsToTake; step++) {
       console.log("step is ", step);
@@ -27,19 +30,27 @@ export class DrunkardsWalk {
             switch (ranNum) {
               case 0:
                 Map.set(x, y - 1, currentPosition);
-                Map.set(x, y, this.Traversed);
+                Map.set(x, y, Traversed);
+                historicalRecord.push({ xCord: x, yCord: y });
+                //check to see if this space has been occupied before.
                 break;
               case 1:
                 Map.set(x, y + 1, currentPosition);
-                Map.set(x, y, this.Traversed);
+                Map.set(x, y, Traversed);
+                historicalRecord.push({ xCord: x, yCord: y });
+                //check to see if this space has been occupied before.
                 break;
               case 2:
                 Map.set(x + 1, y, currentPosition);
-                Map.set(x, y, this.Traversed);
+                Map.set(x, y, Traversed);
+                historicalRecord.push({ xCord: x, yCord: y });
+                //check to see if this space has been occupied before.
                 break;
               case 3:
                 Map.set(x - 1, y, currentPosition);
-                Map.set(x, y, this.Traversed);
+                Map.set(x, y, Traversed);
+                historicalRecord.push({ xCord: x, yCord: y });
+              //check to see if this space has been occupied before.
             }
             //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
             break loop1;
