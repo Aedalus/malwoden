@@ -31,18 +31,23 @@ export class DrunkardsWalk {
     }
   }
 
-  doSimulationStep(xInitial: number, yInitial: number, stepsToTake = 1) {
+  RunSimulationOnSteps(
+    xInitial: number,
+    yInitial: number,
+    stepsToTake = 1,
+    toCoverTileCount: number = Infinity
+  ) {
     //constants
     const Map = new Table<number>(this.table.width, this.table.height);
     const currentPosition = 2; //these numbers don't really matter. They need need to hold a num position.
     const Traversed = 1; //these numbers don't really matter. They need need to hold a num position.
-    let coveredTileCount: number = 0;
     let historicalRecord = [];
     let check: boolean;
+    let coveredTileCount: number = 0;
     //initial set for the drunk's position.
     Map.set(xInitial, yInitial, currentPosition);
 
-    for (let step = 0; step < stepsToTake; step++) {
+    stepLoop: for (let step = 0; step < stepsToTake; step++) {
       console.log("step is ", step);
       loop1: for (let x = 0; x < Map.width; x++) {
         loop2: for (let y = 0; y < Map.height; y++) {
@@ -89,8 +94,12 @@ export class DrunkardsWalk {
                 if (check === true) {
                   coveredTileCount = coveredTileCount + 1;
                 }
-              //check to see if this space has been occupied before.
+                //check to see if this space has been occupied before.
+                if (coveredTileCount === toCoverTileCount) {
+                  break stepLoop;
+                }
             }
+
             //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
             break loop1;
           }

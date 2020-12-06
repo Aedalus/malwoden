@@ -6,7 +6,7 @@ export default class extends Example {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const map = new Generation.DrunkardsWalk(80, 50);
 
-    map.doSimulationStep(10, 20, 50);
+    map.RunSimulationOnSteps(10, 20, 50);
     // map.doSimulationStep(30, 40, 10);
 
     terminal.clear();
