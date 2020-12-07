@@ -7,6 +7,8 @@ export default class extends Example {
     const map = new Generation.DrunkardsWalk(80, 50);
 
     map.RunSimulationOnSteps(10, 20, 50);
+    map.getHistoricalData();
+    map.getHistoricalDataAtStep(49);
     // map.doSimulationStep(30, 40, 10);
 
     terminal.clear();

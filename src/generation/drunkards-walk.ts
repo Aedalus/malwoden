@@ -3,17 +3,32 @@ import { isNumber } from "util";
 
 export class DrunkardsWalk {
   table: Table<number>;
+  coveredTiles: number;
+  historicalData: any;
 
   constructor(width: number, height: number) {
     this.table = new Table(width, height);
+    this.coveredTiles = 0;
+    this.historicalData;
   }
 
-  gethistoricalDataAtX() {
-    //gets the requested historical data at x position.
+  getHistoricalDataAtPosition(x: number, y: number) {
+    console.log("getting position: ", x, y);
+
+    //gets the requested historical data at x and y.
+  }
+
+  getHistoricalDataAtStep(step: number) {
+    const historicalData = this.historicalData;
+    console.log(historicalData[step]);
+    return this.historicalData;
+    //gets the requested historical data at x position in the array.
   }
 
   getHistoricalData() {
-    //gets the requested historical data.
+    //gets the requested historical data on the parent table..
+    console.log(this.historicalData); // log here only intended for current use and should be deleted in the future during implementation.
+    return this.historicalData;
   }
 
   private addStep(historicalRecord: any, xCord: number, yCord: number) {
@@ -23,10 +38,8 @@ export class DrunkardsWalk {
     );
     console.log(result);
     if (result.length <= 1) {
-      console.log("we are recording true.");
       return true;
     } else {
-      console.log("we are recording false.");
       return false;
     }
   }
@@ -49,8 +62,8 @@ export class DrunkardsWalk {
 
     stepLoop: for (let step = 0; step < stepsToTake; step++) {
       console.log("step is ", step);
-      loop1: for (let x = 0; x < Map.width; x++) {
-        loop2: for (let y = 0; y < Map.height; y++) {
+      xAxis: for (let x = 0; x < Map.width; x++) {
+        yAxis: for (let y = 0; y < Map.height; y++) {
           if (Map.get(x, y) === currentPosition) {
             const ranNum = Math.floor(Math.random() * 4);
             // 0 = north ---  1 = south --- 2 = west --- 3 = east
@@ -73,6 +86,7 @@ export class DrunkardsWalk {
                 check = this.addStep(historicalRecord, x, y);
                 if (check === true) {
                   coveredTileCount = coveredTileCount + 1;
+                  this.coveredTiles = this.coveredTiles + 1;
                 }
                 //check to see if this space has been occupied before.
                 break;
@@ -99,12 +113,12 @@ export class DrunkardsWalk {
                   break stepLoop;
                 }
             }
-
             //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
-            break loop1;
+            break xAxis;
           }
         }
         this.table = Map;
+        this.historicalData = historicalRecord;
       }
     }
   }
