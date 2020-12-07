@@ -7,8 +7,12 @@ export default class extends Example {
     const map = new Generation.DrunkardsWalk(80, 50);
 
     map.RunSimulationOnSteps(10, 20, 50);
+    console.log("getting historical data.");
     map.getHistoricalData();
+    console.log("getting data at step 49");
     map.getHistoricalDataAtStep(49);
+    console.log("getting historical data at position 10,20");
+    console.log(map.getHistoricalDataAtPosition(20, 10));
     // map.doSimulationStep(30, 40, 10);
 
     terminal.clear();

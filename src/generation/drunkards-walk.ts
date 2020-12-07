@@ -13,9 +13,19 @@ export class DrunkardsWalk {
   }
 
   getHistoricalDataAtPosition(x: number, y: number) {
-    console.log("getting position: ", x, y);
-
-    //gets the requested historical data at x and y.
+    // console.log("getting position: ", x, y);
+    const map = this.table;
+    const data = map.get(x, y);
+    switch (data) {
+      case undefined:
+        return "you have not stepped here.";
+      case 1:
+        return "you have stepped here before.";
+      case 2:
+        return "you are here.";
+      default:
+        return "you have given an unrecongized input.";
+    }
   }
 
   getHistoricalDataAtStep(step: number) {
