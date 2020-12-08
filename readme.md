@@ -5,6 +5,10 @@
   - [ ] docs
   - [ ] examples
 
+  - [x] Precise Shadowcasting
+    - [x] Topology - 4
+    - [x] Topology - 8
+
 - Generation (10%)
 
   - [ ] docs

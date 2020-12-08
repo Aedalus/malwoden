@@ -1,6 +1,5 @@
 import { Example } from "../example";
 import { Terminal, FOV, CharCode, Color, Generation, Input, Util } from "cacti-term";
-import * as ROT from "rot-js";
 
 export default class extends Example {
   Run() {

@@ -1,42 +1,4 @@
-import { Vector2 } from "../util";
-export function getRing(originX: number, originY: number, range: number): Vector2[] {
-  if (range === 0) {
-    return [
-      {
-        x: originX,
-        y: originY,
-      },
-    ];
-  }
-  const ring: Vector2[] = [];
-
-  const maxX = originX + range;
-  const minX = originX - range;
-  const maxY = originY + range;
-  const minY = originY - range;
-
-  // Top right arc
-  for (let x = maxX, y = originY; x > originX; x--, y--) {
-    ring.push({ x, y });
-  }
-
-  // Top left arc
-  for (let x = originX, y = minY; x > minX; x--, y++) {
-    ring.push({ x, y });
-  }
-
-  // Bottom left arc
-  for (let x = minX, y = originY; x < originX; x++, y++) {
-    ring.push({ x, y });
-  }
-
-  // Bottom right arc
-  for (let x = originX, y = maxY; x < maxX; x++, y--) {
-    ring.push({ x, y });
-  }
-
-  return ring;
-}
+import { getRing4, getRing8 } from "./get-ring";
 
 type RationalNum = [number, number];
 
@@ -59,9 +21,11 @@ interface VisibilityStruct {
 
 export class PreciseShadowcasting {
   private lightPasses: LightPassesCallback;
+  private getRing: typeof getRing4;
 
-  constructor(lightPasses: LightPassesCallback) {
+  constructor(lightPasses: LightPassesCallback, topology: "four" | "eight" = "eight") {
     this.lightPasses = lightPasses;
+    this.getRing = topology === "four" ? getRing4 : getRing8;
   }
 
   calculateVectors(originX: number, originY: number, range: number): VisibilityStruct[] {
@@ -80,7 +44,8 @@ export class PreciseShadowcasting {
 
     // For all rings
     for (let r = 1; r <= range; r++) {
-      const ring = getRing(originX, originY, r);
+      const ring = this.getRing(originX, originY, r);
+      debugger;
       // * by 2 here since we're making 2 arcs per tile
       const arcCount = ring.length * 2;
 

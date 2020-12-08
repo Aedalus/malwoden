@@ -1,5 +1,5 @@
 import { Example } from "../example";
-import { Terminal, Glyph, CharCode, Input, Color, Generation, Util } from "cacti-term";
+import { Terminal, CharCode, Color, Generation } from "cacti-term";
 
 export default class extends Example {
   Run() {
