@@ -28,14 +28,8 @@ export class DrunkardsWalk {
   }
 
   private addStep(Path: any, xCord: number, yCord: number) {
-    //check to see if the requested cordinates are unique within historicalRecord. If unique, return true. If not unique return false.
-    const result = Path.filter((record: any) => record.xCord === xCord && yCord === record.yCord);
-    if (result.length <= 1) {
-      return true;
-    } else {
-      return false;
-    }
-  } // this needs to be moved to the table check. If the table has a value, you've either been there are or are there.
+    // To be done: allows user to insert a step into the table and record. It should also increase the step count if the user hasn't been there.
+  }
 
   //private get randDirection(){} return type of vector2. Concept 'cycolmatic complexity'.
 
@@ -54,23 +48,26 @@ export class DrunkardsWalk {
     this.path.push({ x: xInitial, y: yInitial });
 
     stepLoop: for (let step = 0; step < stepsToTake; step++) {
+      const currentPosition = this.path[this.path.length - 1];
+      this.table.set(currentPosition.x, currentPosition.y, 2);
       if (coveredTileCount === toCoverTileCount) {
         break stepLoop;
       }
-      const currentPosition = this.path[this.path.length - 1];
       const randomDirection = this.getRandomDirection();
       const nextPosition = {
         x: currentPosition.x + randomDirection.x,
         y: currentPosition.y + randomDirection.y,
       };
       //check if the space is within bounds.
+      //tbd
       // add nextPosition to Path array.
       this.path.push(nextPosition);
+      // check to see if you've already been there before. If not, increase covered tiled count. Otherwise, set the table and break the loop.
+      if (this.table.get(nextPosition.x, nextPosition.y) === 0) {
+        coveredTileCount = coveredTileCount + 1;
+      }
       // write to the table.
       this.table.set(nextPosition.x, nextPosition.y, 1);
-      console.log(this.path);
-      // check to see if you've already been there before. If not, increase covered tiled count.
-      // break out of the loop if the covered tile count is met.
     }
   }
 }
