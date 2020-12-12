@@ -12,7 +12,6 @@ export class DrunkardsWalk {
 
   private getRandomDirection(): Vector2 {
     const ranNum = Math.floor(Math.random() * 4);
-
     // 0 = north ---  1 = south --- 2 = west --- 3 = east
     switch (ranNum) {
       case 0:
@@ -28,11 +27,9 @@ export class DrunkardsWalk {
     }
   }
 
-  private addStep(historicalRecord: any, xCord: number, yCord: number) {
+  private addStep(Path: any, xCord: number, yCord: number) {
     //check to see if the requested cordinates are unique within historicalRecord. If unique, return true. If not unique return false.
-    const result = historicalRecord.filter(
-      (record: any) => record.xCord === xCord && yCord === record.yCord
-    );
+    const result = Path.filter((record: any) => record.xCord === xCord && yCord === record.yCord);
     if (result.length <= 1) {
       return true;
     } else {
@@ -67,11 +64,14 @@ export class DrunkardsWalk {
         y: currentPosition.y + randomDirection.y,
       };
       //check if the space is within bounds.
-      //check to see if you've already been there before. If not, increase covered tiled count.
-
-      //check to see if this space has been occupied before.
+      // add nextPosition to Path array.
+      this.path.push(nextPosition);
+      // write to the table.
+      this.table.set(nextPosition.x, nextPosition.y, 1);
+      console.log(this.path);
+      // check to see if you've already been there before. If not, increase covered tiled count.
+      // break out of the loop if the covered tile count is met.
     }
-    //sets x and y to an absurd number so the forloop ends it doesn't get picked a easterly or southerly movement.
   }
 }
 
