@@ -29,7 +29,7 @@ export class DrunkardsWalk {
     }
   }
 
-  addNewCord(x: number, y: number, tableset: any) {
+  addCordToTable(x: number, y: number, tableset: any) {
     try {
       this.table.set(x, y, tableset);
     } catch {
@@ -37,18 +37,23 @@ export class DrunkardsWalk {
     }
   }
 
-  addNewStep(Path: Vector2[], xCord: number, yCord: number, tableValue: any): Vector2[] {
+  addStepToPath(Path: Vector2[], xCord: number, yCord: number) {
     // To be done: allows user to insert a step into the table and record. It should also increase the step count if the user hasn't been there.
     try {
       Path.push({ x: xCord, y: yCord });
-      this.addNewCord(xCord, yCord, tableValue);
-      return Path;
-    } catch {
+    } catch (e) {
       throw new Error("Unable to push new cordinates into the path history.");
     }
   }
 
-  //private get randDirection(){} return type of vector2. Concept 'cycolmatic complexity'.
+  addCustomPoint(Path: Vector2[], xCord: number, yCord: number, tableValue: any) {
+    try {
+      this.addStepToPath(Path, xCord, yCord);
+      this.addCordToTable(xCord, yCord, tableValue);
+    } catch {
+      throw new Error("Error thrown in addCustomPoint.");
+    }
+  }
 
   RunSimulationOnSteps(
     xInitial: number,
@@ -92,7 +97,7 @@ export class DrunkardsWalk {
       }
       // adds nextPosition to the Path array and writes to the table.
 
-      this.path = this.addNewStep(this.path, nextPosition.x, nextPosition.y, 2);
+      this.addCustomPoint(this.path, nextPosition.x, nextPosition.y, 2);
 
       // write to the table.
       // loop keepers

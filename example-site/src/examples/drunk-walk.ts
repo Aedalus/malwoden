@@ -7,7 +7,7 @@ export default class extends Example {
     const map = new Generation.DrunkardsWalk(80, 50);
 
     map.RunSimulationOnSteps(79, 49, 20, Infinity, 80, 50);
-    map.addNewStep(map.path, 5, 5, 1);
+    map.addCustomPoint(map.path, 5, 5, 1);
 
     terminal.clear();
     for (let x = 0; x < map.table.width; x++) {
