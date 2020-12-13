@@ -29,8 +29,23 @@ export class DrunkardsWalk {
     }
   }
 
-  addStep(Path: any, xCord: number, yCord: number) {
+  addNewCord(x: number, y: number, tableset: any) {
+    try {
+      this.table.set(x, y, tableset);
+    } catch {
+      throw new Error("Unable to set cordinates.");
+    }
+  }
+
+  addNewStep(Path: Vector2[], xCord: number, yCord: number, tableValue: any): Vector2[] {
     // To be done: allows user to insert a step into the table and record. It should also increase the step count if the user hasn't been there.
+    try {
+      Path.push({ x: xCord, y: yCord });
+      this.addNewCord(xCord, yCord, tableValue);
+      return Path;
+    } catch {
+      throw new Error("Unable to push new cordinates into the path history.");
+    }
   }
 
   //private get randDirection(){} return type of vector2. Concept 'cycolmatic complexity'.
@@ -70,15 +85,16 @@ export class DrunkardsWalk {
       ) {
         continue stepLoop;
       }
-      // adds nextPosition to the Path array.
-      this.path.push(nextPosition);
       // check to see if you've already been there before. If not, increase covered tiled count. Otherwise, set the table and break the loop.
       if (this.table.get(nextPosition.x, nextPosition.y) === 0) {
         coveredTileCount = coveredTileCount + 1;
         this.coveredTiles = coveredTileCount;
       }
+      // adds nextPosition to the Path array and writes to the table.
+
+      this.path = this.addNewStep(this.path, nextPosition.x, nextPosition.y, 2);
+
       // write to the table.
-      this.table.set(nextPosition.x, nextPosition.y, 2);
       // loop keepers
       this.step = this.step + 1;
     }
