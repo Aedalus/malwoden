@@ -4,6 +4,8 @@ export class DrunkardsWalk {
   table: Table<number>;
   coveredTiles: number = 0;
   path: Vector2[] = [];
+  step: number = 1;
+  stepsToTake: number = 1;
   //fill the array with 0s.
 
   constructor(width: number, height: number) {
@@ -27,7 +29,7 @@ export class DrunkardsWalk {
     }
   }
 
-  private addStep(Path: any, xCord: number, yCord: number) {
+  addStep(Path: any, xCord: number, yCord: number) {
     // To be done: allows user to insert a step into the table and record. It should also increase the step count if the user hasn't been there.
   }
 
@@ -36,45 +38,51 @@ export class DrunkardsWalk {
   RunSimulationOnSteps(
     xInitial: number,
     yInitial: number,
-    stepsToTake = 1,
-    toCoverTileCount: number = Infinity
+    stepsToTake: number = Infinity,
+    toCoverTileCount: number = Infinity,
+    xBounds: number = Infinity,
+    yBounds: number = Infinity
   ) {
     //constants
     this.table.fill(0);
-    let check: boolean;
-    let coveredTileCount: number = 1;
-    //initial set for the drunk's position.
+    let coveredTileCount: number = 1; // local step count for the function.
+    let step: number = 0;
+    // initial set for the drunk's and path add for position.
     this.table.set(xInitial, yInitial, 2);
     this.path.push({ x: xInitial, y: yInitial });
 
-    stepLoop: for (let step = 0; step < stepsToTake; step++) {
+    stepLoop: while (step !== stepsToTake && coveredTileCount !== toCoverTileCount) {
+      // initital function setup for current array position and table set.
       const currentPosition = this.path[this.path.length - 1];
-      this.table.set(currentPosition.x, currentPosition.y, 2);
-      if (coveredTileCount === toCoverTileCount) {
-        break stepLoop;
-      }
+      this.table.set(currentPosition.x, currentPosition.y, 1);
+
       const randomDirection = this.getRandomDirection();
       const nextPosition = {
         x: currentPosition.x + randomDirection.x,
         y: currentPosition.y + randomDirection.y,
       };
       //check if the space is within bounds.
-      //tbd
-      // add nextPosition to Path array.
+
+      if (
+        nextPosition.x < 0 ||
+        nextPosition.y < 0 ||
+        nextPosition.x >= xBounds ||
+        nextPosition.y >= yBounds
+      ) {
+        continue stepLoop;
+      }
+      // adds nextPosition to the Path array.
       this.path.push(nextPosition);
       // check to see if you've already been there before. If not, increase covered tiled count. Otherwise, set the table and break the loop.
       if (this.table.get(nextPosition.x, nextPosition.y) === 0) {
         coveredTileCount = coveredTileCount + 1;
+        this.coveredTiles = coveredTileCount;
       }
       // write to the table.
-      this.table.set(nextPosition.x, nextPosition.y, 1);
+      this.table.set(nextPosition.x, nextPosition.y, 2);
+      // loop keepers
+      step = step + 1;
+      this.step = step;
     }
   }
 }
-
-//means of improvement
-
-// fill in a hundred blocks, rather than just taking 100 steps.
-// take n number of steps --- can do
-// show where the drunk has been, each step of the way.
-//

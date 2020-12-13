@@ -6,12 +6,12 @@ export default class extends Example {
     const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const map = new Generation.DrunkardsWalk(80, 50);
 
-    map.RunSimulationOnSteps(10, 20, 5);
+    map.RunSimulationOnSteps(79, 49, Infinity, 20, 80, 50);
 
     terminal.clear();
     for (let x = 0; x < map.table.width; x++) {
       for (let y = 0; y < map.table.height; y++) {
-        if (map.table.get(x, y) === 2) {
+        if (map.table.get(x, y) === 1) {
           terminal.drawCharCode({
             x: x,
             y: y,
@@ -20,7 +20,7 @@ export default class extends Example {
           });
         }
 
-        if (map.table.get(x, y) === 1) {
+        if (map.table.get(x, y) === 2) {
           terminal.drawCharCode({
             x: x,
             y: y,
