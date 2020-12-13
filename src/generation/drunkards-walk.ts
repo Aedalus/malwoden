@@ -46,12 +46,11 @@ export class DrunkardsWalk {
     //constants
     this.table.fill(0);
     let coveredTileCount: number = 1; // local step count for the function.
-    let step: number = 0;
     // initial set for the drunk's and path add for position.
     this.table.set(xInitial, yInitial, 2);
     this.path.push({ x: xInitial, y: yInitial });
 
-    stepLoop: while (step !== stepsToTake && coveredTileCount !== toCoverTileCount) {
+    stepLoop: while (this.path.length !== stepsToTake && coveredTileCount !== toCoverTileCount) {
       // initital function setup for current array position and table set.
       const currentPosition = this.path[this.path.length - 1];
       this.table.set(currentPosition.x, currentPosition.y, 1);
@@ -81,8 +80,7 @@ export class DrunkardsWalk {
       // write to the table.
       this.table.set(nextPosition.x, nextPosition.y, 2);
       // loop keepers
-      step = step + 1;
-      this.step = step;
+      this.step = this.step + 1;
     }
   }
 }
