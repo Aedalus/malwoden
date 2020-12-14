@@ -25,22 +25,22 @@ export class Display {
   setGlyph(x: number, y: number, glyph: Glyph) {
     if (x < 0 || x >= this.width) return;
     if (y < 0 || y >= this.height) return;
-    if (glyph.isEqual(this.glyphs.get(x, y))) {
-      this.changedGlyphs.set(x, y, undefined);
+    if (glyph.isEqual(this.glyphs.get({ x, y }))) {
+      this.changedGlyphs.set({ x, y }, undefined);
     } else {
-      this.changedGlyphs.set(x, y, glyph);
+      this.changedGlyphs.set({ x, y }, glyph);
     }
   }
 
   render(callback: RenderGlyph) {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        const glyph = this.changedGlyphs.get(x, y);
+        const glyph = this.changedGlyphs.get({ x, y });
         if (!glyph) continue;
         callback(x, y, glyph);
 
-        this.glyphs.set(x, y, glyph);
-        this.changedGlyphs.set(x, y, undefined);
+        this.glyphs.set({ x, y }, glyph);
+        this.changedGlyphs.set({ x, y }, undefined);
       }
     }
   }
