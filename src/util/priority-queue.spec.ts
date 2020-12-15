@@ -33,4 +33,16 @@ describe("PriorityQueue", () => {
     expect(q.pop()).toEqual({ x: 10, y: 10 });
     expect(q.pop()).toEqual({ x: 100, y: 10 });
   });
+
+  it("Will prioritize object inserted first", () => {
+    const q = new PriorityQueue((v: Vector2) => v.x);
+
+    for (let y = 0; y < 100; y++) {
+      q.insert({ x: 0, y });
+    }
+
+    for (let y = 0; y < 100; y++) {
+      expect(q.pop()).toEqual({ x: 0, y });
+    }
+  });
 });
