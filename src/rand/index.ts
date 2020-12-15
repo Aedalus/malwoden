@@ -1,2 +1,2 @@
 export { AleaRNG } from "./alea";
-export { RNG } from "./rng";
+export { IRNG } from "./rng";

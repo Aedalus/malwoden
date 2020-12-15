@@ -13,3 +13,9 @@
   - Broguelike
   - City Buildings
   - Maze with Rooms
+- Pathfinding
+  - AStar
+    - Randomize Neighbors?
+  - Dijkstra
+    - Pathfinding
+    - General Search

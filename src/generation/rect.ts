@@ -1,4 +1,4 @@
-import { AleaRNG, RNG } from "../rand";
+import { AleaRNG, IRNG } from "../rand";
 import { IRect, Rect } from "../util/rect";
 
 interface SubRectOptions {
@@ -6,13 +6,14 @@ interface SubRectOptions {
   maxWidth: number;
   minHeight: number;
   maxHeight: number;
-  rng?: RNG;
+  rng?: IRNG;
 }
 
 export class RectGen {
   static SubRect(rect: IRect, config: SubRectOptions): Rect {
     const r1 = new Rect(rect);
-    if (r1.width() < config.minWidth) throw new Error("error generating sub rect: width too small");
+    if (r1.width() < config.minWidth)
+      throw new Error("error generating sub rect: width too small");
     if (r1.height() < config.minHeight)
       throw new Error("error generating sub rect: height too small");
 
