@@ -72,7 +72,7 @@ export class Color {
     );
   }
 
-  blend(other: Color, fractionOther: number = 0) {
+  blend(other: Color, fractionOther: number = 0.5) {
     const fractionThis = 1.0 - fractionOther;
     return new Color(
       this.sanitizeElement(this.r * fractionThis + other.r * fractionOther),

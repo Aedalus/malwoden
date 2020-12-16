@@ -29,79 +29,51 @@ export class DrunkardsWalk {
     }
   }
 
-  addCordToTable(x: number, y: number, tableset: any) {
-    try {
-      this.table.set(x, y, tableset);
-    } catch {
-      throw new Error("Unable to set cordinates.");
-    }
+  addCustomPoint(Cords: Vector2, tableValue: any) {
+    this.table.set(Cords, tableValue);
+    this.path.push(Cords);
   }
 
-  addStepToPath(Path: Vector2[], xCord: number, yCord: number) {
-    // To be done: allows user to insert a step into the table and record. It should also increase the step count if the user hasn't been there.
-    try {
-      Path.push({ x: xCord, y: yCord });
-    } catch (e) {
-      throw new Error("Unable to push new cordinates into the path history.");
-    }
-  }
-
-  addCustomPoint(Path: Vector2[], xCord: number, yCord: number, tableValue: any) {
-    try {
-      this.addStepToPath(Path, xCord, yCord);
-      this.addCordToTable(xCord, yCord, tableValue);
-    } catch {
-      throw new Error("Error thrown in addCustomPoint.");
-    }
-  }
-
-  RunSimulationOnSteps(
-    xInitial: number,
-    yInitial: number,
-    stepsToTake: number = Infinity,
-    toCoverTileCount: number = Infinity,
-    xBounds: number = Infinity,
-    yBounds: number = Infinity
+  walkSteps(
+    initial: Vector2,
+    stepsToTake: number = 100,
+    toCoverTileCount: number = Infinity
   ) {
     //constants
     this.table.fill(0);
     let coveredTileCount: number = 1; // local step count for the function.
     // initial set for the drunk's and path add for position.
-    this.table.set(xInitial, yInitial, 2);
-    this.path.push({ x: xInitial, y: yInitial });
+    this.path.push(initial);
 
-    stepLoop: while (this.path.length !== stepsToTake && coveredTileCount !== toCoverTileCount) {
+    while (
+      this.path.length !== stepsToTake &&
+      coveredTileCount !== toCoverTileCount
+    ) {
       // initital function setup for current array position and table set.
       const currentPosition = this.path[this.path.length - 1];
-      this.table.set(currentPosition.x, currentPosition.y, 1);
+      this.table.set(currentPosition, 1);
 
       const randomDirection = this.getRandomDirection();
-      const nextPosition = {
+      const nextPosition: Vector2 = {
         x: currentPosition.x + randomDirection.x,
         y: currentPosition.y + randomDirection.y,
       };
       //check if the space is within bounds.
 
-      if (
-        nextPosition.x < 0 ||
-        nextPosition.y < 0 ||
-        nextPosition.x >= xBounds ||
-        nextPosition.y >= yBounds
-      ) {
-        continue stepLoop;
+      if (this.table.isInBounds(nextPosition) === false) {
+        continue;
       }
       // check to see if you've already been there before. If not, increase covered tiled count. Otherwise, set the table and break the loop.
-      if (this.table.get(nextPosition.x, nextPosition.y) === 0) {
+      if (this.table.get(nextPosition) === 0) {
         coveredTileCount = coveredTileCount + 1;
         this.coveredTiles = coveredTileCount;
       }
       // adds nextPosition to the Path array and writes to the table.
+      this.addCustomPoint(nextPosition, 1);
 
-      this.addCustomPoint(this.path, nextPosition.x, nextPosition.y, 2);
-
-      // write to the table.
       // loop keepers
       this.step = this.step + 1;
+      console.log("loop", this.step);
     }
   }
 }
