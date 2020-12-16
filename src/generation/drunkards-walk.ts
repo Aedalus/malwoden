@@ -73,7 +73,6 @@ export class DrunkardsWalk {
 
       // loop keepers
       this.step = this.step + 1;
-      console.log("loop", this.step);
     }
   }
 }
