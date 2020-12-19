@@ -68,7 +68,9 @@ export class Line {
   }
 
   isLineCollinear(line: Line) {
-    return this.isCollinear(line.x1, line.y1) && this.isCollinear(line.x2, line.y2);
+    return (
+      this.isCollinear(line.x1, line.y1) && this.isCollinear(line.x2, line.y2)
+    );
   }
 
   calculateRelativeSlope(x: number, y: number): number {

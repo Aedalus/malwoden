@@ -1,29 +1,69 @@
-import { Example } from "../example";
-import { Terminal, Glyph, CharCode, Input, Color, Generation, Util } from "cacti-term";
+import { Example } from '../example';
+import {
+  Terminal,
+  Glyph,
+  CharCode,
+  Input,
+  Color,
+  Generation,
+  Util,
+} from 'cacti-term';
 
 function drawDoubleBox(
   terminal: Terminal.BaseTerminal,
   x1: number,
   x2: number,
   y1: number,
-  y2: number
+  y2: number,
 ) {
   // Corners
-  terminal.drawGlyph(x1, y1, Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndRight));
-  terminal.drawGlyph(x2, y1, Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndLeft));
-  terminal.drawGlyph(x1, y2, Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndRight));
-  terminal.drawGlyph(x2, y2, Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndLeft));
+  terminal.drawGlyph(
+    x1,
+    y1,
+    Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndRight),
+  );
+  terminal.drawGlyph(
+    x2,
+    y1,
+    Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndLeft),
+  );
+  terminal.drawGlyph(
+    x1,
+    y2,
+    Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndRight),
+  );
+  terminal.drawGlyph(
+    x2,
+    y2,
+    Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndLeft),
+  );
 
   // Horizontal Bars
   for (let dx = x1 + 1; dx < x2; dx++) {
-    terminal.drawGlyph(dx, y1, Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal));
-    terminal.drawGlyph(dx, y2, Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal));
+    terminal.drawGlyph(
+      dx,
+      y1,
+      Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal),
+    );
+    terminal.drawGlyph(
+      dx,
+      y2,
+      Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal),
+    );
   }
 
   // Vertical Bars
   for (let dy = y1 + 1; dy < y2; dy++) {
-    terminal.drawGlyph(x1, dy, Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical));
-    terminal.drawGlyph(x2, dy, Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical));
+    terminal.drawGlyph(
+      x1,
+      dy,
+      Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical),
+    );
+    terminal.drawGlyph(
+      x2,
+      dy,
+      Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical),
+    );
   }
 }
 
@@ -40,19 +80,19 @@ export default class extends Example {
     const movement = new Input.KeyboardContext()
       .onDown(Input.KeyCode.DownArrow, () => {
         player.y++;
-        console.log("Down!");
+        console.log('Down!');
       })
       .onDown(Input.KeyCode.LeftArrow, () => {
         player.x--;
-        console.log("Left!");
+        console.log('Left!');
       })
       .onDown(Input.KeyCode.RightArrow, () => {
         player.x++;
-        console.log("Right!");
+        console.log('Right!');
       })
       .onDown(Input.KeyCode.UpArrow, () => {
         player.y--;
-        console.log("Up!");
+        console.log('Up!');
       });
 
     keyboard.setContext(movement);
@@ -78,20 +118,25 @@ export default class extends Example {
         minHeight: r.height() / 2,
         maxWidth: r.width(),
         maxHeight: r.height(),
-      })
+      }),
     );
 
     for (let r of rooms) {
       for (let x = r.x1; x < r.x2; x++) {
         for (let y = r.y1; y < r.y2; y++) {
-          map.set(x, y, 0);
+          map.set({ x: x, y: y }, 0);
         }
       }
     }
 
-    const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
+    const terminal = Terminal.Retro.fromURL(80, 50, 'font_16.png', 16, 16);
     // ToDo - Fix this API. 2 Vectors?
-    const mapterminal = new Terminal.PortTerminal(17, 1, { x: map_width, y: map_height }, terminal);
+    const mapterminal = new Terminal.PortTerminal(
+      17,
+      1,
+      { x: map_width, y: map_height },
+      terminal,
+    );
 
     const loop = (delta: number) => {
       terminal.clear();
@@ -101,7 +146,7 @@ export default class extends Example {
       terminal.writeAt({
         x: 2,
         y: 0,
-        text: " Player ",
+        text: ' Player ',
       });
 
       // World Box
@@ -112,13 +157,13 @@ export default class extends Example {
       terminal.writeAt({
         x: 2,
         y: 40,
-        text: " Log ",
+        text: ' Log ',
       });
 
       // Draw Map
       for (let x = 0; x < map.width; x++) {
         for (let y = 0; y < map.height; y++) {
-          const isWall = map.get(x, y);
+          const isWall = map.get({ x, y });
           mapterminal.drawCharCode({
             x,
             y,
@@ -128,7 +173,11 @@ export default class extends Example {
       }
 
       // Player Entity
-      mapterminal.drawGlyph(player.x, player.y, Glyph.fromCharCode(CharCode.at, Color.yellow));
+      mapterminal.drawGlyph(
+        player.x,
+        player.y,
+        Glyph.fromCharCode(CharCode.at, Color.yellow),
+      );
 
       terminal.render();
 

@@ -146,7 +146,6 @@ export class Retro extends RenderableTerminal {
     // If cached return
     const colorName = color.cssColor();
     const cached = this._fontColorCache.get(colorName);
-    console.log(this._fontColorCache.size);
     if (cached) return cached;
 
     // Create a font using the given color.

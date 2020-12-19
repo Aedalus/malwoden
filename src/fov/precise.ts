@@ -23,12 +23,19 @@ export class PreciseShadowcasting {
   private lightPasses: LightPassesCallback;
   private getRing: typeof getRing4;
 
-  constructor(lightPasses: LightPassesCallback, topology: "four" | "eight" = "eight") {
+  constructor(
+    lightPasses: LightPassesCallback,
+    topology: "four" | "eight" = "eight"
+  ) {
     this.lightPasses = lightPasses;
     this.getRing = topology === "four" ? getRing4 : getRing8;
   }
 
-  calculateVectors(originX: number, originY: number, range: number): VisibilityStruct[] {
+  calculateVectors(
+    originX: number,
+    originY: number,
+    range: number
+  ): VisibilityStruct[] {
     const v: VisibilityStruct[] = [];
     this.calculateCallback(originX, originY, range, (x, y, r, visibility) => {
       v.push({ x, y, r, visibility });
@@ -36,7 +43,12 @@ export class PreciseShadowcasting {
     return v;
   }
 
-  calculateCallback(originX: number, originY: number, range: number, callback: VisibilityCallback) {
+  calculateCallback(
+    originX: number,
+    originY: number,
+    range: number,
+    callback: VisibilityCallback
+  ) {
     // Always call the original
     callback(originX, originY, 0, 1);
 

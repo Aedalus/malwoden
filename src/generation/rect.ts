@@ -12,7 +12,8 @@ interface SubRectOptions {
 export class RectGen {
   static SubRect(rect: IRect, config: SubRectOptions): Rect {
     const r1 = new Rect(rect);
-    if (r1.width() < config.minWidth) throw new Error("error generating sub rect: width too small");
+    if (r1.width() < config.minWidth)
+      throw new Error("error generating sub rect: width too small");
     if (r1.height() < config.minHeight)
       throw new Error("error generating sub rect: height too small");
 
