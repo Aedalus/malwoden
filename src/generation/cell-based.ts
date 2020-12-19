@@ -21,7 +21,7 @@ export class CellBased {
   readonly cellWidth: number;
   readonly cellHeight: number;
 
-  readonly cells: Rect;
+  // readonly cells: Rect;
 
   constructor(options: Partial<CellBasedOptions>) {
     this.width = options.width !== undefined ? options.width : 80;
