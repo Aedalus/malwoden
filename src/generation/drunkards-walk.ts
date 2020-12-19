@@ -1,4 +1,5 @@
 import { Table, Vector2 } from "../util";
+import { DrunkardConfig } from "../util/drunkardConfig";
 
 export class DrunkardsWalk {
   table: Table<number>;
@@ -34,20 +35,16 @@ export class DrunkardsWalk {
     this.path.push(Cords);
   }
 
-  walkSteps(
-    initial: Vector2,
-    stepsToTake: number = 100,
-    toCoverTileCount: number = Infinity
-  ) {
+  walkSteps(config: DrunkardConfig) {
     //constants
     this.table.fill(0);
     let coveredTileCount: number = 1; // local step count for the function.
     // initial set for the drunk's and path add for position.
-    this.path.push(initial);
+    this.path.push(config.initialCords);
 
     while (
-      this.path.length !== stepsToTake &&
-      coveredTileCount !== toCoverTileCount
+      this.path.length !== config.stepsToTake &&
+      coveredTileCount !== config.toCoverTileCount
     ) {
       // initital function setup for current array position and table set.
       const currentPosition = this.path[this.path.length - 1];
