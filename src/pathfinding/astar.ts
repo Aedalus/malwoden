@@ -67,7 +67,6 @@ export class AStar {
           });
         }
         return totalPath;
-        // ToDo - Reconstruct path
       }
 
       const neighbors =
@@ -81,6 +80,7 @@ export class AStar {
 
       for (let n of neighbors) {
         // ToDo - Optimize this? Not sure if heuristic makes sense if we know the distance.
+        // ToDo - llow the distance to be determined by function
         let tentative_gScore = currentGScore + 1;
 
         if (gScore.has(`${n.x}:${n.y}`) === false) {
