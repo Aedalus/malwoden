@@ -1,4 +1,4 @@
-import { AleaRNG, RNG } from "../rand";
+import { AleaRNG, IRNG } from "../rand";
 import { IRect, Rect } from "../util/rect";
 
 interface SubRectOptions {
@@ -6,7 +6,7 @@ interface SubRectOptions {
   maxWidth: number;
   minHeight: number;
   maxHeight: number;
-  rng?: RNG;
+  rng?: IRNG;
 }
 
 export class RectGen {

@@ -1,7 +1,7 @@
 // https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
 // Johannes Baagøe <baagoe@baagoe.com>, 2010
 
-import { RNG } from "./rng";
+import { IRNG } from "./rng";
 
 function Mash() {
   var n = 0xefc8249d;
@@ -24,7 +24,7 @@ function Mash() {
   return mash;
 }
 
-export class AleaRNG implements RNG {
+export class AleaRNG implements IRNG {
   private seed: string;
   private s0 = 0;
   private s1 = 0;

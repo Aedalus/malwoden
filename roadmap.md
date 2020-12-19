@@ -13,3 +13,15 @@
   - Broguelike
   - City Buildings
   - Maze with Rooms
+- Pathfinding
+
+  - AStar
+    - Optimize Priority queue
+    - Randomize Neighbors?
+  - Dijkstra
+    - Pathfinding
+    - Distance Limit
+    - General Search
+
+- Update typescript
+  - Remove a lot of the !

@@ -1,11 +1,10 @@
 import { Table, Vector2 } from "../util";
-import { RNG, AleaRNG } from "../rand";
-import { stringify } from "querystring";
+import { IRNG, AleaRNG } from "../rand";
 
 interface CellularAutomataOptions<T> {
   aliveValue: T;
   deadValue: T;
-  rng: RNG;
+  rng: IRNG;
 }
 
 /** Used to create CellularAutomata Maps. */
@@ -15,7 +14,7 @@ export class CellularAutomata<T> {
   readonly aliveValue: T;
   readonly deadValue: T;
 
-  private rng: RNG;
+  private rng: IRNG;
 
   /**
    * Creates a Cellular Automata Map Generator
