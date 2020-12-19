@@ -1,9 +1,9 @@
-import { Example } from '../example';
-import { Terminal, CharCode, Color, Generation } from 'cacti-term';
+import { Example } from "../example";
+import { Terminal, CharCode, Color, Generation } from "yendor";
 
 export default class extends Example {
   Run() {
-    const terminal = Terminal.Retro.fromURL(80, 50, 'font_16.png', 16, 16);
+    const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const map = new Generation.CellularAutomata(80, 50);
     map.randomize();
     map.doSimulationStep(3);

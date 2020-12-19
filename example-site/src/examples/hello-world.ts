@@ -1,5 +1,5 @@
 import { Example } from "../example";
-import { Terminal } from "cacti-term";
+import { Terminal } from "yendor";
 
 export default class extends Example {
   Run() {
