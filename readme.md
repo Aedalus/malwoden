@@ -1,6 +1,6 @@
-# (!!!Alpha) Delve
+# (!!!Alpha) Yendor
 
-Delve is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
+Yendor is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
 
 One of the main goals of this library is to provide a simple, minimalistic `Terminal` package with great support for CP437 tilesets.
 This is one area I've found lacking, and hope this library can provide a solid framework for roguelikes and text based games.
@@ -20,12 +20,12 @@ This package is not yet hosted, but will be available on npm once in beta.
 If you want to try it out now, consider building it locally and linking it via `npm link`
 
 ```
-# Inside the delve project
+# Inside the yendor project
 npm run start
 npm link
 
 # Inside another project
-npm link delve
+npm link yendor
 ```
 
 ## Modules

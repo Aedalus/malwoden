@@ -1,4 +1,4 @@
-import { Example } from '../example';
+import { Example } from "../example";
 import {
   Terminal,
   FOV,
@@ -7,11 +7,11 @@ import {
   Generation,
   Input,
   Util,
-} from 'cacti-term';
+} from "yendor";
 
 export default class extends Example {
   Run() {
-    const terminal = Terminal.Retro.fromURL(80, 50, 'font_16.png', 16, 16);
+    const terminal = Terminal.Retro.fromURL(80, 50, "font_16.png", 16, 16);
     const explored = new Util.Table<boolean>(80, 50);
     const map = new Generation.CellularAutomata(80, 50);
     map.randomize(0.6);
@@ -26,7 +26,7 @@ export default class extends Example {
     // topology: 8,
     // });
     const fov = new FOV.PreciseShadowcasting(
-      (x, y) => map.table.get({ x, y }) !== 1,
+      (x, y) => map.table.get({ x, y }) !== 1
     );
 
     // Keyboard
