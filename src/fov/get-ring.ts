@@ -1,6 +1,10 @@
 import { Vector2 } from "../util";
 
-export function getRing8(originX: number, originY: number, range: number): Vector2[] {
+export function getRing8(
+  originX: number,
+  originY: number,
+  range: number
+): Vector2[] {
   if (range === 0) return [{ x: originX, y: originY }];
 
   const ring: Vector2[] = [];
@@ -38,7 +42,11 @@ export function getRing8(originX: number, originY: number, range: number): Vecto
   return ring;
 }
 
-export function getRing4(originX: number, originY: number, range: number): Vector2[] {
+export function getRing4(
+  originX: number,
+  originY: number,
+  range: number
+): Vector2[] {
   if (range === 0) {
     return [
       {
