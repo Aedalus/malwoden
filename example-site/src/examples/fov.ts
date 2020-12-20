@@ -67,7 +67,6 @@ export default class extends Example {
       }
     }
     function calcFOV() {
-      // debugger;
       fov_spaces = [];
       // fov.compute(player.x, player.y, 7, (x, y, r, v) => {
       fov.calculateCallback(player.x, player.y, 10, (x, y, r, v) => {

@@ -57,7 +57,6 @@ export class PreciseShadowcasting {
     // For all rings
     for (let r = 1; r <= range; r++) {
       const ring = this.getRing(originX, originY, r);
-      debugger;
       // * by 2 here since we're making 2 arcs per tile
       const arcCount = ring.length * 2;
 

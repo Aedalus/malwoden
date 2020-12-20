@@ -30,12 +30,17 @@ export class Font {
 
 export class Canvas extends RenderableTerminal {
   readonly display: Display;
-  readonly canvas: HTMLCanvasElement;
-  readonly context: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly context: CanvasRenderingContext2D;
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
-  static New(width: number, height: number, font: Font, canvas?: HTMLCanvasElement): Canvas {
+  static New(
+    width: number,
+    height: number,
+    font: Font,
+    canvas?: HTMLCanvasElement
+  ): Canvas {
     const display = new Display(width, height);
     if (!canvas) {
       canvas = window.document.createElement("canvas");
@@ -68,7 +73,9 @@ export class Canvas extends RenderableTerminal {
   }
 
   render() {
-    this.context.font = `${this.font.size * this.scale}px ${this.font.family}, monospace`;
+    this.context.font = `${this.font.size * this.scale}px ${
+      this.font.family
+    }, monospace`;
 
     this.display.render((x, y, glyph) => {
       // Fill the background
@@ -100,5 +107,10 @@ export class Canvas extends RenderableTerminal {
       x: Math.floor(pixel.x / this.font.charWidth),
       y: Math.floor(pixel.y / this.font.lineHeight),
     };
+  }
+
+  /** Deletes the terminal, removing the canvas. */
+  delete() {
+    this.canvas.parentNode?.removeChild(this.canvas);
   }
 }

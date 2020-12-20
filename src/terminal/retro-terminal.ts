@@ -166,4 +166,9 @@ export class Retro extends RenderableTerminal {
     this._fontColorCache.set(colorName, tint);
     return tint;
   }
+
+  /** Deletes the terminal, removing the canvas. */
+  delete() {
+    this._canvas.parentNode?.removeChild(this._canvas);
+  }
 }

@@ -7,6 +7,8 @@ describe("lib", () => {
     expect(Yendor.FOV).toBeTruthy();
     expect(Yendor.Generation).toBeTruthy();
     expect(Yendor.Glyph).toBeTruthy();
+    expect(Yendor.GUI).toBeTruthy();
+    expect(Yendor.Rand).toBeTruthy();
     expect(Yendor.Input).toBeTruthy();
     expect(Yendor.Terminal).toBeTruthy();
     expect(Yendor.Util).toBeTruthy();
