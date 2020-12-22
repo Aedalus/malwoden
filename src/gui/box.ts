@@ -1,4 +1,4 @@
-import { Terminal, CharCode, Glyph } from "../yendor";
+import { BaseTerminal, CharCode, Glyph } from "../terminal";
 
 interface DrawBoxOptions {
   title?: string;
@@ -8,7 +8,7 @@ interface DrawBoxOptions {
   y2: number;
 }
 
-export function box(terminal: Terminal.BaseTerminal, options: DrawBoxOptions) {
+export function box(terminal: BaseTerminal, options: DrawBoxOptions) {
   const { x1, x2, y1, y2, title } = options;
   // Corners
   terminal.drawGlyph(

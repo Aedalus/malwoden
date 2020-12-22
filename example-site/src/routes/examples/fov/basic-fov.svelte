@@ -12,15 +12,31 @@
 	} from "yendor";
 
 	onMount(() => {
-		const terminal = Terminal.Retro.fromURL(40, 40, "font_16.png", 16, 16);
-		const explored = new Util.Table<boolean>(80, 50);
-		const map = new Generation.CellularAutomata(80, 50);
+		const mount = document.getElementById("example");
+		const terminal = Terminal.Retro.fromURL(
+			40,
+			40,
+			"font_16.png",
+			16,
+			16,
+			mount
+		);
+		const explored = new Util.Table<boolean>(40, 40);
+		const map = new Generation.CellularAutomata(40, 40);
 		map.randomize(0.6);
 		map.doSimulationStep(3);
 
+		const free = [];
+		for (let x = 0; x < map.table.width; x++) {
+			for (let y = 0; y < map.table.height; y++) {
+				if (map.table.get({ x, y }) !== map.aliveValue) {
+					free.push({ x, y });
+				}
+			}
+		}
 		const player = {
-			x: 10,
-			y: 10,
+			x: free[0].x,
+			y: free[0].y,
 		};
 
 		const fov = new FOV.PreciseShadowcasting(
@@ -143,9 +159,14 @@
 </script>
 
 <svelte:head>
-	<title>Hello World</title>
+	<title>FOV</title>
 </svelte:head>
 
-<h1>Hello World Example</h1>
+<h1>Field of View (FOV)</h1>
 
-<p>This is a basic example showing how to create a new terminal.</p>
+<p>
+	Yendor supports some basic Field of View algorithms. You can choose between
+	topology = 4 and topology = 8.
+</p>
+
+<div id="example" />

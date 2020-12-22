@@ -39,23 +39,23 @@ export class Retro extends RenderableTerminal {
     imageURL: string,
     charWidth: number,
     charHeight: number,
-    canvas?: HTMLCanvasElement
+    mountNode?: HTMLElement
   ): Retro {
     let scale = devicePixelRatio;
 
     // Create a canvas if not define
-    if (canvas === undefined) {
-      canvas = window.document.createElement("canvas");
-      const canvasWidth = charWidth * width;
-      const canvasHeight = charHeight * height;
-      canvas.width = canvasWidth * scale;
-      canvas.height = canvasHeight * scale;
-      canvas.style.width = `${canvasWidth}px`;
-      canvas.style.height = `${canvasHeight}px`;
+    const canvas = window.document.createElement("canvas");
+    const canvasWidth = charWidth * width;
+    const canvasHeight = charHeight * height;
+    canvas.width = canvasWidth * scale;
+    canvas.height = canvasHeight * scale;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
 
-      document.body.append(canvas);
+    if (mountNode) {
+      mountNode.appendChild(canvas);
     } else {
-      scale = 1;
+      document.body.appendChild(canvas);
     }
 
     const display = new Display(width, height);

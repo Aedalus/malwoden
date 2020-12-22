@@ -12,7 +12,15 @@
 	} from "yendor";
 
 	onMount(() => {
-		const terminal = Terminal.Retro.fromURL(40, 40, "font_16.png", 16, 16);
+		const mount = document.getElementById("example");
+		const terminal = Terminal.Retro.fromURL(
+			40,
+			40,
+			"font_16.png",
+			16,
+			16,
+			mount
+		);
 		const map = new Generation.CellularAutomata(40, 40);
 		map.randomize(0.65);
 		map.doSimulationStep(3);
@@ -46,3 +54,5 @@
 <h1>Hello World Example</h1>
 
 <p>This is a basic example showing how to create a new terminal.</p>
+
+<div id="example" />

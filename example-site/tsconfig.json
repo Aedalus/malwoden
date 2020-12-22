@@ -1,25 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
-  },
-  "include": [
-    "src", "../src/generation/drunkards-walk.ts"
-  ]
-}
+		"extends": "@tsconfig/svelte/tsconfig.json",
+		"compilerOptions": {
+			"lib": ["DOM", "ES2017", "WebWorker"]
+		},
+		"include": ["src/**/*", "src/node_modules/**/*"],
+		"exclude": ["node_modules/*", "__sapper__/*", "static/*"]
+	}

@@ -80,7 +80,15 @@
 
 		keyboard.setContext(movement);
 
-		const terminal = Terminal.Retro.fromURL(48, 30, "font_16.png", 16, 16);
+		const mount = document.getElementById("example");
+		const terminal = Terminal.Retro.fromURL(
+			48,
+			30,
+			"font_16.png",
+			16,
+			16,
+			mount
+		);
 		// ToDo - Fix this API. 2 Vectors?
 		const mapterminal = new Terminal.PortTerminal(
 			17,
@@ -192,3 +200,5 @@
 <h1>Basic Game</h1>
 
 <p>This is a very basic game using Yendor.</p>
+
+<div id="example" />

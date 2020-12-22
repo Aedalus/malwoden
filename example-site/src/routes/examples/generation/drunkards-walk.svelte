@@ -1,24 +1,24 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 
-	import {
-		Terminal,
-		Util,
-		Generation,
-		FOV,
-		Input,
-		CharCode,
-		Color,
-	} from "yendor";
+	import { Terminal, Generation, CharCode, Color } from "yendor";
 
 	onMount(() => {
-		const terminal = Terminal.Retro.fromURL(40, 40, "font_16.png", 16, 16);
+		const mount = document.getElementById("example");
+		const terminal = Terminal.Retro.fromURL(
+			40,
+			40,
+			"font_16.png",
+			16,
+			16,
+			mount
+		);
 		const map = new Generation.DrunkardsWalk(40, 40);
 
 		map.walkSteps({
 			initialCords: { x: 20, y: 20 },
 			stepsToTake: Infinity,
-			toCoverTileCount: 200,
+			toCoverTileCount: 400,
 		});
 
 		terminal.clear();
@@ -28,8 +28,16 @@
 					terminal.drawCharCode({
 						x: x,
 						y: y,
-						charCode: CharCode.blackSpadeSuit,
-						fore: Color.green,
+						charCode: CharCode.blackSquare,
+						back: Color.brown,
+					});
+				} else {
+					terminal.drawCharCode({
+						x,
+						y,
+						charCode: CharCode.blackUpPointingTriangle,
+						fore: Color.darkBrown,
+						back: Color.brown,
 					});
 				}
 			}
@@ -48,5 +56,7 @@
 
 <p>
 	The drunkards walk can walk until a set number of tiles have been visited.
-	For example, in the following map, we walk until 200 tiles are visited.
+	For example, in the following map, we walk until 400 tiles are visited.
 </p>
+
+<div id="example" />
