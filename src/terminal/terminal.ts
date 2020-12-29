@@ -19,8 +19,8 @@ export abstract class BaseTerminal {
   constructor(config: TerminalConfig) {
     this.width = config.width;
     this.height = config.height;
-    this.foreColor = config.foreColor || Color.white;
-    this.backColor = config.backColor || Color.black;
+    this.foreColor = config.foreColor || Color.White;
+    this.backColor = config.backColor || Color.Black;
   }
 
   size(): Vector2 {

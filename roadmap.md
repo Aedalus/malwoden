@@ -1,8 +1,5 @@
 - NPM Hosted
 - Document site
-- Terminal
-  - Range 0_10 of each color?
-  - Hash color from string?
 - Input module
   - Keyboard
   - Mouse
