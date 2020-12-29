@@ -1,4 +1,5 @@
-import { Vector2, areEqual } from "../util";
+import * as Math from "../math";
+import { Vector2 } from "../util";
 import { AStar } from "./astar";
 
 describe("astar", () => {
@@ -125,10 +126,10 @@ describe("astar", () => {
     const a = new AStar({
       topology: "four",
       isBlockedCallback: (v) =>
-        areEqual(v, { x: 1, y: 0 }) ||
-        areEqual(v, { x: -1, y: 0 }) ||
-        areEqual(v, { x: 0, y: 1 }) ||
-        areEqual(v, { x: 0, y: -1 }),
+        Math.Vector.areEqual(v, { x: 1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: -1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: 0, y: 1 }) ||
+        Math.Vector.areEqual(v, { x: 0, y: -1 }),
     });
     const path = a.compute({ x: 0, y: 0 }, { x: 5, y: 5 });
     expect(path).toEqual(undefined);
@@ -138,14 +139,14 @@ describe("astar", () => {
     const a = new AStar({
       topology: "eight",
       isBlockedCallback: (v) =>
-        areEqual(v, { x: 1, y: 0 }) ||
-        areEqual(v, { x: -1, y: 0 }) ||
-        areEqual(v, { x: 0, y: 1 }) ||
-        areEqual(v, { x: 0, y: -1 }) ||
-        areEqual(v, { x: 1, y: -1 }) ||
-        areEqual(v, { x: -1, y: -1 }) ||
-        areEqual(v, { x: -1, y: 1 }) ||
-        areEqual(v, { x: 1, y: 1 }),
+        Math.Vector.areEqual(v, { x: 1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: -1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: 0, y: 1 }) ||
+        Math.Vector.areEqual(v, { x: 0, y: -1 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: -1 }) ||
+        Math.Vector.areEqual(v, { x: -1, y: -1 }) ||
+        Math.Vector.areEqual(v, { x: -1, y: 1 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: 1 }),
     });
     const path = a.compute({ x: 0, y: 0 }, { x: 5, y: 5 });
     expect(path).toEqual(undefined);
@@ -155,9 +156,9 @@ describe("astar", () => {
     const a = new AStar({
       topology: "four",
       isBlockedCallback: (v) =>
-        areEqual(v, { x: 1, y: -1 }) ||
-        areEqual(v, { x: 1, y: 0 }) ||
-        areEqual(v, { x: 1, y: 1 }),
+        Math.Vector.areEqual(v, { x: 1, y: -1 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: 1 }),
     });
     const path = a.compute({ x: 0, y: 0 }, { x: 2, y: 0 });
     expect(path).toEqual([
@@ -175,9 +176,9 @@ describe("astar", () => {
     const a = new AStar({
       topology: "eight",
       isBlockedCallback: (v) =>
-        areEqual(v, { x: 1, y: -1 }) ||
-        areEqual(v, { x: 1, y: 0 }) ||
-        areEqual(v, { x: 1, y: 1 }),
+        Math.Vector.areEqual(v, { x: 1, y: -1 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: 0 }) ||
+        Math.Vector.areEqual(v, { x: 1, y: 1 }),
     });
     const path = a.compute({ x: 0, y: 0 }, { x: 2, y: 0 });
     expect(path).toEqual([
