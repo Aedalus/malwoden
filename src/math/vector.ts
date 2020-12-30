@@ -64,7 +64,7 @@ export function getClosest(
   area: Vector2[],
   target: Vector2,
   topology: "four" | "eight" = "four"
-): Vector2 | undefined {
+): Vector2 {
   // Throw an error if area is empty
   if (area.length < 1) {
     throw new Error("Error: Trying to find closest position of an empty area");
