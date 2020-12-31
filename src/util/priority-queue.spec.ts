@@ -16,6 +16,30 @@ describe("PriorityQueue", () => {
     expect(q.pop()).toEqual(1000);
   });
 
+  it("Can peek at the top entry", () => {
+    const q = new PriorityQueue((n: number) => n);
+
+    q.insert(100);
+    q.insert(50);
+    q.insert(500);
+
+    expect(q.peek()).toEqual(50);
+    expect(q.peek()).toEqual(50);
+    expect(q.peek()).toEqual(50);
+  });
+
+  it("Will return undefined when peeking at an empty queue", () => {
+    const q = new PriorityQueue((n: number) => n);
+
+    expect(q.peek()).toEqual(undefined);
+  });
+
+  it("Will return undefined when popping an empty queue", () => {
+    const q = new PriorityQueue((n: number) => n);
+
+    expect(q.pop()).toEqual(undefined);
+  });
+
   it("Can take in objects", () => {
     const q = new PriorityQueue((v: Vector2) => v.x);
 

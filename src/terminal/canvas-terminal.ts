@@ -30,37 +30,36 @@ export class Font {
 
 export class Canvas extends RenderableTerminal {
   readonly display: Display;
-  readonly canvas: HTMLCanvasElement;
-  readonly context: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly context: CanvasRenderingContext2D;
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
-  static New(width: number, height: number, font: Font, canvas?: HTMLCanvasElement): Canvas {
-    const display = new Display(width, height);
-    if (!canvas) {
-      canvas = window.document.createElement("canvas");
-      window.document.body.appendChild(canvas);
-    }
-
-    return new Canvas(display, font, canvas);
-  }
-
-  constructor(display: Display, font: Font, canvas: HTMLCanvasElement) {
-    super({
-      height: display.height,
-      width: display.width,
-    });
-    this.display = display;
+  constructor(
+    width: number,
+    height: number,
+    font: Font,
+    mountNode?: HTMLElement
+  ) {
+    super({ height, width });
+    this.display = new Display(width, height);
     this.font = font;
-    this.canvas = canvas;
-    this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    this.canvas = window.document.createElement("canvas");
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     const canvasWidth = this.font.charWidth * this.display.width;
     const canvasHeight = this.font.lineHeight * this.display.height;
-    canvas.width = canvasWidth * this.scale;
-    canvas.height = canvasHeight * this.scale;
-    canvas.style.width = `${canvasWidth}px`;
-    canvas.style.height = `${canvasHeight}px`;
+    this.canvas.width = canvasWidth * this.scale;
+    this.canvas.height = canvasHeight * this.scale;
+    this.canvas.style.width = `${canvasWidth}px`;
+    this.canvas.style.height = `${canvasHeight}px`;
+
+    // Mount the canvas
+    if (mountNode) {
+      mountNode.appendChild(this.canvas);
+    } else {
+      window.document.body.appendChild(this.canvas);
+    }
   }
 
   drawGlyph(x: number, y: number, glyph: Glyph) {
@@ -68,7 +67,9 @@ export class Canvas extends RenderableTerminal {
   }
 
   render() {
-    this.context.font = `${this.font.size * this.scale}px ${this.font.family}, monospace`;
+    this.context.font = `${this.font.size * this.scale}px ${
+      this.font.family
+    }, monospace`;
 
     this.display.render((x, y, glyph) => {
       // Fill the background
@@ -100,5 +101,10 @@ export class Canvas extends RenderableTerminal {
       x: Math.floor(pixel.x / this.font.charWidth),
       y: Math.floor(pixel.y / this.font.lineHeight),
     };
+  }
+
+  /** Deletes the terminal, removing the canvas. */
+  delete() {
+    this.canvas.parentNode?.removeChild(this.canvas);
   }
 }

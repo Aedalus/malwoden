@@ -1,8 +1,5 @@
 - NPM Hosted
 - Document site
-- Terminal
-  - Range 0_10 of each color?
-  - Hash color from string?
 - Input module
   - Keyboard
   - Mouse
@@ -14,8 +11,14 @@
   - City Buildings
   - Maze with Rooms
 - Pathfinding
+
   - AStar
+    - Optimize Priority queue
     - Randomize Neighbors?
   - Dijkstra
     - Pathfinding
+    - Distance Limit
     - General Search
+
+- Update typescript
+  - Remove a lot of the !

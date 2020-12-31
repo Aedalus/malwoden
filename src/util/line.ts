@@ -1,28 +1,44 @@
+import { Vector2 } from "./vector";
+
 export class Line {
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
+  private _v1: Vector2;
+  private _v2: Vector2;
+
+  get v1() {
+    return this._v1;
+  }
+
+  get v2() {
+    return this._v2;
+  }
+
+  set v1(val) {
+    this._v1 = val;
+    this.calcDeltas();
+  }
+
+  set v2(val) {
+    this._v2 = val;
+    this.calcDeltas();
+  }
 
   private dx: number = 0;
   private dy: number = 0;
 
-  constructor(x1: number, y1: number, x2: number, y2: number) {
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
+  constructor(v1: Vector2, v2: Vector2) {
+    this._v1 = v1;
+    this._v2 = v2;
 
     this.calcDeltas();
   }
 
   private calcDeltas() {
-    this.dx = this.x2 - this.x1;
-    this.dy = this.y2 - this.y1;
+    this.dx = this._v2.x - this.v1.x;
+    this.dy = this._v2.y - this.v1.y;
   }
 
   clone(): Line {
-    return new Line(this.x1, this.y1, this.x2, this.y2);
+    return new Line({ ...this._v1 }, { ...this._v2 });
   }
 
   getDeltaX() {
@@ -31,20 +47,6 @@ export class Line {
 
   getDeltaY() {
     return this.dy;
-  }
-
-  setFirstPoint(x1: number, y1: number) {
-    this.x1 = x1;
-    this.y1 = y1;
-
-    this.calcDeltas();
-  }
-
-  setSecondPoint(x2: number, y2: number) {
-    this.x2 = x2;
-    this.y2 = y2;
-
-    this.calcDeltas();
   }
 
   isBelow(x: number, y: number) {
@@ -69,11 +71,12 @@ export class Line {
 
   isLineCollinear(line: Line) {
     return (
-      this.isCollinear(line.x1, line.y1) && this.isCollinear(line.x2, line.y2)
+      this.isCollinear(line.v1.x, line.v1.y) &&
+      this.isCollinear(line.v2.x, line.v2.y)
     );
   }
 
   calculateRelativeSlope(x: number, y: number): number {
-    return this.dy * (this.x2 - x) - this.dx * (this.y2 - y);
+    return this.dy * (this.v2.x - x) - this.dx * (this.v2.y - y);
   }
 }

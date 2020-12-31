@@ -34,7 +34,7 @@ export function getRing8(
     ring.push({ x, y });
   }
 
-  // Right side back to to 0 degrees, no corder
+  // Right side back to to 0 degrees, no corner
   for (let x = maxX, y = maxY - 1; y > originY; y--) {
     ring.push({ x, y });
   }

@@ -1,41 +1,39 @@
-export interface IRect {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-}
+import { Vector2 } from "./vector";
 
+/** Represents a basic rectangle. */
 export class Rect {
-  readonly x1: number;
-  readonly x2: number;
-  readonly y1: number;
-  readonly y2: number;
+  readonly v1: Vector2;
+  readonly v2: Vector2;
 
-  static fromWidthHeight(x: number, y: number, width: number, height: number): Rect {
-    return new Rect({
-      x1: x,
-      y1: y,
-      x2: x + width,
-      y2: y + height,
-    });
-  }
-
-  constructor(points: IRect) {
-    this.x1 = points.x1;
-    this.y1 = points.y1;
-    this.x2 = points.x2;
-    this.y2 = points.y2;
+  /**
+   * Creates a rectangle. Will internally set v1 to the min
+   * coordinate corder, and v2 to the max corner.
+   *
+   * @param v1 - A vector representing one of the corners
+   * @param v2 - A vector representing the other corner
+   */
+  constructor(v1: Vector2, v2: Vector2) {
+    this.v1 = {
+      x: Math.min(v1.x, v2.x),
+      y: Math.min(v1.y, v2.y),
+    };
+    this.v2 = {
+      x: Math.max(v1.x, v2.x),
+      y: Math.max(v1.y, v2.y),
+    };
   }
 
   width(): number {
-    return this.x2 - this.x1;
+    return Math.abs(this.v2.x - this.v1.x) + 1;
   }
+
   height(): number {
-    return this.y2 - this.y1;
+    return Math.abs(this.v2.y - this.v1.y) + 1;
   }
-  intersects(rect: IRect): boolean {
-    if (this.x1 > rect.x2 || rect.x1 > this.x2) return false;
-    if (this.y1 > rect.y2 || rect.y1 > this.y2) return false;
+
+  intersects(rect: Rect): boolean {
+    if (this.v1.x > rect.v2.x || rect.v1.x > this.v2.x) return false;
+    if (this.v1.y > rect.v2.y || rect.v1.y > this.v2.y) return false;
 
     return true;
   }

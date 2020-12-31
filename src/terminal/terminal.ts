@@ -19,8 +19,8 @@ export abstract class BaseTerminal {
   constructor(config: TerminalConfig) {
     this.width = config.width;
     this.height = config.height;
-    this.foreColor = config.foreColor || Color.white;
-    this.backColor = config.backColor || Color.black;
+    this.foreColor = config.foreColor || Color.White;
+    this.backColor = config.backColor || Color.Black;
   }
 
   size(): Vector2 {
@@ -75,7 +75,11 @@ export abstract class BaseTerminal {
   }) {
     for (let i = 0; i < text.length; i++) {
       if (x + i >= this.width) break;
-      this.drawGlyph(x + i, y, Glyph.fromCharCode(text.charCodeAt(i), fore, back));
+      this.drawGlyph(
+        x + i,
+        y,
+        Glyph.fromCharCode(text.charCodeAt(i), fore, back)
+      );
     }
   }
 
@@ -107,6 +111,8 @@ export abstract class RenderableTerminal extends BaseTerminal {
   abstract render(): void;
 
   abstract pixelToChar(pixel: Vector2): Vector2;
+
+  abstract delete(): void;
 }
 
 export class PortTerminal extends BaseTerminal {
@@ -131,6 +137,11 @@ export class PortTerminal extends BaseTerminal {
   }
 
   rect(x: number, y: number, width: number, height: number) {
-    return new PortTerminal(this._x + x, this._y + y, { x: width, y: height }, this.root);
+    return new PortTerminal(
+      this._x + x,
+      this._y + y,
+      { x: width, y: height },
+      this.root
+    );
   }
 }

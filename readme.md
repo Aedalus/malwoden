@@ -1,17 +1,31 @@
-# Delve
+# (!!!Alpha) Yendor
 
-Delve is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
+Yendor is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
 
-One of the main goals of this library is to provide a simple, minimalistic `Terminal` package with great support for CP437 tilesets, along with a collection of UI "widgets." This is one area I've found lacking, and hope this library can provide a solid framework for roguelikes and text based games. The core of the terminal package is based heavily on Bob Nystrom's amazing [malison](https://github.com/munificent/malison) Dart library, which can be seen in action in his roguelike, [Hauberk.](http://munificent.github.io/hauberk/)
+One of the main goals of this library is to provide a simple, minimalistic `Terminal` package with great support for CP437 tilesets.
+This is one area I've found lacking, and hope this library can provide a solid framework for roguelikes and text based games.
+The core of the terminal package is based heavily on Bob Nystrom's amazing [malison](https://github.com/munificent/malison) Dart library,
+which can be seen in action in his roguelike, [Hauberk.](http://munificent.github.io/hauberk/)
 
 If you're looking for graphics outside basic ASCII/CP437, [phaser](https://phaser.io/) and [pixi](https://www.pixijs.com/) are both worth checking out.
 
+## Alpha
+
+This library is still in alpha. While many of the features are working well, the api is not fully finalized yet. We welcome any feedback on the design and implementation so far, and hope to launch a public beta early 2021.
+
 ## Installation
 
-This package can be installed from NPM:
+This package is not yet hosted, but will be available on npm once in beta.
+
+If you want to try it out now, consider building it locally and linking it via `npm link`
 
 ```
-npm install @aedalus/delve
+# Inside the yendor project
+npm run start
+npm link
+
+# Inside another project
+npm link yendor
 ```
 
 ## Modules
@@ -42,6 +56,8 @@ npm install @aedalus/delve
 
   - [ ] docs
   - [ ] examples
+
+  - [x] A\*
 
 - Rand (80%)
 

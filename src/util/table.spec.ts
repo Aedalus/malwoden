@@ -11,6 +11,28 @@ describe("table", () => {
     }
   });
 
+  it("can fill the entire table", () => {
+    const t = new Table<number>(10, 10);
+
+    for (let i = 0; i < 10; i++) {
+      t.fill(i);
+
+      for (let x = 0; x < t.width; x++) {
+        for (let y = 0; y < t.height; y++) {
+          expect(t.get({ x, y })).toEqual(i);
+        }
+      }
+    }
+  });
+
+  it("will return undefined if retrieving a value out of bounds", () => {
+    const t = new Table<number>(10, 10);
+    t.fill(10);
+
+    expect(t.get({ x: -10, y: 10 })).toEqual(undefined);
+    expect(t.get({ x: 10, y: -10 })).toEqual(undefined);
+    expect(t.get({ x: -10, y: -10 })).toEqual(undefined);
+  });
   it("can set and unset values", () => {
     const t = new Table<number>(10, 10);
 
@@ -20,6 +42,9 @@ describe("table", () => {
 
     expect(t.get({ x: 0, y: 0 })).toEqual(1);
     expect(t.get({ x: 0, y: 0 })).not.toEqual(undefined);
+
+    t.set({ x: 0, y: 0 }, undefined);
+    expect(t.get({ x: 0, y: 0 })).toEqual(undefined);
   });
 
   it("will throw an error if setting out of bounds", () => {
@@ -83,6 +108,16 @@ describe("table", () => {
     expect(neighbors).toContainEqual({ x: 4, y: 6 });
     expect(neighbors).toContainEqual({ x: 4, y: 4 });
     expect(neighbors).toContainEqual({ x: 6, y: 4 });
+  });
+
+  it("can get neighbords - predicate", () => {
+    const t = new Table<number>(10, 10);
+
+    const n = t.getNeighbors({ x: 0, y: 0 }, (pos, _) => pos.x == 1, "eight");
+    expect(n).toEqual([
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+    ]);
   });
 
   it("can floodfillSelect", () => {
