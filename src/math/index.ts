@@ -1,1 +1,1 @@
-export * as Vector from "./vector";
+export { Vector } from "./vector";

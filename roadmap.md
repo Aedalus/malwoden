@@ -1,5 +1,6 @@
 - NPM Hosted
 - Document site
+- Example Site
 - Input module
   - Keyboard
   - Mouse
@@ -19,6 +20,3 @@
     - Pathfinding
     - Distance Limit
     - General Search
-
-- Update typescript
-  - Remove a lot of the !
