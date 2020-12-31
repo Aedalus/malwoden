@@ -10,12 +10,12 @@ import CardContent from "@material-ui/core/CardContent"
 import Header from "../components/header"
 
 // Examples
-import HelloWorldExample from "./examples/hello-world"
-import BasicGameExample from "./examples/basic-game"
+import HelloWorldExample from "../examples/hello-world"
+import BasicGameExample from "../examples/basic-game"
 
-import BasicFOVExample from "./examples/fov/basic-fov"
-import CellularAutomataExample from "./examples/generation/cellular"
-import DrunkardsWalkExample from "./examples/generation/drunkards-walk"
+import BasicFOVExample from "../examples/fov/basic-fov"
+import CellularAutomataExample from "../examples/generation/cellular"
+import DrunkardsWalkExample from "../examples/generation/drunkards-walk"
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -17,6 +17,8 @@ export default class extends React.Component {
     const map = new Generation.CellularAutomata(40, 40)
     map.randomize(0.6)
     map.doSimulationStep(3)
+    debugger
+    map.connect()
 
     const free = []
     for (let x = 0; x < map.table.width; x++) {
