@@ -14,7 +14,7 @@ export default class extends React.Component {
       mount
     )
     const map = new Generation.CellularAutomata(40, 40)
-    map.randomize(0.65)
+    map.randomize(0.6)
     map.doSimulationStep(3)
 
     terminal.clear()
