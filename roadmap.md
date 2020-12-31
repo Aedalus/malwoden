@@ -1,8 +1,11 @@
 - NPM Hosted
 - Document site
+- Example Site
 - Input module
   - Keyboard
   - Mouse
+- Colors
+  - Fix Greyscale
 - Generation
   - BSP Tree
   - Random Walk
@@ -19,6 +22,3 @@
     - Pathfinding
     - Distance Limit
     - General Search
-
-- Update typescript
-  - Remove a lot of the !

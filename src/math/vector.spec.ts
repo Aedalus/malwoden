@@ -1,5 +1,5 @@
 import { Vector2 } from "../util";
-import { areEqual, getDistance, getCenter, getClosest } from "./vector";
+import { Vector } from "./vector";
 
 describe("areEqual", () => {
   it("returns true if two vectors are equal", () => {
@@ -19,7 +19,7 @@ describe("areEqual", () => {
     ];
 
     for (let [v1, v2] of tests) {
-      expect(areEqual(v1, v2)).toBeTruthy();
+      expect(Vector.areEqual(v1, v2)).toBeTruthy();
     }
   });
   it("returns false if two vectors are unequal", () => {
@@ -39,7 +39,7 @@ describe("areEqual", () => {
     ];
 
     for (let [v1, v2] of tests) {
-      expect(areEqual(v1, v2)).toBeFalsy();
+      expect(Vector.areEqual(v1, v2)).toBeFalsy();
     }
   });
 });
@@ -54,7 +54,7 @@ describe("getDistance", () => {
     ];
 
     for (let [v1, v2, d] of tests) {
-      expect(getDistance(v1, v2)).toEqual(d);
+      expect(Vector.getDistance(v1, v2)).toEqual(d);
     }
   });
 
@@ -67,7 +67,7 @@ describe("getDistance", () => {
     ];
 
     for (let [v1, v2, d] of tests) {
-      expect(getDistance(v1, v2, "eight")).toEqual(d);
+      expect(Vector.getDistance(v1, v2, "eight")).toEqual(d);
     }
   });
 });
@@ -75,14 +75,14 @@ describe("getDistance", () => {
 describe("getCenter", () => {
   it("Can get a center point", () => {
     expect(
-      getCenter([
+      Vector.getCenter([
         { x: 0, y: 0 },
         { x: 10, y: 10 },
       ])
     ).toEqual({ x: 5, y: 5 });
 
     expect(
-      getCenter([
+      Vector.getCenter([
         { x: 0, y: 0 },
         { x: 10, y: 10 },
         { x: 100, y: 100 },
@@ -94,7 +94,7 @@ describe("getCenter", () => {
   });
 
   it("Will throw an error if the area is empty", () => {
-    expect(() => getCenter([])).toThrow(
+    expect(() => Vector.getCenter([])).toThrow(
       "Error: Trying to find center of empty area"
     );
   });
@@ -102,7 +102,7 @@ describe("getCenter", () => {
 
 describe("getClosest", () => {
   it("Can get the closest vector - 4", () => {
-    const result = getClosest(
+    const result = Vector.getClosest(
       [
         { x: 0, y: 0 },
         { x: 10, y: 10 },
@@ -116,7 +116,7 @@ describe("getClosest", () => {
   });
 
   it("Can get the closest vector - 8", () => {
-    const result = getClosest(
+    const result = Vector.getClosest(
       [
         { x: 0, y: 0 },
         { x: 10, y: 10 },
@@ -132,7 +132,7 @@ describe("getClosest", () => {
 
   it("Will immediately return if an exact match is found", () => {
     expect(
-      getClosest(
+      Vector.getClosest(
         [
           { x: 0, y: 0 },
           { x: 5, y: 5 },
@@ -144,7 +144,7 @@ describe("getClosest", () => {
   });
 
   it("Will throw an error if the area is empty", () => {
-    expect(() => getClosest([], { x: 0, y: 0 })).toThrow(
+    expect(() => Vector.getClosest([], { x: 0, y: 0 })).toThrow(
       "Error: Trying to find closest position of an empty area"
     );
   });
