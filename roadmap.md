@@ -4,6 +4,8 @@
 - Input module
   - Keyboard
   - Mouse
+- Colors
+  - Fix Greyscale
 - Generation
   - BSP Tree
   - Random Walk
