@@ -114,19 +114,8 @@ export default class extends React.Component {
       })
 
       // HP
-      terminal.writeAt({
-        x: 2,
-        y: 2,
-        text: `HP : ${player.hp}/10`,
-        fore: Color.Red,
-      })
-
-      terminal.writeAt({
-        x: 2,
-        y: 4,
-        text: `Gold : ${player.coins}`,
-        fore: Color.Yellow,
-      })
+      terminal.writeAt({ x: 2, y: 2 }, `HP : ${player.hp}/10`, Color.Red)
+      terminal.writeAt({ x: 2, y: 4 }, `Gold : ${player.coins}`, Color.Yellow)
 
       // World Box
       GUI.box(terminal, {
@@ -145,36 +134,29 @@ export default class extends React.Component {
         y2: 29,
       })
       for (let i = 0; i < logs.length; i++) {
-        terminal.writeAt({
-          x: 1,
-          y: 23 + i,
-          text: logs[i],
-        })
+        terminal.writeAt({ x: 1, y: 23 + i }, logs[i])
       }
 
       // Draw Map
       for (let x = 0; x < map.table.width; x++) {
         for (let y = 0; y < map.table.height; y++) {
           const isWall = map.table.get({ x, y })
-          mapterminal.drawCharCode({
-            x,
-            y,
-            charCode: isWall ? CharCode.blackSpadeSuit : CharCode.space,
-            fore: isWall ? Color.Green : Color.White,
-          })
+          mapterminal.drawCharCode(
+            { x, y },
+            isWall ? CharCode.blackSpadeSuit : CharCode.space,
+            isWall ? Color.Green : Color.White
+          )
         }
       }
 
       // Coin
       mapterminal.drawGlyph(
-        coin.x,
-        coin.y,
+        coin,
         Glyph.fromCharCode(CharCode.oLower, Color.Yellow)
       )
       // Player Entity
       mapterminal.drawGlyph(
-        player.x,
-        player.y,
+        player,
         Glyph.fromCharCode(CharCode.at, Color.Yellow)
       )
 

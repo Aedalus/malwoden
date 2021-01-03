@@ -28,13 +28,24 @@ export class Font {
   }
 }
 
-export class Canvas extends RenderableTerminal {
+/**
+ * Renders a display by writing fonts to a canvas.
+ */
+export class CanvasTerminal extends RenderableTerminal {
   readonly display: Display;
   private readonly canvas: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
+  /**
+   * Creates a new CanvasTerminal.
+   *
+   * @param width - The width of the terminal in characters.
+   * @param height - The height of the terminal in characters.
+   * @param font Font - A font object
+   * @param mountNode - Will mount the canvas as a child of this node if provided.
+   */
   constructor(
     width: number,
     height: number,
@@ -62,21 +73,31 @@ export class Canvas extends RenderableTerminal {
     }
   }
 
-  drawGlyph(x: number, y: number, glyph: Glyph) {
-    this.display.setGlyph(x, y, glyph);
+  /**
+   * Draws a glyph on the display.
+   *
+   * @param pos Vector2 - Position of the Glyph
+   * @param glyph Glyph - The Glyph to render
+   */
+  drawGlyph(pos: Vector2, glyph: Glyph) {
+    this.display.setGlyph(pos, glyph);
   }
 
+  /**
+   * Renders the display to the canvas.
+   * Usually drawn once per animation frame.
+   */
   render() {
     this.context.font = `${this.font.size * this.scale}px ${
       this.font.family
     }, monospace`;
 
-    this.display.render((x, y, glyph) => {
+    this.display.render((pos, glyph) => {
       // Fill the background
       this.context.fillStyle = glyph.back.cssColor();
       this.context.fillRect(
-        x * this.font.charWidth * this.scale,
-        y * this.font.lineHeight * this.scale,
+        pos.x * this.font.charWidth * this.scale,
+        pos.y * this.font.lineHeight * this.scale,
         this.font.charWidth * this.scale,
         this.font.lineHeight * this.scale
       );
@@ -90,12 +111,15 @@ export class Canvas extends RenderableTerminal {
       this.context.fillStyle = glyph.fore.cssColor();
       this.context.fillText(
         String.fromCharCode(glyph.char),
-        (x * this.font.charWidth + this.font.x) * this.scale,
-        (y * this.font.lineHeight + this.font.y) * this.scale
+        (pos.x * this.font.charWidth + this.font.x) * this.scale,
+        (pos.y * this.font.lineHeight + this.font.y) * this.scale
       );
     });
   }
 
+  /**
+   * Returns the character position given a pixel coordinate.
+   */
   pixelToChar(pixel: Vector2): Vector2 {
     return {
       x: Math.floor(pixel.x / this.font.charWidth),
@@ -103,7 +127,9 @@ export class Canvas extends RenderableTerminal {
     };
   }
 
-  /** Deletes the terminal, removing the canvas. */
+  /**
+   * Deletes the terminal, removing the canvas.
+   */
   delete() {
     this.canvas.parentNode?.removeChild(this.canvas);
   }

@@ -89,14 +89,14 @@ export class Retro extends RenderableTerminal {
     };
   }
 
-  drawGlyph(x: number, y: number, glyph: Glyph): void {
-    this._display.setGlyph(x, y, glyph);
+  drawGlyph(pos: Vector2, glyph: Glyph): void {
+    this._display.setGlyph(pos, glyph);
   }
 
   render() {
     if (!this._imageLoaded) return;
 
-    this._display.render((x, y, glyph) => {
+    this._display.render((pos, glyph) => {
       let char = glyph.char;
 
       // Remap it if it's a Unicode character
@@ -110,8 +110,8 @@ export class Retro extends RenderableTerminal {
       // Fill the background
       this._context.fillStyle = glyph.back.cssColor();
       this._context.fillRect(
-        x * this._charWidth * this._scale,
-        y * this._charHeight * this._scale,
+        pos.x * this._charWidth * this._scale,
+        pos.y * this._charHeight * this._scale,
         this._charWidth * this._scale,
         this._charHeight * this._scale
       );
@@ -127,8 +127,8 @@ export class Retro extends RenderableTerminal {
         sy,
         this._charWidth,
         this._charHeight,
-        x * this._charWidth * this._scale,
-        y * this._charHeight * this._scale,
+        pos.x * this._charWidth * this._scale,
+        pos.y * this._charHeight * this._scale,
         this._charWidth * this._scale,
         this._charHeight * this._scale
       );
