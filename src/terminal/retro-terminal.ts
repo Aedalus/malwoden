@@ -25,14 +25,6 @@ export class Retro extends RenderableTerminal {
   private readonly _charWidth: number;
   private readonly _charHeight: number;
 
-  static dos(width: number, height: number, canvas: HTMLCanvasElement) {
-    // ToDo - Implement me
-  }
-
-  static shortDos(width: number, height: number, canvas: HTMLCanvasElement) {
-    // ToDo - Implement me
-  }
-
   static fromURL(
     width: number,
     height: number,
@@ -41,7 +33,7 @@ export class Retro extends RenderableTerminal {
     charHeight: number,
     mountNode?: HTMLElement
   ): Retro {
-    let scale = devicePixelRatio;
+    let scale = window.devicePixelRatio;
 
     // Create a canvas if not define
     const canvas = window.document.createElement("canvas");
