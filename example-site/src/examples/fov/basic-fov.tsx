@@ -5,14 +5,15 @@ import { Terminal, Util, Generation, FOV, Input, CharCode, Color } from "yendor"
 export default class extends React.Component {
   componentDidMount() {
     const mount = document.getElementById("example")
-    const terminal = Terminal.Retro.fromURL(
-      40,
-      40,
-      "/font_16.png",
-      16,
-      16,
-      mount
-    )
+    const terminal = new Terminal.RetroTerminal({
+      width: 40,
+      height: 40,
+      imageURL: "/font_16.png",
+      charWidth: 16,
+      charHeight: 16,
+      mountNode: mount,
+    })
+
     const explored = new Util.Table<boolean>(40, 40)
     const map = new Generation.CellularAutomata(40, 40)
     map.randomize(0.65)

@@ -14,14 +14,14 @@ import {
 export default class extends React.Component {
   componentDidMount() {
     const mount = document.getElementById("example")
-    const terminal = Terminal.Retro.fromURL(
-      48,
-      30,
-      "/font_16.png",
-      16,
-      16,
-      mount
-    )
+    const terminal = new Terminal.RetroTerminal({
+      width: 48,
+      height: 30,
+      imageURL: "/font_16.png",
+      charWidth: 16,
+      charHeight: 16,
+      mountNode: mount,
+    })
 
     // Generate Map
     const map_width = 30
@@ -88,12 +88,7 @@ export default class extends React.Component {
     keyboard.setContext(movement)
 
     // ToDo - Fix this API. 2 Vectors?
-    const mapterminal = new Terminal.PortTerminal(
-      17,
-      1,
-      { x: map_width, y: map_height },
-      terminal
-    )
+    const mapterminal = terminal.port({ x: 17, y: 1 }, map_width, map_height)
 
     const loop = (delta: number) => {
       // Logic
