@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import { CharCode } from "./char-code";
 import { Color } from "./color";
 import { Glyph } from "./glyph";
-import { Retro } from "./retro-terminal";
+import { RetroTerminal } from "./retro-terminal";
 
 describe("RetroTerminal", () => {
   beforeEach(() => {
@@ -54,19 +54,62 @@ describe("RetroTerminal", () => {
   });
 
   it("Can be created from a URL", () => {
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
+
+    const fullOptions = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      foreColor: Color.Green,
+      backColor: Color.Blue,
+      imageURL: "/public/tilemap.png",
+    });
   });
 
   it("Can be mounted to a node", () => {
     const div = document.createElement("div");
     document.body.appendChild(div);
     expect(div.childNodes).toHaveLength(0);
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10, div);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+      mountNode: div,
+    });
     expect(div.childNodes).toHaveLength(1);
   });
 
+  it("Won't render until the font is loaded", () => {
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
+    //@ts-ignore
+    const spy = jest.spyOn(term, "getColorFont");
+    term.render();
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it("Will render once the font is loaded", () => {
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
     const spy = jest.spyOn(term, "render");
 
     expect(spy).not.toHaveBeenCalled();
@@ -78,7 +121,13 @@ describe("RetroTerminal", () => {
   });
 
   it("Can cache and render multiple colors", () => {
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
 
     // Will cache red
     term.drawCharCode({ x: 0, y: 0 }, 102, Color.Red);
@@ -105,7 +154,13 @@ describe("RetroTerminal", () => {
   });
 
   it("Can be destroyed", () => {
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
     expect(window.document.body.childNodes).toHaveLength(1);
     term.delete();
     expect(window.document.body.childNodes).toHaveLength(0);
@@ -115,7 +170,13 @@ describe("RetroTerminal", () => {
   });
 
   it("Can get pixel to char", () => {
-    const term = Retro.fromURL(10, 10, "/public/tilemap.png", 10, 10);
+    const term = new RetroTerminal({
+      width: 10,
+      height: 10,
+      charWidth: 10,
+      charHeight: 10,
+      imageURL: "/public/tilemap.png",
+    });
     const pos = term.pixelToChar({ x: 10, y: 10 });
 
     expect(pos).toEqual({ x: 1, y: 1 });

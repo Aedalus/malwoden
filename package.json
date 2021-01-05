@@ -46,6 +46,13 @@
     }
   },
   "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsconfig": {
+          "target": "es6"
+        }
+      }
+    },
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
@@ -58,7 +65,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "index.ts"
     ],
     "coverageThreshold": {
       "global": {
