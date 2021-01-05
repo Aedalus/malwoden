@@ -10,6 +10,7 @@
   - BSP Tree
   - Random Walk
   - Cellular Automata
+    - Stroke Method
   - Broguelike
   - City Buildings
   - Maze with Rooms

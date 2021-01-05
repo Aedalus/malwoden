@@ -15,9 +15,8 @@ export default class extends React.Component {
     )
     const explored = new Util.Table<boolean>(40, 40)
     const map = new Generation.CellularAutomata(40, 40)
-    map.randomize(0.6)
+    map.randomize(0.65)
     map.doSimulationStep(3)
-    debugger
     map.connect()
 
     const free = []
@@ -92,20 +91,18 @@ export default class extends React.Component {
           if (explored.get({ x, y })) {
             const isAlive = map.table.get({ x, y }) === 1
             if (isAlive) {
-              terminal.drawCharCode({
-                x: x,
-                y: y,
-                charCode: CharCode.blackSpadeSuit,
-                fore: Color.DarkGreen.toAvgGrayscale(),
-                back: Color.Green.toAvgGrayscale(),
-              })
+              terminal.drawCharCode(
+                { x: x, y: y },
+                CharCode.blackSpadeSuit,
+                Color.DarkGreen.toAvgGrayscale(),
+                Color.Green.toAvgGrayscale()
+              )
             } else {
-              terminal.drawCharCode({
-                x: x,
-                y: y,
-                charCode: CharCode.fullBlock,
-                fore: Color.Green.toAvgGrayscale(),
-              })
+              terminal.drawCharCode(
+                { x: x, y: y },
+                CharCode.fullBlock,
+                Color.Green.toAvgGrayscale()
+              )
             }
           }
         }
@@ -115,30 +112,27 @@ export default class extends React.Component {
       for (let { x, y, v } of fov_spaces) {
         const isAlive = map.table.get({ x, y }) === 1
         if (isAlive) {
-          terminal.drawCharCode({
-            x: x,
-            y: y,
-            charCode: CharCode.blackSpadeSuit,
-            fore: Color.DarkGreen.blend(Color.Black, (1 - v) / 2),
-            back: Color.Green.blend(Color.Black, (1 - v) / 2),
-          })
+          terminal.drawCharCode(
+            { x: x, y: y },
+            CharCode.blackSpadeSuit,
+            Color.DarkGreen.blend(Color.Black, (1 - v) / 2),
+            Color.Green.blend(Color.Black, (1 - v) / 2)
+          )
         } else {
-          terminal.drawCharCode({
-            x: x,
-            y: y,
-            charCode: CharCode.fullBlock,
-            fore: Color.Green.blend(Color.Black, (1 - v) / 2),
-          })
+          terminal.drawCharCode(
+            { x: x, y: y },
+            CharCode.fullBlock,
+            Color.Green.blend(Color.Black, (1 - v) / 2)
+          )
         }
       }
 
       // Draw player
-      terminal.drawCharCode({
-        x: player.x,
-        y: player.y,
-        charCode: CharCode.at,
-        fore: Color.Yellow,
-      })
+      terminal.drawCharCode(
+        { x: player.x, y: player.y },
+        CharCode.at,
+        Color.Yellow
+      )
 
       terminal.render()
       requestAnimationFrame(loop)
