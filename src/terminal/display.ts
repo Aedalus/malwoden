@@ -6,8 +6,8 @@ type RenderGlyph = (pos: Vector2, glyph: Glyph) => any;
 
 /** Represents glyph data, agnostic to how it is rendered. */
 export class Display {
-  glyphs: Table<Glyph>;
-  changedGlyphs: Table<Glyph>;
+  private glyphs: Table<Glyph>;
+  private changedGlyphs: Table<Glyph>;
 
   readonly width: number;
   readonly height: number;
