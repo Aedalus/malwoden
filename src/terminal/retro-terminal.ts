@@ -1,4 +1,4 @@
-import { RenderableTerminal } from "./terminal";
+import { RenderableTerminal, TerminalConfig } from "./terminal";
 
 import { Display } from "./display";
 import { Color } from "./color";
@@ -7,7 +7,14 @@ import { unicodeMap } from "./unicodemap";
 import { CharCode } from "./char-code";
 import { Vector2 } from "../util/vector";
 
-export class Retro extends RenderableTerminal {
+interface RetroTerminalConfig extends TerminalConfig {
+  charWidth: number;
+  charHeight: number;
+  imageURL: string;
+  mountNode?: HTMLElement;
+}
+
+export class RetroTerminal extends RenderableTerminal {
   private readonly _display: Display;
 
   private readonly _canvas: HTMLCanvasElement;
@@ -25,63 +32,35 @@ export class Retro extends RenderableTerminal {
   private readonly _charWidth: number;
   private readonly _charHeight: number;
 
-  static dos(width: number, height: number, canvas: HTMLCanvasElement) {
-    // ToDo - Implement me
-  }
+  constructor(config: RetroTerminalConfig) {
+    super(config);
 
-  static shortDos(width: number, height: number, canvas: HTMLCanvasElement) {
-    // ToDo - Implement me
-  }
+    this._display = new Display(config.width, config.height);
+    this._charWidth = config.charWidth;
+    this._charHeight = config.charHeight;
+    this._scale = window.devicePixelRatio;
 
-  static fromURL(
-    width: number,
-    height: number,
-    imageURL: string,
-    charWidth: number,
-    charHeight: number,
-    mountNode?: HTMLElement
-  ): Retro {
-    let scale = devicePixelRatio;
+    // Font
+    this._font = new Image();
+    this._font.src = config.imageURL;
 
-    // Create a canvas if not define
+    // Create canvas
     const canvas = window.document.createElement("canvas");
-    const canvasWidth = charWidth * width;
-    const canvasHeight = charHeight * height;
-    canvas.width = canvasWidth * scale;
-    canvas.height = canvasHeight * scale;
+    const canvasWidth = config.charWidth * config.width;
+    const canvasHeight = config.charHeight * config.height;
+    canvas.width = canvasWidth * this._scale;
+    canvas.height = canvasHeight * this._scale;
     canvas.style.width = `${canvasWidth}px`;
     canvas.style.height = `${canvasHeight}px`;
 
-    if (mountNode) {
-      mountNode.appendChild(canvas);
+    if (config.mountNode) {
+      config.mountNode.appendChild(canvas);
     } else {
       document.body.appendChild(canvas);
     }
 
-    const display = new Display(width, height);
-
-    const img = new Image();
-    img.src = imageURL;
-    return new Retro(display, charWidth, charHeight, canvas, img, scale);
-  }
-
-  constructor(
-    display: Display,
-    charWidth: number,
-    charHeight: number,
-    canvas: HTMLCanvasElement,
-    font: HTMLImageElement,
-    scale: number
-  ) {
-    super({ width: display.width, height: display.height });
-
-    this._display = display;
-    this._charWidth = charWidth;
-    this._charHeight = charHeight;
     this._canvas = canvas;
     this._context = canvas.getContext("2d")!;
-    this._font = font;
-    this._scale = scale;
 
     this._font.onload = () => {
       this._imageLoaded = true;
@@ -89,14 +68,14 @@ export class Retro extends RenderableTerminal {
     };
   }
 
-  drawGlyph(x: number, y: number, glyph: Glyph): void {
-    this._display.setGlyph(x, y, glyph);
+  drawGlyph(pos: Vector2, glyph: Glyph): void {
+    this._display.setGlyph(pos, glyph);
   }
 
   render() {
     if (!this._imageLoaded) return;
 
-    this._display.render((x, y, glyph) => {
+    this._display.render((pos, glyph) => {
       let char = glyph.char;
 
       // Remap it if it's a Unicode character
@@ -110,8 +89,8 @@ export class Retro extends RenderableTerminal {
       // Fill the background
       this._context.fillStyle = glyph.back.cssColor();
       this._context.fillRect(
-        x * this._charWidth * this._scale,
-        y * this._charHeight * this._scale,
+        pos.x * this._charWidth * this._scale,
+        pos.y * this._charHeight * this._scale,
         this._charWidth * this._scale,
         this._charHeight * this._scale
       );
@@ -127,8 +106,8 @@ export class Retro extends RenderableTerminal {
         sy,
         this._charWidth,
         this._charHeight,
-        x * this._charWidth * this._scale,
-        y * this._charHeight * this._scale,
+        pos.x * this._charWidth * this._scale,
+        pos.y * this._charHeight * this._scale,
         this._charWidth * this._scale,
         this._charHeight * this._scale
       );

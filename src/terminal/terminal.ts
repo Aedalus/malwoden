@@ -19,8 +19,8 @@ export abstract class BaseTerminal {
   constructor(config: TerminalConfig) {
     this.width = config.width;
     this.height = config.height;
-    this.foreColor = config.foreColor || Color.White;
-    this.backColor = config.backColor || Color.Black;
+    this.foreColor = config.foreColor ?? Color.White;
+    this.backColor = config.backColor ?? Color.Black;
   }
 
   size(): Vector2 {
@@ -31,80 +31,53 @@ export abstract class BaseTerminal {
   }
 
   clear() {
-    this.fill({
-      x: 0,
-      y: 0,
-      width: this.width,
-      height: this.height,
-    });
+    this.fill(
+      { x: 0, y: 0 },
+      { x: this.width - 1, y: this.height - 1 },
+      new Glyph(" ")
+    );
   }
 
-  fill({
-    x,
-    y,
-    width,
-    height,
-    color = this.backColor,
-  }: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    color?: Color;
-  }) {
-    const glyph = new Glyph(" ", this.foreColor, color);
-    for (let py = y; py < y + height; py++) {
-      for (let px = x; px < x + width; px++) {
-        this.drawGlyph(px, py, glyph);
+  fill(v1: Vector2, v2: Vector2, glyph: Glyph) {
+    for (let x = v1.x; x <= v2.x; x++) {
+      for (let y = v1.y; y <= v2.y; y++) {
+        this.drawGlyph({ x, y }, glyph);
       }
     }
   }
 
-  writeAt({
-    x,
-    y,
-    text,
+  writeAt(
+    pos: Vector2,
+    text: string,
     fore = this.foreColor,
-    back = this.backColor,
-  }: {
-    x: number;
-    y: number;
-    text: string;
-    fore?: Color;
-    back?: Color;
-  }) {
+    back = this.backColor
+  ) {
     for (let i = 0; i < text.length; i++) {
-      if (x + i >= this.width) break;
+      if (pos.x + i >= this.width) break;
       this.drawGlyph(
-        x + i,
-        y,
+        {
+          x: pos.x + i,
+          y: pos.y,
+        },
         Glyph.fromCharCode(text.charCodeAt(i), fore, back)
       );
     }
   }
 
-  rect(x: number, y: number, width: number, height: number) {
-    // TODO: Bounds check.
-    return new PortTerminal(x, y, { x: width, y: height }, this);
+  port(pos: Vector2, width: number, height: number) {
+    return new PortTerminal(pos, { x: width, y: height }, this);
   }
 
-  drawCharCode({
-    x,
-    y,
-    charCode,
-    fore = this.foreColor,
-    back = this.backColor,
-  }: {
-    x: number;
-    y: number;
-    charCode: number;
-    fore?: Color;
-    back?: Color;
-  }) {
-    this.drawGlyph(x, y, Glyph.fromCharCode(charCode, fore, back));
+  drawCharCode(
+    pos: Vector2,
+    charCode: number,
+    foreColor = this.foreColor,
+    backColor = this.backColor
+  ) {
+    this.drawGlyph(pos, Glyph.fromCharCode(charCode, foreColor, backColor));
   }
 
-  abstract drawGlyph(x: number, y: number, glyph: Glyph): void;
+  abstract drawGlyph(pos: Vector2, glyph: Glyph): void;
 }
 
 export abstract class RenderableTerminal extends BaseTerminal {
@@ -116,30 +89,32 @@ export abstract class RenderableTerminal extends BaseTerminal {
 }
 
 export class PortTerminal extends BaseTerminal {
-  readonly _x: number;
-  readonly _y: number;
+  private readonly _x: number;
+  private readonly _y: number;
   readonly portSize: Vector2;
 
   readonly root: BaseTerminal;
 
-  constructor(x: number, y: number, size: Vector2, root: BaseTerminal) {
+  constructor(pos: Vector2, size: Vector2, root: BaseTerminal) {
     super({ width: size.x, height: size.y });
-    this._x = x;
-    this._y = y;
+    this._x = pos.x;
+    this._y = pos.y;
     this.portSize = size;
     this.root = root;
   }
 
-  drawGlyph(x: number, y: number, glyph: Glyph) {
-    if (x < 0 || x >= this.width) return;
-    if (y < 0 || y >= this.height) return;
-    this.root.drawGlyph(this._x + x, this._y + y, glyph);
+  drawGlyph(pos: Vector2, glyph: Glyph) {
+    if (pos.x < 0 || pos.x >= this.width) return;
+    if (pos.y < 0 || pos.y >= this.height) return;
+    this.root.drawGlyph({ x: this._x + pos.x, y: this._y + pos.y }, glyph);
   }
 
-  rect(x: number, y: number, width: number, height: number) {
+  port(pos: Vector2, width: number, height: number) {
     return new PortTerminal(
-      this._x + x,
-      this._y + y,
+      {
+        x: this._x + pos.x,
+        y: this._y + pos.y,
+      },
       { x: width, y: height },
       this.root
     );

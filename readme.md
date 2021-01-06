@@ -1,4 +1,9 @@
-# (!!!Alpha) Yendor
+# (!Alpha) Yendor
+
+![alt text](./coverage/badge-lines.svg)
+![alt text](./coverage/badge-statements.svg)
+![alt text](./coverage/badge-functions.svg)
+![alt text](./coverage/badge-branches.svg)
 
 Yendor is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
 
@@ -38,6 +43,7 @@ npm link yendor
   - [x] Precise Shadowcasting
     - [x] Topology - 4
     - [x] Topology - 8
+    - [ ] Topology - Circle
 
 - Generation (10%)
 

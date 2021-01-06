@@ -1,34 +1,6 @@
 import { AleaRNG } from "./alea";
 
 describe("AleaRNG", () => {
-  // Just for testing purposes
-  it.skip("looks alright", () => {
-    const aa = new AleaRNG();
-    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-
-    const ints = [];
-    const numbers = [];
-    const bools = [];
-    const letters = [];
-
-    for (let i = 0; i < 100; i++) {
-      ints.push(aa.nextInt());
-      numbers.push(aa.next());
-      bools.push(aa.nextBoolean());
-      letters.push(aa.nextItem(alphabet));
-    }
-
-    console.log(ints);
-    console.log(numbers);
-    console.log(bools);
-    console.log(letters);
-
-    const scrambled = aa.shuffle(alphabet);
-    console.log(scrambled);
-
-    expect(alphabet).toEqual("abcdefghijklmnopqrstuvwxyz".split(""));
-  });
-
   it("Can generate numbers", () => {
     const aa = new AleaRNG("hello");
     const bb = new AleaRNG("hello");
@@ -128,6 +100,8 @@ describe("AleaRNG", () => {
     }
 
     expect(nums).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    expect(aa.nextItem([])).toEqual(undefined);
   });
 
   it("Can shuffle an array", () => {
