@@ -1,4 +1,4 @@
-import { RenderableTerminal } from "./terminal";
+import { RenderableTerminal, TerminalConfig } from "./terminal";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
 import { Vector2 } from "../util/vector";
@@ -28,6 +28,11 @@ export class Font {
   }
 }
 
+interface CanvasTerminalConfig extends TerminalConfig {
+  font: Font;
+  mountNode?: HTMLElement;
+}
+
 /**
  * Renders a display by writing fonts to a canvas.
  */
@@ -41,20 +46,16 @@ export class CanvasTerminal extends RenderableTerminal {
   /**
    * Creates a new CanvasTerminal.
    *
-   * @param width - The width of the terminal in characters.
-   * @param height - The height of the terminal in characters.
-   * @param font Font - A font object
-   * @param mountNode - Will mount the canvas as a child of this node if provided.
+   * @param config - The config for the CanvasTerminal
+   * @param config.width - The width of the terminal in characters.
+   * @param config.height - The height of the terminal in characters.
+   * @param config.font Font - A font object
+   * @param config.mountNode - Will mount the canvas as a child of this node if provided.
    */
-  constructor(
-    width: number,
-    height: number,
-    font: Font,
-    mountNode?: HTMLElement
-  ) {
-    super({ height, width });
-    this.display = new Display(width, height);
-    this.font = font;
+  constructor(config: CanvasTerminalConfig) {
+    super(config);
+    this.display = new Display(config.width, config.height);
+    this.font = config.font;
     this.canvas = window.document.createElement("canvas");
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
@@ -66,8 +67,8 @@ export class CanvasTerminal extends RenderableTerminal {
     this.canvas.style.height = `${canvasHeight}px`;
 
     // Mount the canvas
-    if (mountNode) {
-      mountNode.appendChild(this.canvas);
+    if (config.mountNode) {
+      config.mountNode.appendChild(this.canvas);
     } else {
       window.document.body.appendChild(this.canvas);
     }

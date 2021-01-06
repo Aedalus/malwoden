@@ -100,6 +100,8 @@ describe("AleaRNG", () => {
     }
 
     expect(nums).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    expect(aa.nextItem([])).toEqual(undefined);
   });
 
   it("Can shuffle an array", () => {
