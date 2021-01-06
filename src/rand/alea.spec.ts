@@ -118,4 +118,17 @@ describe("AleaRNG", () => {
       expect(alph2.indexOf(c)).toBeGreaterThanOrEqual(0);
     }
   });
+
+  it("Will sanitize the initial mash function 0 < x < 1", () => {
+    const a = new AleaRNG();
+    a["s0"] = -0.5;
+    a["s1"] = -0.2;
+    a["s2"] = -0.1;
+
+    a["sanitize"]();
+
+    expect(a["s0"]).toEqual(0.5);
+    expect(a["s1"]).toEqual(0.8);
+    expect(a["s2"]).toEqual(0.9);
+  });
 });

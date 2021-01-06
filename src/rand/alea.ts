@@ -47,12 +47,15 @@ export class AleaRNG implements IRNG {
     this.c = 1;
 
     this.s0 -= mash(this.seed);
-    if (this.s0 < 0) this.s0 += 1;
-
     this.s1 -= mash(this.seed);
-    if (this.s1 < 0) this.s1 += 1;
-
     this.s2 -= mash(this.seed);
+
+    this.sanitize();
+  }
+
+  private sanitize() {
+    if (this.s0 < 0) this.s0 += 1;
+    if (this.s1 < 0) this.s1 += 1;
     if (this.s2 < 0) this.s2 += 1;
   }
 
