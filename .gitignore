@@ -1,5 +1,6 @@
 node_modules
-coverage
+coverage/**
+!coverage/*.svg
 .nyc_output
 .DS_Store
 *.log
