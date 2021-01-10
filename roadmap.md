@@ -1,6 +1,11 @@
 - NPM Hosted
 - Document site
 - Example Site
+- FOV
+
+  - Fix API to use Vectors
+  - Return all spaces by default
+
 - Input module
   - Keyboard
   - Mouse
@@ -15,7 +20,6 @@
   - City Buildings
   - Maze with Rooms
 - Pathfinding
-
   - AStar
     - Optimize Priority queue
     - Randomize Neighbors?
