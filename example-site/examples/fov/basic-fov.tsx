@@ -5,19 +5,19 @@ import { Terminal, Util, Generation, FOV, Input, CharCode, Color } from "yendor"
 export default class extends React.Component {
   componentDidMount() {
     const mount = document.getElementById("example")
-    const terminal = Terminal.Retro.fromURL(
-      40,
-      40,
-      "/font_16.png",
-      16,
-      16,
-      mount
-    )
+    const terminal = new Terminal.RetroTerminal({
+      width: 40,
+      height: 40,
+      imageURL: "/font_16.png",
+      charWidth: 16,
+      charHeight: 16,
+      mountNode: mount,
+    })
+
     const explored = new Util.Table<boolean>(40, 40)
     const map = new Generation.CellularAutomata(40, 40)
-    map.randomize(0.6)
+    map.randomize(0.65)
     map.doSimulationStep(3)
-    debugger
     map.connect()
 
     const free = []
@@ -92,20 +92,18 @@ export default class extends React.Component {
           if (explored.get({ x, y })) {
             const isAlive = map.table.get({ x, y }) === 1
             if (isAlive) {
-              terminal.drawCharCode({
-                x: x,
-                y: y,
-                charCode: CharCode.blackSpadeSuit,
-                fore: Color.DarkGreen.toAvgGrayscale(),
-                back: Color.Green.toAvgGrayscale(),
-              })
+              terminal.drawCharCode(
+                { x: x, y: y },
+                CharCode.blackSpadeSuit,
+                Color.DarkGreen.toAvgGrayscale(),
+                Color.Green.toAvgGrayscale()
+              )
             } else {
-              terminal.drawCharCode({
-                x: x,
-                y: y,
-                charCode: CharCode.fullBlock,
-                fore: Color.Green.toAvgGrayscale(),
-              })
+              terminal.drawCharCode(
+                { x: x, y: y },
+                CharCode.fullBlock,
+                Color.Green.toAvgGrayscale()
+              )
             }
           }
         }
@@ -115,30 +113,27 @@ export default class extends React.Component {
       for (let { x, y, v } of fov_spaces) {
         const isAlive = map.table.get({ x, y }) === 1
         if (isAlive) {
-          terminal.drawCharCode({
-            x: x,
-            y: y,
-            charCode: CharCode.blackSpadeSuit,
-            fore: Color.DarkGreen.blend(Color.Black, (1 - v) / 2),
-            back: Color.Green.blend(Color.Black, (1 - v) / 2),
-          })
+          terminal.drawCharCode(
+            { x: x, y: y },
+            CharCode.blackSpadeSuit,
+            Color.DarkGreen.blend(Color.Black, (1 - v) / 2),
+            Color.Green.blend(Color.Black, (1 - v) / 2)
+          )
         } else {
-          terminal.drawCharCode({
-            x: x,
-            y: y,
-            charCode: CharCode.fullBlock,
-            fore: Color.Green.blend(Color.Black, (1 - v) / 2),
-          })
+          terminal.drawCharCode(
+            { x: x, y: y },
+            CharCode.fullBlock,
+            Color.Green.blend(Color.Black, (1 - v) / 2)
+          )
         }
       }
 
       // Draw player
-      terminal.drawCharCode({
-        x: player.x,
-        y: player.y,
-        charCode: CharCode.at,
-        fore: Color.Yellow,
-      })
+      terminal.drawCharCode(
+        { x: player.x, y: player.y },
+        CharCode.at,
+        Color.Yellow
+      )
 
       terminal.render()
       requestAnimationFrame(loop)

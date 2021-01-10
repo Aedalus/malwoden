@@ -4,14 +4,15 @@ import { Terminal, Generation, CharCode, Color } from "yendor"
 export default class extends React.Component {
   componentDidMount() {
     const mount = document.getElementById("example")
-    const terminal = Terminal.Retro.fromURL(
-      40,
-      40,
-      "/font_16.png",
-      16,
-      16,
-      mount
-    )
+    const terminal = new Terminal.RetroTerminal({
+      width: 40,
+      height: 40,
+      imageURL: "/font_16.png",
+      charWidth: 16,
+      charHeight: 16,
+      mountNode: mount,
+    })
+
     const map = new Generation.DrunkardsWalk(40, 40)
 
     map.walkSteps({
@@ -23,21 +24,20 @@ export default class extends React.Component {
     terminal.clear()
     for (let x = 0; x < map.table.width; x++) {
       for (let y = 0; y < map.table.height; y++) {
-        if (map.table.get({ x: x, y: y }) === 1) {
-          terminal.drawCharCode({
-            x: x,
-            y: y,
-            charCode: CharCode.blackSquare,
-            back: Color.RosyBrown,
-          })
+        if (map.table.get({ x, y }) === 1) {
+          terminal.drawCharCode(
+            { x, y },
+            CharCode.blackSquare,
+            undefined,
+            Color.RosyBrown
+          )
         } else {
-          terminal.drawCharCode({
-            x,
-            y,
-            charCode: CharCode.blackUpPointingTriangle,
-            fore: Color.SaddleBrown,
-            back: Color.RosyBrown,
-          })
+          terminal.drawCharCode(
+            { x, y },
+            CharCode.blackUpPointingTriangle,
+            Color.SaddleBrown,
+            Color.RosyBrown
+          )
         }
       }
     }

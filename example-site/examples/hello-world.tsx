@@ -4,15 +4,17 @@ import { Terminal } from "yendor"
 
 export default class extends React.Component {
   componentDidMount() {
-    const mount = document.getElementById("example")
+    const mountNode = document.getElementById("example")
     const font = new Terminal.Font("Courier", 24, 15, 24, 1, 24)
-    const terminal = new Terminal.Canvas(20, 10, font, mount)
-    terminal.clear()
-    terminal.writeAt({
-      x: 1,
-      y: 1,
-      text: "Hello World!",
+    const terminal = new Terminal.CanvasTerminal({
+      width: 20,
+      height: 10,
+      font,
+      mountNode,
     })
+    terminal.clear()
+    terminal.writeAt({ x: 0, y: 0 }, "Yendor Says")
+    terminal.writeAt({ x: 1, y: 1 }, "Hello World!")
     terminal.render()
   }
 

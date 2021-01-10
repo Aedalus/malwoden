@@ -14,14 +14,14 @@ import {
 export default class extends React.Component {
   componentDidMount() {
     const mount = document.getElementById("example")
-    const terminal = Terminal.Retro.fromURL(
-      48,
-      30,
-      "/font_16.png",
-      16,
-      16,
-      mount
-    )
+    const terminal = new Terminal.RetroTerminal({
+      width: 48,
+      height: 30,
+      imageURL: "/font_16.png",
+      charWidth: 16,
+      charHeight: 16,
+      mountNode: mount,
+    })
 
     // Generate Map
     const map_width = 30
@@ -88,12 +88,7 @@ export default class extends React.Component {
     keyboard.setContext(movement)
 
     // ToDo - Fix this API. 2 Vectors?
-    const mapterminal = new Terminal.PortTerminal(
-      17,
-      1,
-      { x: map_width, y: map_height },
-      terminal
-    )
+    const mapterminal = terminal.port({ x: 17, y: 1 }, map_width, map_height)
 
     const loop = (delta: number) => {
       // Logic
@@ -114,19 +109,8 @@ export default class extends React.Component {
       })
 
       // HP
-      terminal.writeAt({
-        x: 2,
-        y: 2,
-        text: `HP : ${player.hp}/10`,
-        fore: Color.Red,
-      })
-
-      terminal.writeAt({
-        x: 2,
-        y: 4,
-        text: `Gold : ${player.coins}`,
-        fore: Color.Yellow,
-      })
+      terminal.writeAt({ x: 2, y: 2 }, `HP : ${player.hp}/10`, Color.Red)
+      terminal.writeAt({ x: 2, y: 4 }, `Gold : ${player.coins}`, Color.Yellow)
 
       // World Box
       GUI.box(terminal, {
@@ -145,36 +129,29 @@ export default class extends React.Component {
         y2: 29,
       })
       for (let i = 0; i < logs.length; i++) {
-        terminal.writeAt({
-          x: 1,
-          y: 23 + i,
-          text: logs[i],
-        })
+        terminal.writeAt({ x: 1, y: 23 + i }, logs[i])
       }
 
       // Draw Map
       for (let x = 0; x < map.table.width; x++) {
         for (let y = 0; y < map.table.height; y++) {
           const isWall = map.table.get({ x, y })
-          mapterminal.drawCharCode({
-            x,
-            y,
-            charCode: isWall ? CharCode.blackSpadeSuit : CharCode.space,
-            fore: isWall ? Color.Green : Color.White,
-          })
+          mapterminal.drawCharCode(
+            { x, y },
+            isWall ? CharCode.blackSpadeSuit : CharCode.space,
+            isWall ? Color.Green : Color.White
+          )
         }
       }
 
       // Coin
       mapterminal.drawGlyph(
-        coin.x,
-        coin.y,
+        coin,
         Glyph.fromCharCode(CharCode.oLower, Color.Yellow)
       )
       // Player Entity
       mapterminal.drawGlyph(
-        player.x,
-        player.y,
+        player,
         Glyph.fromCharCode(CharCode.at, Color.Yellow)
       )
 
