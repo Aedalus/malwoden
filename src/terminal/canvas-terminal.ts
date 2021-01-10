@@ -122,9 +122,10 @@ export class CanvasTerminal extends RenderableTerminal {
    * Returns the character position given a pixel coordinate.
    */
   pixelToChar(pixel: Vector2): Vector2 {
+    const rect = this.canvas.getBoundingClientRect();
     return {
-      x: Math.floor(pixel.x / this.font.charWidth),
-      y: Math.floor(pixel.y / this.font.lineHeight),
+      x: Math.floor((pixel.x - rect.left) / this.font.charWidth),
+      y: Math.floor((pixel.y - rect.top) / this.font.lineHeight),
     };
   }
 

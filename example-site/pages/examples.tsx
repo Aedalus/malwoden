@@ -17,6 +17,10 @@ import BasicFOVExample from "../examples/fov/basic-fov";
 import CellularAutomataExample from "../examples/generation/cellular";
 import DrunkardsWalkExample from "../examples/generation/drunkards-walk";
 
+import MouseInputExample from "../examples/input/mouse-input";
+import MouseInputFontExample from "../examples/input/mouse-input-font";
+import MouseInputFont from "../examples/input/mouse-input-font";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -45,6 +49,10 @@ const MenuData: IMenuData = {
   General: {
     "Hello World": <HelloWorldExample />,
     "Basic Game": <BasicGameExample />,
+  },
+  Input: {
+    Mouse: <MouseInputExample />,
+    "Mouse - Font": <MouseInputFont />,
   },
   FOV: {
     "Basic FOV": <BasicFOVExample />,
