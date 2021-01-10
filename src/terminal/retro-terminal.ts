@@ -115,9 +115,10 @@ export class RetroTerminal extends RenderableTerminal {
   }
 
   pixelToChar(pixel: Vector2): Vector2 {
+    const rect = this._canvas.getBoundingClientRect();
     return {
-      x: Math.floor(pixel.x / this._charWidth),
-      y: Math.floor(pixel.y / this._charHeight),
+      x: Math.floor((pixel.x - rect.left) / this._charWidth),
+      y: Math.floor((pixel.y - rect.top) / this._charHeight),
     };
   }
 
