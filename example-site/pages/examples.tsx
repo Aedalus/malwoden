@@ -1,23 +1,23 @@
-import React, { useState } from "react"
-import { makeStyles } from "@material-ui/core/styles"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import Divider from "@material-ui/core/Divider"
-import Card from "@material-ui/core/Card"
-import CardContent from "@material-ui/core/CardContent"
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
-import Header from "../components/header"
+import Layout from "../components/layout";
 
 // Examples
-import HelloWorldExample from "../examples/hello-world"
-import BasicGameExample from "../examples/basic-game"
+import HelloWorldExample from "../examples/hello-world";
+import BasicGameExample from "../examples/basic-game";
 
-import BasicFOVExample from "../examples/fov/basic-fov"
-import CellularAutomataExample from "../examples/generation/cellular"
-import DrunkardsWalkExample from "../examples/generation/drunkards-walk"
+import BasicFOVExample from "../examples/fov/basic-fov";
+import CellularAutomataExample from "../examples/generation/cellular";
+import DrunkardsWalkExample from "../examples/generation/drunkards-walk";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 250,
@@ -34,12 +34,12 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "20px",
     marginTop: "20px",
   },
-}))
+}));
 
 interface IMenuData {
   [index: string]: {
-    [index: string]: JSX.Element
-  }
+    [index: string]: JSX.Element;
+  };
 }
 const MenuData: IMenuData = {
   General: {
@@ -53,15 +53,15 @@ const MenuData: IMenuData = {
     "Cellular Automata": <CellularAutomataExample />,
     "Drunkards Walk": <DrunkardsWalkExample />,
   },
-}
+};
 
 export default function Examples() {
-  const classes = useStyles()
+  const classes = useStyles();
 
-  const [Example, setExample] = useState(<HelloWorldExample />)
+  const [Example, setExample] = useState(<HelloWorldExample />);
 
   return (
-    <Header>
+    <Layout>
       <div className={classes.layout}>
         <List component="nav" className={classes.root}>
           {Object.entries(MenuData).map(([section, examples]) => (
@@ -75,7 +75,7 @@ export default function Examples() {
                     button
                     className={classes.nested}
                     onClick={() => {
-                      setExample(component)
+                      setExample(component);
                     }}
                   >
                     <ListItemText primary={example} />
@@ -92,6 +92,6 @@ export default function Examples() {
           </Card>
         )}
       </div>
-    </Header>
-  )
+    </Layout>
+  );
 }
