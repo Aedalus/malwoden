@@ -1,39 +1,22 @@
 {
-  "name": "gatsby-starter-hello-world",
-  "private": true,
-  "description": "A simplified bare-bones starter for Gatsby",
+  "name": "example-site-4",
   "version": "0.1.0",
-  "license": "0BSD",
+  "private": true,
   "scripts": {
-    "build": "gatsby build",
-    "develop": "gatsby develop",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "npm run develop",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "dev": "next dev -p 1234",
+    "start": "next start",
+    "s3_sanitize": "for file in $(find out -name '*.html'); do cp $file $(echo $file | sed 's/.html//g'); done;",
+    "build": "next build && next export"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
-    "@mdx-js/react": "^1.6.22",
-    "antd": "^4.9.4",
     "fontsource-roboto": "^4.0.0",
-    "gatsby": "^2.26.1",
-    "gatsby-plugin-material-ui": "^2.1.10",
-    "normalize.css": "^8.0.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "yendor": "file:.."
+    "next": "10.0.5",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
   },
   "devDependencies": {
-    "prettier": "2.2.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "@types/react": "^17.0.0"
   }
 }

@@ -117,6 +117,7 @@
     "typescript": "^4.1.2"
   },
   "dependencies": {
+    "gatsby-plugin-s3": "^0.3.8",
     "typedoc-plugin-remove-references": "0.0.5"
   }
 }
