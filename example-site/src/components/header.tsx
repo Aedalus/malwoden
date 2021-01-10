@@ -5,12 +5,10 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
 import Link from "@material-ui/core/Link"
-import Menu from "@material-ui/core/Menu"
-import MenuIcon from "@material-ui/icons/Menu"
 import Github from "@material-ui/icons/GitHub"
 
 import "fontsource-roboto"
-import "../styles/reset.css"
+import "normalize.css"
 
 const useStyles = makeStyles(theme => ({
   appBar: {
