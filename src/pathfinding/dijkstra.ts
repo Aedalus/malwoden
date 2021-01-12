@@ -1,5 +1,4 @@
-import { Table, Vector2 } from "../util";
-import { DijkstraConfig } from "../util/dijkstra-config";
+import { Vector2 } from "../util";
 
 interface dijkstraConfig {
   isBlockedCallback?: IsBlockedCallback;
@@ -18,19 +17,25 @@ export class Dijkstra {
   }
   compute(initial: Vector2, goal: Vector2): Vector2[] | undefined {
     //unpackage config.
-    let parents = {
-      start: initial,
-    };
+    const cameFrom = new Map<string, string>();
     let processing = [initial];
+    console.log("the log is: ", processing);
+    console.log("the log is: ", processing.length);
 
     while (processing.length !== 0) {
       //shift the last node off the array.
-      const current = processing.shift;
+      const current = processing.shift();
+      console.log("the current processing element is: ", current);
       // check to see if the space is where you need to be. If so, exit loop.
+      if (current === goal) {
+        break;
+      }
       //look at the adjacent spots.
       //check adjactent spots to see if they are either blocked or don't exist.
 
       // push in the four corners into processing if available on the table.
+
+      //return an array of vector2s that corrospond to the path.
     }
 
     return undefined;
