@@ -12,3 +12,4 @@ compiled
 .rpt2_cache
 docs
 .cache
+.terraform
