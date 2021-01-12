@@ -9,8 +9,7 @@ Yendor is a roguelike library, meant to perform much of the heavy lifting when c
 
 One of the main goals of this library is to provide a simple, minimalistic `Terminal` package with great support for CP437 tilesets.
 This is one area I've found lacking, and hope this library can provide a solid framework for roguelikes and text based games.
-The core of the terminal package is based heavily on Bob Nystrom's amazing [malison](https://github.com/munificent/malison) Dart library,
-which can be seen in action in his roguelike, [Hauberk.](http://munificent.github.io/hauberk/)
+The core of the terminal package is based heavily on Bob Nystrom's amazing [malison](https://github.com/munificent/malison) Dart library.
 
 If you're looking for graphics outside basic ASCII/CP437, [phaser](https://phaser.io/) and [pixi](https://www.pixijs.com/) are both worth checking out.
 
@@ -20,11 +19,19 @@ This library is still in alpha. While many of the features are working well, the
 
 ## Installation
 
-This package is not yet hosted, but will be available on npm once in beta.
+Yendor can be downloaded via npm:
 
-If you want to try it out now, consider building it locally and linking it via `npm link`
+```sh
+# For stable
+npm install yendor
 
+# For dev builds
+npm install yendor@next
 ```
+
+If developing yendor locally, you can use `npm link` to easily use it in another project.
+
+```sh
 # Inside the yendor project
 npm run start
 npm link
@@ -35,48 +42,12 @@ npm link yendor
 
 ## Modules
 
-- FOV (30%)
-
-  - [ ] docs
-  - [ ] examples
-
-  - [x] Precise Shadowcasting
-    - [x] Topology - 4
-    - [x] Topology - 8
-    - [ ] Topology - Circle
-
-- Generation (10%)
-
-  - [ ] docs
-  - [ ] examples
-
-  - [x] Cellular Automata
-  - [ ] BSP
-
-- Input (30%)
-
-  - [ ] docs
-  - [ ] examples
-
-- Pathfinding (0%)
-
-  - [ ] docs
-  - [ ] examples
-
-  - [x] A\*
-
-- Rand (80%)
-
-  - [ ] docs
-  - [ ] examples
-
-  - [x] AleaRNG
-
-- Terminal (80%)
-
-  - [ ] docs
-  - [ ] examples
-
-- Util
-  - [ ] docs
-  - [ ] examples
+- FOV - Field of View Algorithms
+- Generation - General Map Creation
+- GUI - Useful UI Widgets
+- Input - Keyboard + Mouse Abstractions
+- Math - Primarily Vector Functions
+- Pathfinding - Pathfinding Implementations
+- Rand - Seedable RNG
+- Terminal - Draw Fonts or Tilesets
+- Util - Misc Structs + Functions
