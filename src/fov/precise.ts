@@ -1,62 +1,80 @@
+import { Vector2 } from "../util/vector";
 import { getRing4, getRing8 } from "./get-ring";
 
 type RationalNum = [number, number];
 
-export function diffRationalNums(a: RationalNum, b: RationalNum): number {
-  return a[0] * b[1] - b[0] * a[1];
+interface LightPassesCallback {
+  (pos: Vector2): boolean;
 }
 
-interface LightPassesCallback {
-  (x: number, y: number): boolean;
-}
 interface VisibilityCallback {
-  (x: number, y: number, r: number, visibility: number): void;
+  (pos: Vector2, range: number, visibility: number): void;
 }
+
 interface VisibilityStruct {
-  x: number;
-  y: number;
+  pos: Vector2;
   r: number;
   visibility: number;
 }
 
+interface PreciseShadowcastingConfig {
+  lightPasses: LightPassesCallback;
+  topology: "four" | "eight";
+}
+
+/** FOV Algorithm that calculates angles of shadows and merges them together. */
 export class PreciseShadowcasting {
   private lightPasses: LightPassesCallback;
   private getRing: typeof getRing4;
 
-  constructor(
-    lightPasses: LightPassesCallback,
-    topology: "four" | "eight" = "eight"
-  ) {
-    this.lightPasses = lightPasses;
-    this.getRing = topology === "four" ? getRing4 : getRing8;
+  /**
+   * Creates a new PreciseShadowcasting object
+   * which can calulate viewsheds.
+   *
+   * @param config
+   * @param config.lightPasses Vector2 => Boolean - Whether a position is visible
+   * @param config.topology "four" | "eight" - The topology to use
+   */
+  constructor(config: PreciseShadowcastingConfig) {
+    this.lightPasses = config.lightPasses;
+    this.getRing = config.topology === "four" ? getRing4 : getRing8;
   }
 
-  calculateVectors(
-    originX: number,
-    originY: number,
-    range: number
-  ): VisibilityStruct[] {
+  /**
+   * Calculates an array of visible Vectors. Same as calculateCallback,
+   * but returns an Array instead.
+   *
+   * @param origin Vector2 - The position to start from.
+   * @param range Number - The range of vision
+   */
+  calculateArray(origin: Vector2, range: number): VisibilityStruct[] {
     const v: VisibilityStruct[] = [];
-    this.calculateCallback(originX, originY, range, (x, y, r, visibility) => {
-      v.push({ x, y, r, visibility });
+    this.calculateCallback(origin, range, (pos, r, visibility) => {
+      v.push({ pos, r, visibility });
     });
     return v;
   }
 
+  /**
+   * Calculates visible positions, and invokes the given callback for each one.
+   *
+   * @param origin Vector2 - The position to start from
+   * @param range Number - The range of vision
+   * @param callback (pos: Vector2, range: number, visibility: number) => void - The function to call for each visible tile
+   */
   calculateCallback(
-    originX: number,
-    originY: number,
+    origin: Vector2,
     range: number,
     callback: VisibilityCallback
   ) {
     // Always call the original
-    callback(originX, originY, 0, 1);
+    callback(origin, 0, 1);
 
     const shadows: RationalNum[] = [];
 
     // For all rings
     for (let r = 1; r <= range; r++) {
-      const ring = this.getRing(originX, originY, r);
+      const ring = this.getRing(origin.x, origin.y, r);
       // * by 2 here since we're making 2 arcs per tile
       const arcCount = ring.length * 2;
 
@@ -70,7 +88,7 @@ export class PreciseShadowcasting {
         const lesserAngle = [lesserN, arcCount];
         const greaterAngle = [2 * i + 1, arcCount];
 
-        const blocks = this.lightPasses(cell.x, cell.y) === false;
+        const blocks = this.lightPasses(cell) === false;
         const visibility = this.checkVisibility(
           lesserAngle as RationalNum,
           greaterAngle as RationalNum,
@@ -78,7 +96,7 @@ export class PreciseShadowcasting {
           shadows
         );
         if (visibility) {
-          callback(cell.x, cell.y, r, visibility);
+          callback(cell, r, visibility);
         }
         // ToDo - Short circuit if entirely surrounded
       }
