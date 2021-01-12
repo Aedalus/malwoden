@@ -41,33 +41,22 @@ export default class extends React.Component {
       y: free[0].y,
     };
 
-    const fov = new FOV.PreciseShadowcasting(
-      (x, y) => map.table.get({ x, y }) !== 1
-    );
+    const fov = new FOV.PreciseShadowcasting({
+      lightPasses: (pos) => map.table.get(pos) !== 1,
+      topology: "eight",
+    });
 
     // Keyboard
     const keyboard = new Input.KeyboardHandler();
     const movement = new Input.KeyboardContext()
-      .onDown(Input.KeyCode.DownArrow, () => {
-        attemptMove(0, 1);
-        calcFOV();
-      })
-      .onDown(Input.KeyCode.LeftArrow, () => {
-        attemptMove(-1, 0);
-        calcFOV();
-      })
-      .onDown(Input.KeyCode.RightArrow, () => {
-        attemptMove(1, 0);
-        calcFOV();
-      })
-      .onDown(Input.KeyCode.UpArrow, () => {
-        attemptMove(0, -1);
-        calcFOV();
-      });
+      .onDown(Input.KeyCode.DownArrow, () => attemptMove(0, 1))
+      .onDown(Input.KeyCode.LeftArrow, () => attemptMove(-1, 0))
+      .onDown(Input.KeyCode.RightArrow, () => attemptMove(1, 0))
+      .onDown(Input.KeyCode.UpArrow, () => attemptMove(0, -1));
 
     keyboard.setContext(movement);
 
-    let fov_spaces: { x: number; y: number; r: number; v: number }[] = [];
+    let fov_spaces: { pos: Util.Vector2; r: number; v: number }[] = [];
     calcFOV();
 
     function attemptMove(dx: number, dy: number) {
@@ -76,17 +65,19 @@ export default class extends React.Component {
       if (map.table.get({ x, y }) !== 1) {
         player.x = x;
         player.y = y;
+        calcFOV();
       }
     }
+
     function calcFOV() {
       fov_spaces = [];
-      // fov.compute(player.x, player.y, 7, (x, y, r, v) => {
-      fov.calculateCallback(player.x, player.y, 10, (x, y, r, v) => {
+
+      fov.calculateCallback(player, 10, (pos, r, v) => {
         if (v) {
-          if (explored.isInBounds({ x, y })) {
-            explored.set({ x, y }, true);
+          if (explored.isInBounds(pos)) {
+            explored.set(pos, true);
           }
-          fov_spaces.push({ x, y, r, v });
+          fov_spaces.push({ pos, r, v });
         }
       });
     }
@@ -118,18 +109,18 @@ export default class extends React.Component {
       }
 
       // Draw tiles in fov
-      for (let { x, y, v } of fov_spaces) {
-        const isAlive = map.table.get({ x, y }) === 1;
+      for (let { pos, v } of fov_spaces) {
+        const isAlive = map.table.get(pos) === 1;
         if (isAlive) {
           terminal.drawCharCode(
-            { x: x, y: y },
+            pos,
             CharCode.blackSpadeSuit,
             Color.DarkGreen.blend(Color.Black, (1 - v) / 2),
             Color.Green.blend(Color.Black, (1 - v) / 2)
           );
         } else {
           terminal.drawCharCode(
-            { x: x, y: y },
+            pos,
             CharCode.fullBlock,
             Color.Green.blend(Color.Black, (1 - v) / 2)
           );
