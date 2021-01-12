@@ -63,21 +63,12 @@ describe("Color", () => {
     expect(n.b).toEqual(20);
   });
 
-  it("Can get average grayscale", () => {
-    const c = new Color(10, 20, 30);
-    const g = c.toAvgGrayscale();
-
-    expect(g.r).toEqual(20);
-    expect(g.g).toEqual(20);
-    expect(g.b).toEqual(20);
-  });
-
   it("Can get grayscale", () => {
     const c = new Color(10, 20, 30);
     const g = c.toGrayscale();
 
-    expect(g.r).toEqual(Math.round(10 * 0.299));
-    expect(g.g).toEqual(Math.round(20 * 0.587));
-    expect(g.b).toEqual(Math.round(30 * 0.114));
+    expect(g.r).toEqual(20);
+    expect(g.g).toEqual(20);
+    expect(g.b).toEqual(20);
   });
 });
