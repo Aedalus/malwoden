@@ -4,13 +4,12 @@
 - FOV
 
   - Fix API to use Vectors
+  - Circle Mode
   - Return all spaces by default
 
 - Input module
   - Keyboard
   - Mouse
-- Colors
-  - Fix Greyscale
 - Generation
   - BSP Tree
   - Random Walk
@@ -22,7 +21,6 @@
 - Pathfinding
   - AStar
     - Optimize Priority queue
-    - Randomize Neighbors?
   - Dijkstra
     - Pathfinding
     - Distance Limit
