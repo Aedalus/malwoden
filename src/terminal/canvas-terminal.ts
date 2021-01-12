@@ -1,4 +1,4 @@
-import { RenderableTerminal } from "./terminal";
+import { RenderableTerminal, TerminalConfig } from "./terminal";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
 import { Vector2 } from "../util/vector";
@@ -28,22 +28,34 @@ export class Font {
   }
 }
 
-export class Canvas extends RenderableTerminal {
+interface CanvasTerminalConfig extends TerminalConfig {
+  font: Font;
+  mountNode?: HTMLElement;
+}
+
+/**
+ * Renders a display by writing fonts to a canvas.
+ */
+export class CanvasTerminal extends RenderableTerminal {
   readonly display: Display;
   private readonly canvas: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
-  constructor(
-    width: number,
-    height: number,
-    font: Font,
-    mountNode?: HTMLElement
-  ) {
-    super({ height, width });
-    this.display = new Display(width, height);
-    this.font = font;
+  /**
+   * Creates a new CanvasTerminal.
+   *
+   * @param config - The config for the CanvasTerminal
+   * @param config.width - The width of the terminal in characters.
+   * @param config.height - The height of the terminal in characters.
+   * @param config.font Font - A font object
+   * @param config.mountNode - Will mount the canvas as a child of this node if provided.
+   */
+  constructor(config: CanvasTerminalConfig) {
+    super(config);
+    this.display = new Display(config.width, config.height);
+    this.font = config.font;
     this.canvas = window.document.createElement("canvas");
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
@@ -55,28 +67,38 @@ export class Canvas extends RenderableTerminal {
     this.canvas.style.height = `${canvasHeight}px`;
 
     // Mount the canvas
-    if (mountNode) {
-      mountNode.appendChild(this.canvas);
+    if (config.mountNode) {
+      config.mountNode.appendChild(this.canvas);
     } else {
       window.document.body.appendChild(this.canvas);
     }
   }
 
-  drawGlyph(x: number, y: number, glyph: Glyph) {
-    this.display.setGlyph(x, y, glyph);
+  /**
+   * Draws a glyph on the display.
+   *
+   * @param pos Vector2 - Position of the Glyph
+   * @param glyph Glyph - The Glyph to render
+   */
+  drawGlyph(pos: Vector2, glyph: Glyph) {
+    this.display.setGlyph(pos, glyph);
   }
 
+  /**
+   * Renders the display to the canvas.
+   * Usually drawn once per animation frame.
+   */
   render() {
     this.context.font = `${this.font.size * this.scale}px ${
       this.font.family
     }, monospace`;
 
-    this.display.render((x, y, glyph) => {
+    this.display.render((pos, glyph) => {
       // Fill the background
       this.context.fillStyle = glyph.back.cssColor();
       this.context.fillRect(
-        x * this.font.charWidth * this.scale,
-        y * this.font.lineHeight * this.scale,
+        pos.x * this.font.charWidth * this.scale,
+        pos.y * this.font.lineHeight * this.scale,
         this.font.charWidth * this.scale,
         this.font.lineHeight * this.scale
       );
@@ -90,20 +112,26 @@ export class Canvas extends RenderableTerminal {
       this.context.fillStyle = glyph.fore.cssColor();
       this.context.fillText(
         String.fromCharCode(glyph.char),
-        (x * this.font.charWidth + this.font.x) * this.scale,
-        (y * this.font.lineHeight + this.font.y) * this.scale
+        (pos.x * this.font.charWidth + this.font.x) * this.scale,
+        (pos.y * this.font.lineHeight + this.font.y) * this.scale
       );
     });
   }
 
+  /**
+   * Returns the character position given a pixel coordinate.
+   */
   pixelToChar(pixel: Vector2): Vector2 {
+    const rect = this.canvas.getBoundingClientRect();
     return {
-      x: Math.floor(pixel.x / this.font.charWidth),
-      y: Math.floor(pixel.y / this.font.lineHeight),
+      x: Math.floor((pixel.x - rect.left) / this.font.charWidth),
+      y: Math.floor((pixel.y - rect.top) / this.font.lineHeight),
     };
   }
 
-  /** Deletes the terminal, removing the canvas. */
+  /**
+   * Deletes the terminal, removing the canvas.
+   */
   delete() {
     this.canvas.parentNode?.removeChild(this.canvas);
   }

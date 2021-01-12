@@ -77,9 +77,7 @@ export class AStar {
         neighbors = neighbors.filter((v) => this.isBlocked!(v) === false);
       }
 
-      let currentGScore = gScore.has(`${current.x}:${current.y}`)
-        ? gScore.get(`${current.x}:${current.y}`)!
-        : Infinity;
+      let currentGScore = gScore.get(`${current.x}:${current.y}`)!;
 
       for (let n of neighbors) {
         // ToDo - allow the distance to be determined by function

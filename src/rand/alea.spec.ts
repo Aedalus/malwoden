@@ -1,34 +1,6 @@
 import { AleaRNG } from "./alea";
 
 describe("AleaRNG", () => {
-  // Just for testing purposes
-  it.skip("looks alright", () => {
-    const aa = new AleaRNG();
-    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-
-    const ints = [];
-    const numbers = [];
-    const bools = [];
-    const letters = [];
-
-    for (let i = 0; i < 100; i++) {
-      ints.push(aa.nextInt());
-      numbers.push(aa.next());
-      bools.push(aa.nextBoolean());
-      letters.push(aa.nextItem(alphabet));
-    }
-
-    console.log(ints);
-    console.log(numbers);
-    console.log(bools);
-    console.log(letters);
-
-    const scrambled = aa.shuffle(alphabet);
-    console.log(scrambled);
-
-    expect(alphabet).toEqual("abcdefghijklmnopqrstuvwxyz".split(""));
-  });
-
   it("Can generate numbers", () => {
     const aa = new AleaRNG("hello");
     const bb = new AleaRNG("hello");
@@ -128,6 +100,8 @@ describe("AleaRNG", () => {
     }
 
     expect(nums).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    expect(aa.nextItem([])).toEqual(undefined);
   });
 
   it("Can shuffle an array", () => {
@@ -143,5 +117,18 @@ describe("AleaRNG", () => {
     for (let c of alph) {
       expect(alph2.indexOf(c)).toBeGreaterThanOrEqual(0);
     }
+  });
+
+  it("Will sanitize the initial mash function 0 < x < 1", () => {
+    const a = new AleaRNG();
+    a["s0"] = -0.5;
+    a["s1"] = -0.2;
+    a["s2"] = -0.1;
+
+    a["sanitize"]();
+
+    expect(a["s0"]).toEqual(0.5);
+    expect(a["s1"]).toEqual(0.8);
+    expect(a["s2"]).toEqual(0.9);
   });
 });

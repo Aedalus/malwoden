@@ -207,21 +207,12 @@ export class Color {
     return this.blend(other, percentOther / 100);
   }
 
-  toAvgGrayscale(): Color {
+  toGrayscale(): Color {
     const total = this.r + this.g + this.b;
     return new Color(
       this.sanitizeElement(total / 3),
       this.sanitizeElement(total / 3),
       this.sanitizeElement(total / 3)
-    );
-  }
-
-  toGrayscale(): Color {
-    // https://www.kdnuggets.com/2019/12/convert-rgb-image-grayscale.html
-    return new Color(
-      this.sanitizeElement(this.r * 0.299),
-      this.sanitizeElement(this.g * 0.587),
-      this.sanitizeElement(this.b * 0.114)
     );
   }
 }
