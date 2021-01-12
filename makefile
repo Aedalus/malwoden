@@ -1,4 +1,4 @@
-.ONESHELL:
+include ./globals.mk
 
 ENV := "dev"
 
@@ -8,7 +8,7 @@ node_modules: package.json
 dist: node_modules
 	npm run build
 
-deploy_docs: dist
+deploy_docs: dist ## Deploys the document site
 	aws s3 sync ./docs s3://yendor-$(ENV)/docs --delete
 
 example-site/out:
@@ -16,7 +16,7 @@ example-site/out:
 	npm ci
 	npm run build
 
-deploy_examples: example-site/out
+deploy_examples: example-site/out ## Deploys the example site
 	aws s3 sync ./example-site/out s3://yendor-$(ENV)/examples --delete
 	FILES=$$(aws s3 ls s3://yendor-$(ENV)/examples --recursive | grep -i .html | cut -c 32-)
 	for file in $$FILES;
@@ -28,19 +28,25 @@ deploy_examples: example-site/out
 
 deploy: deploy_examples
 deploy: deploy_docs
-deploy:
+deploy: ## Deploys both documentation sites
 	echo "Deployed Everything!"
 
-tf_init:
+tf_init: ## Initializes terraform
 	cd ./infra/terraform
 	rm -rf .terraform
 	terraform init -backend-config="../envs/$(ENV).backend.config"
 
-tf_plan:
+tf_plan: ## Plans terraform
 	cd ./infra/terraform
 	terraform plan -var-file="../envs/$(ENV).tfvars"
 
-tf_apply:
+tf_apply: ## Applies terraform
 	cd ./infra/terraform
 	terraform apply -var-file="../envs/$(ENV).tfvars"
+
+npm_push_next: dist ## Deploys the library to npm with the next tag
+	npm publish --tag next
+
+npm_push: dist ## Deploys the library to npm
+	npm publish
 
