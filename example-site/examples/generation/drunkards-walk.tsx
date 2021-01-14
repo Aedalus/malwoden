@@ -1,9 +1,9 @@
-import React from "react"
-import { Terminal, Generation, CharCode, Color } from "yendor"
+import React from "react";
+import { Terminal, Generation, CharCode, Color } from "malwoden";
 
 export default class extends React.Component {
   componentDidMount() {
-    const mount = document.getElementById("example")
+    const mount = document.getElementById("example");
     const terminal = new Terminal.RetroTerminal({
       width: 40,
       height: 40,
@@ -11,17 +11,17 @@ export default class extends React.Component {
       charWidth: 16,
       charHeight: 16,
       mountNode: mount,
-    })
+    });
 
-    const map = new Generation.DrunkardsWalk(40, 40)
+    const map = new Generation.DrunkardsWalk(40, 40);
 
     map.walkSteps({
       initialCords: { x: 20, y: 20 },
       stepsToTake: Infinity,
       toCoverTileCount: 400,
-    })
+    });
 
-    terminal.clear()
+    terminal.clear();
     for (let x = 0; x < map.table.width; x++) {
       for (let y = 0; y < map.table.height; y++) {
         if (map.table.get({ x, y }) === 1) {
@@ -30,19 +30,19 @@ export default class extends React.Component {
             CharCode.blackSquare,
             undefined,
             Color.RosyBrown
-          )
+          );
         } else {
           terminal.drawCharCode(
             { x, y },
             CharCode.blackUpPointingTriangle,
             Color.SaddleBrown,
             Color.RosyBrown
-          )
+          );
         }
       }
     }
   }
   render() {
-    return <div id="example" />
+    return <div id="example" />;
   }
 }

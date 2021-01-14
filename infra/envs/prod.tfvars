@@ -1,3 +1,3 @@
 env="prod"
-examples_domain = "yendor.dev"
-docs_domain = "docs.yendor.dev"
+examples_domain = "malwoden.com"
+docs_domain = "docs.malwoden.com"
