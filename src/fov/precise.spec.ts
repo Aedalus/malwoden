@@ -2,6 +2,40 @@ import { Vector } from "../math";
 import { PreciseShadowcasting } from "./precise";
 
 describe("Shadowcasting", () => {
+  it("Will set returnAll to false by default", () => {
+    const a = new PreciseShadowcasting({
+      lightPasses: () => true,
+      topology: "four",
+      returnAll: true,
+    });
+
+    const b = new PreciseShadowcasting({
+      lightPasses: () => true,
+      topology: "four",
+    });
+
+    expect(a["returnAll"]).toBeTruthy();
+    expect(b["returnAll"]).toBeFalsy();
+  });
+
+  it("Will return all tiles if returnAll is set", () => {
+    const a = new PreciseShadowcasting({
+      lightPasses: () => false,
+      topology: "four",
+      returnAll: true,
+    });
+
+    const results = a.calculateArray({ x: 0, y: 0 }, 2);
+    expect(results).toHaveLength(13);
+    for (let r of results) {
+      if (r.r === 0 || r.r === 1) {
+        expect(r.visibility).toEqual(1);
+      } else {
+        expect(r.visibility).toEqual(0);
+      }
+    }
+  });
+
   it("will calculate for empty tiles", () => {
     const s = new PreciseShadowcasting({
       lightPasses: () => true,

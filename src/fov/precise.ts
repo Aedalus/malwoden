@@ -20,12 +20,14 @@ interface VisibilityStruct {
 interface PreciseShadowcastingConfig {
   lightPasses: LightPassesCallback;
   topology: "four" | "eight";
+  returnAll?: boolean;
 }
 
 /** FOV Algorithm that calculates angles of shadows and merges them together. */
 export class PreciseShadowcasting {
   private lightPasses: LightPassesCallback;
   private getRing: typeof getRing4;
+  private returnAll: boolean;
 
   /**
    * Creates a new PreciseShadowcasting object
@@ -34,10 +36,12 @@ export class PreciseShadowcasting {
    * @param config
    * @param config.lightPasses Vector2 => Boolean - Whether a position is visible
    * @param config.topology "four" | "eight" - The topology to use
+   * @param config.returnAll Return all spaces in range, even if not visible. Default false.
    */
   constructor(config: PreciseShadowcastingConfig) {
     this.lightPasses = config.lightPasses;
     this.getRing = config.topology === "four" ? getRing4 : getRing8;
+    this.returnAll = config.returnAll ?? false;
   }
 
   /**
@@ -95,7 +99,7 @@ export class PreciseShadowcasting {
           blocks,
           shadows
         );
-        if (visibility) {
+        if (visibility || this.returnAll) {
           callback(cell, r, visibility);
         }
         // ToDo - Short circuit if entirely surrounded
