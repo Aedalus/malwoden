@@ -1,6 +1,6 @@
 {
   "name": "yendor",
-  "version": "0.0.1-rc1",
+  "version": "0.0.1-rc2",
   "description": "",
   "keywords": [],
   "main": "dist/yendor.umd.js",
