@@ -39,7 +39,7 @@ export default function ButtonAppBar() {
       <Toolbar>
         <Link href="/">
           <Typography variant="h6" color="inherit" noWrap>
-            YENDOR
+            MALWODEN
           </Typography>
         </Link>
 
@@ -63,7 +63,7 @@ export default function ButtonAppBar() {
           </Link>
         </nav>
 
-        <IconButton color="inherit" href="https://github.com/Aedalus/yendor">
+        <IconButton color="inherit" href="https://github.com/Aedalus/malwoden">
           <Github />
         </IconButton>
       </Toolbar>

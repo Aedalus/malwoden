@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CharCode, Color, Terminal, Input } from "yendor";
+import { CharCode, Color, Terminal, Input } from "malwoden";
 
 export default class extends React.Component {
   componentDidMount() {

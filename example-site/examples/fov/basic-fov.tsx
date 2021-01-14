@@ -8,7 +8,7 @@ import {
   Input,
   CharCode,
   Color,
-} from "yendor";
+} from "malwoden";
 
 export default class extends React.Component {
   componentDidMount() {

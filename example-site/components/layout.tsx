@@ -1,4 +1,5 @@
 import NavBar from "./navbar";
+import Head from "next/head";
 
 const Layout = (props) => (
   <div
@@ -10,6 +11,9 @@ const Layout = (props) => (
       width: "100%",
     }}
   >
+    <Head>
+      <title>Malwoden</title>
+    </Head>
     <div
       className="Content"
       style={{
