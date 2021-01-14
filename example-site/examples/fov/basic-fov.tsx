@@ -44,6 +44,7 @@ export default class extends React.Component {
     const fov = new FOV.PreciseShadowcasting({
       lightPasses: (pos) => map.table.get(pos) !== 1,
       topology: "eight",
+      cartesianRange: true,
     });
 
     // Keyboard
@@ -72,7 +73,7 @@ export default class extends React.Component {
     function calcFOV() {
       fov_spaces = [];
 
-      fov.calculateCallback(player, 10, (pos, r, v) => {
+      fov.calculateCallback(player, 9.9, (pos, r, v) => {
         if (v) {
           if (explored.isInBounds(pos)) {
             explored.set(pos, true);

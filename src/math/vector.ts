@@ -23,12 +23,16 @@ export class Vector {
   static getDistance(
     start: Vector2,
     end: Vector2,
-    topology: "four" | "eight" = "four"
+    topology: "four" | "eight" | "cartesian" = "four"
   ): number {
     if (topology === "four") {
       return Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
-    } else {
+    } else if (topology === "eight") {
       return Math.max(Math.abs(start.x - end.x), Math.abs(start.y - end.y));
+    } else {
+      const a = start.x - end.x;
+      const b = start.y - end.y;
+      return Math.sqrt(a * a + b * b);
     }
   }
 
