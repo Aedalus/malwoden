@@ -18,8 +18,6 @@ jobs:
       - run:
           name: Run tests
           command: npm test
-      - run:
-          name: Run build
   build:
     docker:
       - image: cimg/node:15.1
@@ -27,10 +25,8 @@ jobs:
       - checkout
       - node/install-packages
       - run:
-          name: Run tests
-          command: npm test
-      - run:
           name: Run build
+          command: npm run build
 
 workflows:
   sample:
