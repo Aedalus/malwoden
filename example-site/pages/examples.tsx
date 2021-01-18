@@ -20,6 +20,7 @@ import DrunkardsWalkExample from "../examples/generation/drunkards-walk";
 import MouseInputExample from "../examples/input/mouse-input";
 import MouseInputFontExample from "../examples/input/mouse-input-font";
 import MouseInputFont from "../examples/input/mouse-input-font";
+import AStarExample from "../examples/pathfinding/astar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +61,9 @@ const MenuData: IMenuData = {
   Generation: {
     "Cellular Automata": <CellularAutomataExample />,
     "Drunkards Walk": <DrunkardsWalkExample />,
+  },
+  Pathfinding: {
+    AStar: <AStarExample />,
   },
 };
 

@@ -29,6 +29,25 @@ export class AStar {
   }
 
   /**
+   * Get all neightbors of a point. Returns orthogonal
+   * directions first, then diagonal if topology is 8.
+   * Results in more natural looking paths.
+   * @param pos - Vector2
+   */
+  private getNeighbors(pos: Vector2): Vector2[] {
+    const neighbors = getRing4(pos.x, pos.y, 1);
+
+    if (this.topology === "eight") {
+      neighbors.push({ x: pos.x + 1, y: pos.y - 1 });
+      neighbors.push({ x: pos.x - 1, y: pos.y - 1 });
+      neighbors.push({ x: pos.x - 1, y: pos.y + 1 });
+      neighbors.push({ x: pos.x + 1, y: pos.y + 1 });
+    }
+
+    return neighbors;
+  }
+
+  /**
    * @param start Vector2 - The starting position
    * @param end  Vector2 - The ending position
    *
@@ -68,10 +87,7 @@ export class AStar {
         return totalPath;
       }
 
-      let neighbors =
-        this.topology === "four"
-          ? getRing4(current.x, current.y, 1)
-          : getRing8(current.x, current.y, 1);
+      let neighbors = this.getNeighbors(current);
 
       if (this.isBlocked) {
         neighbors = neighbors.filter((v) => this.isBlocked!(v) === false);
