@@ -68,10 +68,7 @@ describe("MouseHandler", () => {
   it("Will update on mouse movement", () => {
     const m = new MouseHandler();
 
-    m["onMouseUpdate"]({
-      pageX: 5,
-      pageY: 10,
-    } as MouseEvent);
+    m["onMouseUpdateEvent"]({ pageX: 5, pageY: 10 } as any);
 
     expect(m.getPos()).toEqual({ x: 5, y: 10 });
   });
@@ -189,5 +186,28 @@ describe("MouseHandler", () => {
     check(1, 1, 1, 0);
     c.callOnMouseDown({ x: 0, y: 0 }, 2);
     check(1, 1, 1, 1);
+  });
+
+  it("Can tell if a mouse button is held down", () => {
+    const h = new MouseHandler();
+
+    expect(h.isMouseDown()).toBeFalsy();
+    expect(h.isMouseDown(2)).toBeFalsy();
+
+    h["onMouseDownEvent"](new MouseEvent("mousedown", { button: 0 }));
+    expect(h.isMouseDown()).toBeTruthy();
+    expect(h.isMouseDown(2)).toBeFalsy();
+
+    h["onMouseDownEvent"](new MouseEvent("mousedown", { button: 2 }));
+    expect(h.isMouseDown()).toBeTruthy();
+    expect(h.isMouseDown(2)).toBeTruthy();
+
+    h["onMouseUpEvent"](new MouseEvent("mouseup", { button: 0 }));
+    expect(h.isMouseDown()).toBeFalsy();
+    expect(h.isMouseDown(2)).toBeTruthy();
+
+    h["onMouseUpEvent"](new MouseEvent("mouseup", { button: 2 }));
+    expect(h.isMouseDown()).toBeFalsy();
+    expect(h.isMouseDown(2)).toBeFalsy();
   });
 });
