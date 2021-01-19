@@ -60,9 +60,22 @@ describe("KeyboardHandler", () => {
     h.clearContext();
     expect(h["context"]).toBeUndefined();
   });
-});
 
-describe("KeyboardHandler", () => {
+  it("Can check if a key is down", () => {
+    const h = new KeyboardHandler();
+    const _isDown = h["_isDown"];
+
+    expect(h["_isDown"].has(KeyCode.A)).toBeFalsy();
+    expect(h.isKeyDown(KeyCode.A)).toBeFalsy();
+    h["onKeyDownEvent"](new KeyboardEvent("keydown", { keyCode: KeyCode.A }));
+    expect(h["_isDown"].has(KeyCode.A)).toBeTruthy();
+    expect(h.isKeyDown(KeyCode.A)).toBeTruthy();
+
+    h["onKeyUpEvent"](new KeyboardEvent("keyup", { keyCode: KeyCode.A }));
+    expect(h["_isDown"].has(KeyCode.A)).toBeFalsy();
+    expect(h.isKeyDown(KeyCode.A)).toBeFalsy();
+  });
+
   it("Can fire onDown", () => {
     const c = new KeyboardContext();
 

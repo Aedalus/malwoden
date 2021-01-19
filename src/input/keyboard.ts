@@ -8,17 +8,24 @@ import { KeyCode } from "./keycode";
  */
 export class KeyboardHandler {
   private context?: KeyboardContext;
+  private _isDown = new Set<number>();
 
   /** Creates a new KeyboardHandler */
   constructor() {
-    document.addEventListener("keydown", (e: KeyboardEvent) => {
-      this.context && this.context.fireOnDown(e.keyCode);
-      e.preventDefault();
-    });
-    document.addEventListener("keyup", (e: KeyboardEvent) => {
-      this.context && this.context.fireOnUp(e.keyCode);
-      e.preventDefault();
-    });
+    document.addEventListener("keydown", this.onKeyDownEvent.bind(this));
+    document.addEventListener("keyup", this.onKeyUpEvent.bind(this));
+  }
+
+  private onKeyDownEvent(e: KeyboardEvent) {
+    this._isDown.add(e.keyCode);
+    this.context && this.context.fireOnDown(e.keyCode);
+    e.preventDefault();
+  }
+
+  private onKeyUpEvent(e: KeyboardEvent) {
+    this._isDown.delete(e.keyCode);
+    this.context && this.context.fireOnUp(e.keyCode);
+    e.preventDefault();
   }
 
   /**
@@ -36,6 +43,14 @@ export class KeyboardHandler {
     const existing = this.context;
     this.context = undefined;
     return existing;
+  }
+
+  /**
+   * Returns if a key is currently held down.
+   * @param keyCode KeyCode | number - The keyCode to check
+   */
+  isKeyDown(keyCode: number): boolean {
+    return this._isDown.has(keyCode);
   }
 }
 

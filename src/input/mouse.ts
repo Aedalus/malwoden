@@ -10,40 +10,54 @@ export class MouseHandler {
   private y: number = 0;
 
   private context?: MouseContext;
+  private _isDown = new Set<number>();
 
   /** Creates a new Mouse Handler */
   constructor() {
     document.addEventListener(
       "mousemove",
-      this.onMouseUpdate.bind(this),
+      this.onMouseUpdateEvent.bind(this),
       false
     );
     document.addEventListener(
       "mouseenter",
-      this.onMouseUpdate.bind(this),
+      this.onMouseUpdateEvent.bind(this),
       false
     );
 
-    document.addEventListener("mousedown", (e) => {
-      if (this.context) {
-        const x = e.pageX;
-        const y = e.pageY;
-        this.context.callOnMouseDown({ x, y }, e.button);
-      }
-    });
-
-    document.addEventListener("mouseup", (e) => {
-      if (this.context) {
-        const x = e.pageX;
-        const y = e.pageY;
-        this.context.callOnMouseUp({ x, y }, e.button);
-      }
-    });
+    document.addEventListener("mousedown", this.onMouseDownEvent.bind(this));
+    document.addEventListener("mouseup", this.onMouseUpEvent.bind(this));
   }
 
-  private onMouseUpdate(e: MouseEvent) {
+  private onMouseDownEvent(e: MouseEvent) {
+    this._isDown.add(e.button);
+    if (this.context) {
+      const x = e.pageX;
+      const y = e.pageY;
+      this.context.callOnMouseDown({ x, y }, e.button);
+    }
+  }
+
+  private onMouseUpEvent(e: MouseEvent) {
+    this._isDown.delete(e.button);
+    if (this.context) {
+      const x = e.pageX;
+      const y = e.pageY;
+      this.context.callOnMouseUp({ x, y }, e.button);
+    }
+  }
+
+  private onMouseUpdateEvent(e: MouseEvent) {
     this.x = e.pageX;
     this.y = e.pageY;
+  }
+
+  /**
+   * Returns true if the given mouse button is down.
+   * @param mouseButton number - Default 0 for left click.
+   */
+  isMouseDown(mouseButton: number = 0): boolean {
+    return this._isDown.has(mouseButton);
   }
 
   /** Gets the current window position of the mouse */
