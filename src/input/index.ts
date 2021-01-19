@@ -1,3 +1,3 @@
 export { KeyCode } from "./keycode";
 export { KeyboardContext, KeyboardHandler } from "./keyboard";
-export { MouseHandler } from "./mouse";
+export { MouseHandler, MouseContext } from "./mouse";
