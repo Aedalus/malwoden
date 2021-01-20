@@ -107,7 +107,7 @@ export class PreciseShadowcasting {
         );
         if (visibility || this.returnAll) {
           if (this.cartesianRange) {
-            const absRange = Vector.getDistance(origin, cell, "cartesian");
+            const absRange = Vector.getDistance(origin, cell);
             if (absRange <= range) {
               callback(cell, r, visibility);
             }

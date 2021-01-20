@@ -45,6 +45,19 @@ describe("areEqual", () => {
 });
 
 describe("getDistance", () => {
+  it("Can get the distance between two vectors", () => {
+    const tests: [Vector2, Vector2, number][] = [
+      [{ x: 0, y: 0 }, { x: 0, y: 0 }, 0],
+      [{ x: 1, y: 0 }, { x: 0, y: 0 }, 1],
+      [{ x: 1, y: 1 }, { x: 0, y: 0 }, Math.sqrt(2)],
+      [{ x: 100, y: 100 }, { x: -100, y: -100 }, Math.sqrt(80000)],
+    ];
+
+    for (let [v1, v2, d] of tests) {
+      expect(Vector.getDistance(v1, v2)).toEqual(d);
+    }
+  });
+
   it("Can get the distance between two vectors - 4", () => {
     const tests: [Vector2, Vector2, number][] = [
       [{ x: 0, y: 0 }, { x: 0, y: 0 }, 0],
@@ -54,7 +67,7 @@ describe("getDistance", () => {
     ];
 
     for (let [v1, v2, d] of tests) {
-      expect(Vector.getDistance(v1, v2)).toEqual(d);
+      expect(Vector.getDistance(v1, v2, "four")).toEqual(d);
     }
   });
 
