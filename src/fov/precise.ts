@@ -1,3 +1,4 @@
+import { Vector } from "../math/vector";
 import { Vector2 } from "../util/vector";
 import { getRing4, getRing8 } from "./get-ring";
 
@@ -20,12 +21,16 @@ interface VisibilityStruct {
 interface PreciseShadowcastingConfig {
   lightPasses: LightPassesCallback;
   topology: "four" | "eight";
+  returnAll?: boolean;
+  cartesianRange?: boolean;
 }
 
 /** FOV Algorithm that calculates angles of shadows and merges them together. */
 export class PreciseShadowcasting {
   private lightPasses: LightPassesCallback;
   private getRing: typeof getRing4;
+  private returnAll: boolean;
+  private cartesianRange: boolean;
 
   /**
    * Creates a new PreciseShadowcasting object
@@ -33,11 +38,16 @@ export class PreciseShadowcasting {
    *
    * @param config
    * @param config.lightPasses Vector2 => Boolean - Whether a position is visible
-   * @param config.topology "four" | "eight" - The topology to use
+   * @param config.topology "four" | "eight" | "free" - The topology to use
+   * @param config.returnAll Return all spaces in range, even if not visible. Default false.
+   * @param config.cartesianRange If set, will calculate range as a^2 + b^2 = c^2. Results in round shape. Default false.
    */
   constructor(config: PreciseShadowcastingConfig) {
     this.lightPasses = config.lightPasses;
+    // free uses an 8 ring topology
     this.getRing = config.topology === "four" ? getRing4 : getRing8;
+    this.returnAll = config.returnAll ?? false;
+    this.cartesianRange = config.cartesianRange ?? false;
   }
 
   /**
@@ -95,8 +105,15 @@ export class PreciseShadowcasting {
           blocks,
           shadows
         );
-        if (visibility) {
-          callback(cell, r, visibility);
+        if (visibility || this.returnAll) {
+          if (this.cartesianRange) {
+            const absRange = Vector.getDistance(origin, cell, "cartesian");
+            if (absRange <= range) {
+              callback(cell, r, visibility);
+            }
+          } else {
+            callback(cell, r, visibility);
+          }
         }
         // ToDo - Short circuit if entirely surrounded
       }

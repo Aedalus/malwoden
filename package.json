@@ -1,18 +1,18 @@
 {
-  "name": "yendor",
-  "version": "0.0.1-rc1",
+  "name": "malwoden",
+  "version": "0.0.1-rc2",
   "description": "",
   "keywords": [],
-  "main": "dist/yendor.umd.js",
-  "module": "dist/yendor.es5.js",
-  "typings": "dist/types/yendor.d.ts",
+  "main": "dist/malwoden.umd.js",
+  "module": "dist/malwoden.es5.js",
+  "typings": "dist/types/malwoden.d.ts",
   "files": [
     "dist"
   ],
   "author": " <TheAlexanderHiggins@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Aedalus/yendor"
+    "url": "https://github.com/Aedalus/malwoden"
   },
   "license": "MIT",
   "engines": {
@@ -32,7 +32,8 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

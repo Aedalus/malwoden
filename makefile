@@ -9,7 +9,7 @@ dist: node_modules
 	npm run build
 
 deploy_docs: dist ## Deploys the document site
-	aws s3 sync ./docs s3://yendor-$(ENV)/docs --delete
+	aws s3 sync ./docs s3://malwoden-$(ENV)/docs --delete
 
 example-site/out:
 	cd example-site
@@ -17,12 +17,12 @@ example-site/out:
 	npm run build
 
 deploy_examples: example-site/out ## Deploys the example site
-	aws s3 sync ./example-site/out s3://yendor-$(ENV)/examples --delete
-	FILES=$$(aws s3 ls s3://yendor-$(ENV)/examples --recursive | grep -i .html | cut -c 32-)
+	aws s3 sync ./example-site/out s3://malwoden-$(ENV)/examples --delete
+	FILES=$$(aws s3 ls s3://malwoden-$(ENV)/examples --recursive | grep -i .html | cut -c 32-)
 	for file in $$FILES;
 	do
 		no_ext=$$(echo $$file | sed 's/.html//g')
-		aws s3 cp s3://yendor-$(ENV)/$$file s3://yendor-$(ENV)/$$no_ext
+		aws s3 cp s3://malwoden-$(ENV)/$$file s3://malwoden-$(ENV)/$$no_ext
 	done
 	echo "DEPLOYED EXAMPLE SITE"
 

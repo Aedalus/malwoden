@@ -1,11 +1,11 @@
-# (!Alpha) Yendor
+# (!Alpha) Malwoden
 
 ![alt text](./coverage/badge-lines.svg)
 ![alt text](./coverage/badge-statements.svg)
 ![alt text](./coverage/badge-functions.svg)
 ![alt text](./coverage/badge-branches.svg)
 
-Yendor is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
+Malwoden is a roguelike library, meant to perform much of the heavy lifting when creating roguelike games. It takes inspiration from [rot-js](https://ondras.github.io/rot.js/hp), as well as [bracket-lib](https://github.com/thebracket/bracket-lib). ROT still has a number of features we're still building towards, so feel free to take the best parts from each library.
 
 One of the main goals of this library is to provide a simple, minimalistic `Terminal` package with great support for CP437 tilesets.
 This is one area I've found lacking, and hope this library can provide a solid framework for roguelikes and text based games.
@@ -19,25 +19,25 @@ This library is still in alpha. While many of the features are working well, the
 
 ## Installation
 
-Yendor can be downloaded via npm:
+Malwoden can be downloaded via npm:
 
 ```sh
 # For stable
-npm install yendor
+npm install malwoden
 
 # For dev builds
-npm install yendor@next
+npm install malwoden@next
 ```
 
-If developing yendor locally, you can use `npm link` to easily use it in another project.
+If developing malwoden locally, you can use `npm link` to easily use it in another project.
 
 ```sh
-# Inside the yendor project
+# Inside the malwoden project
 npm run start
 npm link
 
 # Inside another project
-npm link yendor
+npm link malwoden
 ```
 
 ## Modules

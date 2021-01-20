@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Terminal } from "yendor";
+import { Terminal } from "malwoden";
 
 export default class extends React.Component {
   componentDidMount() {
@@ -13,7 +13,7 @@ export default class extends React.Component {
       mountNode,
     });
     terminal.clear();
-    terminal.writeAt({ x: 0, y: 0 }, "Yendor Says");
+    terminal.writeAt({ x: 0, y: 0 }, "Malwoden Says");
     terminal.writeAt({ x: 1, y: 1 }, "Hello World!");
     terminal.render();
   }

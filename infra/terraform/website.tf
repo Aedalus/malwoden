@@ -1,21 +1,21 @@
 variable "examples_domain" {
-  default = "alpha.yendor.dev"
+  default = "dev.malwoden.com"
 }
 
 variable "docs_domain" {
-  default = "docs-alpha.yendor.dev"
+  default = "docs.dev.malwoden.com"
 }
 
 variable "acm_arn" {
-  default = "arn:aws:acm:us-east-1:838825577048:certificate/eb6a30f3-08bb-44aa-9827-67feddc1cc2f"
+  default = "arn:aws:acm:us-east-1:838825577048:certificate/ce25a8b1-e28a-4812-bae7-b0052ad8e15c"
 }
 
 resource "aws_s3_bucket" "site" {
-  bucket = "yendor-${var.env}"
+  bucket = "malwoden-${var.env}"
 }
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
-  comment = "Yendor ${var.env} site"
+  comment = "malwoden ${var.env} site"
 }
 
 data "aws_iam_policy_document" "s3_policy" {
@@ -39,21 +39,21 @@ resource "aws_cloudfront_distribution" "examples" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "yendor - ${var.env} - examples"
+  comment             = "malwoden - ${var.env} - examples"
   default_root_object = "index.html"
 
   aliases = [var.examples_domain]
 
   custom_error_response {
-    error_code            = "404"
-    response_code         = "200"
-    response_page_path    = "/index.html"
+    error_code         = "404"
+    response_code      = "200"
+    response_page_path = "/index.html"
   }
 
   custom_error_response {
-    error_code            = "403"
-    response_code         = "200"
-    response_page_path    = "/index.html"
+    error_code         = "403"
+    response_code      = "200"
+    response_page_path = "/index.html"
   }
 
   # --- Origins ----------------------------------------------------------------
@@ -82,9 +82,9 @@ resource "aws_cloudfront_distribution" "examples" {
 
     viewer_protocol_policy = "redirect-to-https"
 
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
   }
 
   price_class = "PriceClass_100"
@@ -96,8 +96,8 @@ resource "aws_cloudfront_distribution" "examples" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_arn
-    ssl_support_method = "sni-only"
+    acm_certificate_arn      = var.acm_arn
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
   }
 }
@@ -106,21 +106,21 @@ resource "aws_cloudfront_distribution" "docs" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "yendor - ${var.env} - docs"
+  comment             = "malwoden - ${var.env} - docs"
   default_root_object = "index.html"
 
   aliases = [var.docs_domain]
 
   custom_error_response {
-    error_code            = "404"
-    response_code         = "200"
-    response_page_path    = "/index.html"
+    error_code         = "404"
+    response_code      = "200"
+    response_page_path = "/index.html"
   }
 
   custom_error_response {
-    error_code            = "403"
-    response_code         = "200"
-    response_page_path    = "/index.html"
+    error_code         = "403"
+    response_code      = "200"
+    response_page_path = "/index.html"
   }
 
   # --- Origins ----------------------------------------------------------------
@@ -164,8 +164,8 @@ resource "aws_cloudfront_distribution" "docs" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_arn
-    ssl_support_method = "sni-only"
+    acm_certificate_arn      = var.acm_arn
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
   }
 }
