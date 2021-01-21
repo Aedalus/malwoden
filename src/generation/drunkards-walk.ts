@@ -58,6 +58,13 @@ export class DrunkardsWalk {
   }
 
   /**
+   * Returns the total number of unique spaces visited
+   */
+  getCoveredCount(): number {
+    return this._coveredCount;
+  }
+
+  /**
    * Adds a point to the drunkards walk,
    * adjusting path, table, and steps as needed.
    * @param point Vector2 - The point to add
@@ -92,7 +99,7 @@ export class DrunkardsWalk {
     // Set the initial coordinate
     this.addPoint(config.start ?? this.getRandPoint());
 
-    for (let i = 0; i < steps; i++) {
+    for (let i = 0; i < steps - 1; i++) {
       // Break if we're over the covered limit
       if (this._coveredCount >= maxCoveredTiles) {
         break;
