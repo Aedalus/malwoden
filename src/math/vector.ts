@@ -14,16 +14,18 @@ export class Vector {
   /**
    * Returns the distance between two vectors.
    *
+   * If no topology is given, diagonal distance is sqrt(2).
    * If topology is four, diagonal distance is 2.
    * If topology is eight, diagonal distance is 1.
+   *
    * @param start The starting Vector2.
    * @param end The ending Vector2.
-   * @param topology Either 'four' or 'eight'. Default 'four'
+   * @param topology Can use "four" or "eight" for non-cartesian distances.
    */
   static getDistance(
     start: Vector2,
     end: Vector2,
-    topology: "four" | "eight" | "cartesian" = "four"
+    topology?: "four" | "eight"
   ): number {
     if (topology === "four") {
       return Math.abs(start.x - end.x) + Math.abs(start.y - end.y);

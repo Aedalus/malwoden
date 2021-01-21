@@ -13,12 +13,15 @@ export default class extends React.Component {
       mountNode: mount,
     });
 
-    const map = new Generation.DrunkardsWalk(40, 40);
+    const map = new Generation.DrunkardsWalk({
+      height: 40,
+      width: 40,
+    });
 
     map.walkSteps({
-      initialCords: { x: 20, y: 20 },
-      stepsToTake: Infinity,
-      toCoverTileCount: 400,
+      start: { x: 20, y: 20 },
+      steps: Infinity,
+      maxCoveredTiles: 400,
     });
 
     terminal.clear();
