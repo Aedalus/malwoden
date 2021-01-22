@@ -18,6 +18,19 @@ export class Dijkstra {
     this.topology = config.topology;
   }
 
+  private getNeighbors(pos: Vector2): Vector2[] {
+    const neighbors = getRing4(pos.x, pos.y, 1);
+
+    if (this.topology === "eight") {
+      neighbors.push({ x: pos.x + 1, y: pos.y - 1 });
+      neighbors.push({ x: pos.x - 1, y: pos.y - 1 });
+      neighbors.push({ x: pos.x - 1, y: pos.y + 1 });
+      neighbors.push({ x: pos.x + 1, y: pos.y + 1 });
+    }
+
+    return neighbors;
+  }
+
   compute(initial: Vector2, goal: Vector2): Vector2[] | undefined {
     //unpackage config.
     const cameFrom = new Map<string, string>();
@@ -54,10 +67,7 @@ export class Dijkstra {
         return totalPath;
       }
 
-      let neighbors =
-        this.topology === "four"
-          ? getRing4(current.x, current.y, 1)
-          : getRing8(current.x, current.y, 1);
+      let neighbors = this.getNeighbors(current);
 
       if (this.isBlocked) {
         neighbors = neighbors.filter((v) => this.isBlocked!(v) === false);
