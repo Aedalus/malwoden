@@ -1,75 +1,138 @@
 import { Table, Vector2 } from "../util";
-import { DrunkardConfig } from "../util/drunkardConfig";
+import { AleaRNG, IRNG } from "../rand";
+import { getRing4, getRing8 } from "../fov/get-ring";
 
+export interface DrunkardsWalkConfig {
+  width: number;
+  height: number;
+  rng?: IRNG;
+  topology?: "four" | "eight";
+}
+
+/** Generator to perform a Drunkard's Walk*/
 export class DrunkardsWalk {
   table: Table<number>;
-  coveredTiles: number = 0;
-  path: Vector2[] = [];
-  step: number = 1;
-  stepsToTake: number = 1;
-  //fill the array with 0s.
 
-  constructor(width: number, height: number) {
-    this.table = new Table(width, height);
-  }
+  private _path: Vector2[] = [];
+  private _steps: number = 0;
+  private _rng: IRNG;
+  private _coveredCount: number = 0;
+  private _topology: "four" | "eight";
 
-  private getRandomDirection(): Vector2 {
-    const ranNum = Math.floor(Math.random() * 4);
-    // 0 = north ---  1 = south --- 2 = west --- 3 = east
-    switch (ranNum) {
-      case 0:
-        return { x: 0, y: -1 };
-      case 1:
-        return { x: 0, y: 1 };
-      case 2:
-        return { x: -1, y: 0 };
-      case 3:
-        return { x: 1, y: 0 };
-      default:
-        throw new Error("Direction not recognized.");
-    }
-  }
+  /**
+   * Creates a new DrunkardsWalk Generator
+   * @param config - Generator Config
+   * @param config.width number - Width of the map
+   * @param config.height number - Height of the map
+   * @param config.rng IRNG - Optional random number generator
+   * @param config.topology "four" | "eight" - Topology to use. Default four.
+   */
+  constructor(config: DrunkardsWalkConfig) {
+    this.table = new Table(config.width, config.height);
+    this._rng = config.rng ?? new AleaRNG();
+    this._topology = config.topology ?? "four";
 
-  addCustomPoint(Cords: Vector2, tableValue: any) {
-    this.table.set(Cords, tableValue);
-    this.path.push(Cords);
-  }
-
-  walkSteps(config: DrunkardConfig) {
-    //constants
+    // Initialize Table
     this.table.fill(0);
-    let coveredTileCount: number = 1; // local step count for the function.
-    // initial set for the drunk's and path add for position.
-    this.path.push(config.initialCords);
+  }
 
-    while (
-      this.path.length !== config.stepsToTake &&
-      coveredTileCount !== config.toCoverTileCount
-    ) {
-      // initital function setup for current array position and table set.
-      const currentPosition = this.path[this.path.length - 1];
-      this.table.set(currentPosition, 1);
+  /**
+   * Returns the path traveled so far.
+   */
+  getPath(): Vector2[] {
+    return this._path;
+  }
 
-      const randomDirection = this.getRandomDirection();
-      const nextPosition: Vector2 = {
-        x: currentPosition.x + randomDirection.x,
-        y: currentPosition.y + randomDirection.y,
-      };
-      //check if the space is within bounds.
+  /**
+   * Returns the last visited location.
+   */
+  getCurrent(): Vector2 | undefined {
+    return this._path[this._path.length - 1];
+  }
 
-      if (this.table.isInBounds(nextPosition) === false) {
-        continue;
-      }
-      // check to see if you've already been there before. If not, increase covered tiled count. Otherwise, set the table and break the loop.
-      if (this.table.get(nextPosition) === 0) {
-        coveredTileCount = coveredTileCount + 1;
-        this.coveredTiles = coveredTileCount;
-      }
-      // adds nextPosition to the Path array and writes to the table.
-      this.addCustomPoint(nextPosition, 1);
+  /**
+   * Returns the total number of steps taken
+   */
+  getSteps(): number {
+    return this._steps;
+  }
 
-      // loop keepers
-      this.step = this.step + 1;
+  /**
+   * Returns the total number of unique spaces visited
+   */
+  getCoveredCount(): number {
+    return this._coveredCount;
+  }
+
+  /**
+   * Adds a point to the drunkards walk,
+   * adjusting path, table, and steps as needed.
+   * @param point Vector2 - The point to add
+   */
+  addPoint(point: Vector2) {
+    this._steps++;
+    if (this.table.get(point) !== 1) {
+      this._coveredCount++;
     }
+    this.table.set(point, 1);
+    this._path.push(point);
+  }
+
+  /**
+   * Generate a path by walking a number of steps.
+   * Can be called multiple times to have the Drunkard 'jump' to a different spot.
+   * @param config - The walk configuration
+   * @param config.steps number - The number of steps to take.
+   * @param config.start Vector2 - The starting position. Default random.
+   * @param config.maxCoveredTiles number - Stops walking if the total number of tiles
+   * ever covered reaches this limit. Default Infinity.
+   */
+  walkSteps(config: {
+    steps: number;
+    start?: Vector2;
+    maxCoveredTiles?: number;
+  }) {
+    // Initialize config
+    const maxCoveredTiles = config.maxCoveredTiles ?? Infinity;
+    const { steps } = config;
+
+    // Set the initial coordinate
+    this.addPoint(config.start ?? this.getRandPoint());
+
+    for (let i = 0; i < steps - 1; i++) {
+      // Break if we're over the covered limit
+      if (this._coveredCount >= maxCoveredTiles) {
+        break;
+      }
+
+      const current = this._path[this._path.length - 1];
+      const next = this.getRandomNeighbor(current);
+      this.addPoint(next);
+    }
+  }
+
+  private getRandPoint() {
+    const x = this._rng.nextInt(0, this.table.width);
+    const y = this._rng.nextInt(0, this.table.height);
+    return { x, y };
+  }
+
+  private getRandomNeighbor(pos: Vector2): Vector2 {
+    let next: Vector2 | undefined = undefined;
+    while (next === undefined) {
+      // Get next neighbor
+      const neighbors =
+        this._topology === "four"
+          ? getRing4(pos.x, pos.y, 1)
+          : getRing8(pos.x, pos.y, 1);
+
+      const n = this._rng.nextItem(neighbors)!;
+
+      // Check if it is in bounds
+      if (this.table.isInBounds(n)) {
+        next = n;
+      }
+    }
+    return next;
   }
 }
