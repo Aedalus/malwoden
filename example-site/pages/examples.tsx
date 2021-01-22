@@ -21,6 +21,7 @@ import MouseInputExample from "../examples/input/mouse-input";
 import MouseInputFontExample from "../examples/input/mouse-input-font";
 import MouseInputFont from "../examples/input/mouse-input-font";
 import AStarExample from "../examples/pathfinding/astar";
+import Dijkstra from "../examples/pathfinding/dijkstra";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +65,7 @@ const MenuData: IMenuData = {
   },
   Pathfinding: {
     AStar: <AStarExample />,
+    Dijkstra: <Dijkstra />
   },
 };
 
