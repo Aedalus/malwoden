@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Terminal,
@@ -10,8 +10,9 @@ import {
   Color,
 } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const BasicFOV = () => {
+  const animRef = React.useRef<number>();
+  useEffect(() => {
     const mount = document.getElementById("example");
     const terminal = new Terminal.RetroTerminal({
       width: 40,
@@ -136,12 +137,12 @@ export default class extends React.Component {
       );
 
       terminal.render();
-      requestAnimationFrame(loop);
+      animRef.current = requestAnimationFrame(loop);
     };
-    requestAnimationFrame(loop);
-  }
+    animRef.current = requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(animRef.current);
+  }, []);
+  return <div id="example" />;
+};
 
-  render() {
-    return <div id="example" />;
-  }
-}
+export default BasicFOV;

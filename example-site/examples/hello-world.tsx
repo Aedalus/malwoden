@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Terminal } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const HelloWorld = () => {
+  useEffect(() => {
     const mountNode = document.getElementById("example");
     const font = new Terminal.Font("Courier", 24, 15, 24, 1, 20);
     const terminal = new Terminal.CanvasTerminal({
@@ -16,9 +16,8 @@ export default class extends React.Component {
     terminal.writeAt({ x: 0, y: 0 }, "Malwoden Says");
     terminal.writeAt({ x: 1, y: 1 }, "Hello World!");
     terminal.render();
-  }
+  }, []);
+  return <div id="example" />;
+};
 
-  render() {
-    return <div id="example" />;
-  }
-}
+export default HelloWorld;

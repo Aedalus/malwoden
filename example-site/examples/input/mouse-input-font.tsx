@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { CharCode, Color, Terminal, Input } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const MouseInput = () => {
+  const requestRef = React.useRef<number>();
+
+  useEffect(() => {
     const mountNode = document.getElementById("example");
     const font = new Terminal.Font("Courier", 24, 15, 24, 1, 20);
     const terminal = new Terminal.CanvasTerminal({
@@ -21,12 +23,12 @@ export default class extends React.Component {
       const char = terminal.pixelToChar(mousePos);
       terminal.drawCharCode(char, CharCode.at, Color.Yellow);
       terminal.render();
-      requestAnimationFrame(loop);
+      requestRef.current = requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
-  }
+    requestRef.current = requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(requestRef.current);
+  }, []);
+  return <div id="example"></div>;
+};
 
-  render() {
-    return <div id="example"></div>;
-  }
-}
+export default MouseInput;

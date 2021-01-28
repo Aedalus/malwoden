@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Terminal, Generation, CharCode, Color } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const DrunkardsWalk = () => {
+  useEffect(() => {
     const mount = document.getElementById("example");
     const terminal = new Terminal.RetroTerminal({
       width: 40,
@@ -44,8 +44,7 @@ export default class extends React.Component {
         }
       }
     }
-  }
-  render() {
-    return <div id="example" />;
-  }
-}
+  }, []);
+  return <div id="example" />;
+};
+export default DrunkardsWalk;
