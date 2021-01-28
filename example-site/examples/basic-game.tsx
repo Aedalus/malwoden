@@ -11,8 +11,10 @@ import {
   Rand,
 } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const BasicGame = () => {
+  const requestRef = React.useRef<number>();
+
+  React.useEffect(() => {
     const mount = document.getElementById("example");
     const terminal = new Terminal.RetroTerminal({
       width: 48,
@@ -157,12 +159,13 @@ export default class extends React.Component {
 
       terminal.render();
 
-      window.requestAnimationFrame(loop);
+      requestRef.current = window.requestAnimationFrame(loop);
     };
-    window.requestAnimationFrame(loop);
-  }
+    requestRef.current = window.requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(requestRef.current);
+  }, []);
 
-  render() {
-    return <div id="example"></div>;
-  }
-}
+  return <div id="example"></div>;
+};
+
+export default BasicGame;

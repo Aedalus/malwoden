@@ -12,8 +12,10 @@ import {
   Pathfinding,
 } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const AStarExample = () => {
+  const requestRef = React.useRef<number>();
+
+  React.useEffect(() => {
     const mount = document.getElementById("example");
     const width = 48;
     const height = 30;
@@ -71,7 +73,6 @@ export default class extends React.Component {
 
       // Get path
       const path = astar.compute(player, tilePos);
-      console.log(path);
       if (path) {
         for (let p of path) {
           terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
@@ -83,12 +84,13 @@ export default class extends React.Component {
 
       // Render Terminal
       terminal.render();
-      requestAnimationFrame(loop);
+      requestRef.current = requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
-  }
+    requestRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(requestRef.current);
+  }, []);
 
-  render() {
-    return <div id="example"></div>;
-  }
-}
+  return <div id="example"></div>;
+};
+
+export default AStarExample;

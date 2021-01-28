@@ -12,7 +12,7 @@ const Layout = (props) => (
     }}
   >
     <Head>
-      <title>Malwoden</title>
+      <title>Malwoden @_,</title>
     </Head>
     <div
       className="Content"

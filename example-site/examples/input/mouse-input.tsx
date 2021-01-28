@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { CharCode, Color, Terminal, Input, Util } from "malwoden";
+import { CharCode, Color, Terminal, Input } from "malwoden";
 
-export default class extends React.Component {
-  componentDidMount() {
+const MouseInput = () => {
+  const requestRef = React.useRef<number>();
+
+  useEffect(() => {
     const mount = document.getElementById("example");
     const width = 48;
     const height = 30;
@@ -41,12 +43,12 @@ export default class extends React.Component {
 
       // Render
       terminal.render();
-      requestAnimationFrame(loop);
+      requestRef.current = requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
-  }
+    requestRef.current = requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(requestRef.current);
+  }, []);
+  return <div id="example"></div>;
+};
 
-  render() {
-    return <div id="example"></div>;
-  }
-}
+export default MouseInput;
