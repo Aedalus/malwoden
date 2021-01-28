@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   CharCode,
@@ -15,7 +15,7 @@ import {
 const AStarExample = () => {
   const requestRef = React.useRef<number>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mount = document.getElementById("example");
     const width = 48;
     const height = 30;

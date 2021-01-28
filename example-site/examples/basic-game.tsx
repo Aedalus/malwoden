@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Glyph,
@@ -14,7 +14,7 @@ import {
 const BasicGame = () => {
   const requestRef = React.useRef<number>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mount = document.getElementById("example");
     const terminal = new Terminal.RetroTerminal({
       width: 48,
