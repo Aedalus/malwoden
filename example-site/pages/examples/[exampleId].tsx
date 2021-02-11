@@ -7,20 +7,20 @@ import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 
 // Examples
-import HelloWorldExample from "../examples/hello-world";
-import BasicGameExample from "../examples/basic-game";
+import HelloWorldExample from "../../examples/hello-world";
+import BasicGameExample from "../../examples/basic-game";
 
-import BasicFOVExample from "../examples/fov/basic-fov";
-import CellularAutomataExample from "../examples/generation/cellular";
-import DrunkardsWalkExample from "../examples/generation/drunkards-walk";
+import BasicFOVExample from "../../examples/fov/basic-fov";
+import CellularAutomataExample from "../../examples/generation/cellular";
+import DrunkardsWalkExample from "../../examples/generation/drunkards-walk";
 
-import MouseInputExample from "../examples/input/mouse-input";
-import MouseInputFontExample from "../examples/input/mouse-input-font";
-import MouseInputFont from "../examples/input/mouse-input-font";
-import AStarExample from "../examples/pathfinding/astar";
+import MouseInputExample from "../../examples/input/mouse-input";
+import MouseInputFontExample from "../../examples/input/mouse-input-font";
+import MouseInputFont from "../../examples/input/mouse-input-font";
+import AStarExample from "../../examples/pathfinding/astar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
