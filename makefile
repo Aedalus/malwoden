@@ -11,19 +11,14 @@ dist: node_modules
 deploy_docs: dist ## Deploys the document site
 	aws s3 sync ./docs s3://malwoden-$(ENV)/docs --delete
 
-example-site/out:
+example-site/build:
 	cd example-site
 	npm ci
+	npm install ..
 	npm run build
 
-deploy_examples: example-site/out ## Deploys the example site
-	aws s3 sync ./example-site/out s3://malwoden-$(ENV)/examples --delete
-	FILES=$$(aws s3 ls s3://malwoden-$(ENV)/examples --recursive | grep -i .html | cut -c 32-)
-	for file in $$FILES;
-	do
-		no_ext=$$(echo $$file | sed 's/.html//g')
-		aws s3 cp s3://malwoden-$(ENV)/$$file s3://malwoden-$(ENV)/$$no_ext
-	done
+deploy_examples: example-site/build ## Deploys the example site
+	aws s3 sync ./example-site/build s3://malwoden-$(ENV)/examples --delete
 	echo "DEPLOYED EXAMPLE SITE"
 
 deploy: deploy_examples
