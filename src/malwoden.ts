@@ -7,3 +7,4 @@ export * as GUI from "./gui";
 export * as Rand from "./rand";
 export * as Util from "./util";
 export * as FOV from "./fov";
+export { Vector2 } from "./util";
