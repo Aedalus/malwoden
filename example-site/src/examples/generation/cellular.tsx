@@ -4,7 +4,11 @@ import { Terminal, Generation, CharCode, Color } from "malwoden";
 
 const Cellular = () => {
   useEffect(() => {
+<<<<<<< HEAD:example-site/src/examples/generation/cellular.tsx
     const mount = document.getElementById("example")!;
+=======
+    const mount = document.getElementById("example");
+>>>>>>> 89d998a6a685a92fc85cd4b9c38d6767791bc786:example-site/examples/generation/cellular.tsx
     const terminal = new Terminal.RetroTerminal({
       width: 40,
       height: 40,

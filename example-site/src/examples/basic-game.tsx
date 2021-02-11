@@ -13,10 +13,17 @@ import {
 } from "malwoden";
 
 const BasicGame = () => {
+<<<<<<< HEAD:example-site/src/examples/basic-game.tsx
   const requestRef = React.useRef<number>(NaN);
 
   useEffect(() => {
     const mount = document.getElementById("example")!;
+=======
+  const requestRef = React.useRef<number>();
+
+  useEffect(() => {
+    const mount = document.getElementById("example");
+>>>>>>> 89d998a6a685a92fc85cd4b9c38d6767791bc786:example-site/examples/basic-game.tsx
     const terminal = new Terminal.RetroTerminal({
       width: 48,
       height: 30,
