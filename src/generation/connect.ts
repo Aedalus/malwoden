@@ -1,4 +1,4 @@
-import { Vector } from "../math";
+import * as Calc from "../calc";
 import { AStar } from "../pathfinding/astar";
 import { Table, Vector2 } from "../util";
 
@@ -57,14 +57,14 @@ export function connect<T>(table: Table<T>, value: T): ConnectData {
     const next = groups[i + 1];
 
     // Get the center point from each area
-    const currentCenter = Vector.getCenter(current);
-    const currentPoint = Vector.getClosest(current, currentCenter);
-    const nextCenter = Vector.getCenter(next);
-    const nextPoint = Vector.getClosest(next, nextCenter);
+    const currentCenter = Calc.Vector.getCenter(current);
+    const currentPoint = Calc.Vector.getClosest(current, currentCenter);
+    const nextCenter = Calc.Vector.getCenter(next);
+    const nextPoint = Calc.Vector.getClosest(next, nextCenter);
 
     // Get two points that are close to the edge for each section
-    const closestCurrent = Vector.getClosest(next, currentPoint);
-    const closestNext = Vector.getClosest(current, nextPoint);
+    const closestCurrent = Calc.Vector.getClosest(next, currentPoint);
+    const closestNext = Calc.Vector.getClosest(current, nextPoint);
 
     const a = new AStar({ topology: "four" });
     const connection = a.compute(closestCurrent, closestNext);

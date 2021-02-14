@@ -1,4 +1,4 @@
-import { Vector } from "../math/vector";
+import * as Calc from "../calc";
 import { Vector2 } from "../util/vector";
 import { getRing4, getRing8 } from "./get-ring";
 
@@ -107,7 +107,7 @@ export class PreciseShadowcasting {
         );
         if (visibility || this.returnAll) {
           if (this.cartesianRange) {
-            const absRange = Vector.getDistance(origin, cell);
+            const absRange = Calc.Vector.getDistance(origin, cell);
             if (absRange <= range) {
               callback(cell, r, visibility);
             }

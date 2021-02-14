@@ -1,5 +1,5 @@
 import { Vector2, PriorityQueue } from "../util";
-import * as Math from "../math";
+import * as Calc from "../calc";
 import { getRing4 } from "../fov/get-ring";
 
 interface dijkstraConfig {
@@ -71,7 +71,7 @@ export class Dijkstra {
       }
 
       // check to see if the space is where you need to be. If so, exit loop.
-      if (Math.Vector.areEqual(current, goal)) {
+      if (Calc.Vector.areEqual(current, goal)) {
         return this.computePathBack(current, cameFrom);
       }
 
