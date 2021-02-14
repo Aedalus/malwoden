@@ -1,4 +1,4 @@
-# (!Alpha) Malwoden
+# Malwoden - Alpha
 
 ![alt text](./coverage/badge-lines.svg)
 ![alt text](./coverage/badge-statements.svg)
@@ -46,7 +46,7 @@ npm link malwoden
 - Generation - General Map Creation
 - GUI - Useful UI Widgets
 - Input - Keyboard + Mouse Abstractions
-- Math - Primarily Vector Functions
+- Calc - Helpful Math Functions
 - Pathfinding - Pathfinding Implementations
 - Rand - Seedable RNG
 - Terminal - Draw Fonts or Tilesets

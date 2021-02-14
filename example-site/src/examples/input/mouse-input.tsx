@@ -7,7 +7,7 @@ const MouseInput = () => {
 
   useEffect(() => {
     const mount = document.getElementById("example")!;
-    const width = 48;
+    const width = 50;
     const height = 30;
     const terminal = new Terminal.RetroTerminal({
       width,
