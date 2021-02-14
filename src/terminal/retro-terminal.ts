@@ -72,6 +72,10 @@ export class RetroTerminal extends RenderableTerminal {
     this._display.setGlyph(pos, glyph);
   }
 
+  private getWidthInTiles() {
+    return this._font.width / this._charWidth;
+  }
+
   render() {
     if (!this._imageLoaded) return;
 
@@ -83,8 +87,8 @@ export class RetroTerminal extends RenderableTerminal {
         char = unicodeMap[char];
       }
 
-      const sx = (char % 32) * this._charWidth;
-      const sy = Math.floor(char / 32) * this._charHeight;
+      const sx = (char % this.getWidthInTiles()) * this._charWidth;
+      const sy = Math.floor(char / this.getWidthInTiles()) * this._charHeight;
 
       // Fill the background
       this._context.fillStyle = glyph.back.cssColor();

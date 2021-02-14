@@ -1,6 +1,6 @@
-import { Vector2 } from "../util";
+import { Vector2, PriorityQueue } from "../util";
 import * as Math from "../math";
-import { getRing4, getRing8 } from "../fov/get-ring";
+import { getRing4 } from "../fov/get-ring";
 
 interface dijkstraConfig {
   isBlockedCallback?: IsBlockedCallback;
@@ -31,40 +31,48 @@ export class Dijkstra {
     return neighbors;
   }
 
+  private computePathBack(
+    current: Vector2,
+    cameFrom: Map<string, string>
+  ): Vector2[] {
+    let curStr = `${current.x}:${current.y}`;
+    const totalPath: Vector2[] = [current];
+
+    while (cameFrom.get(curStr)) {
+      const prevStr = cameFrom.get(curStr)!;
+      const [x, y] = prevStr.split(":");
+      curStr = prevStr;
+      totalPath.unshift({
+        x: Number.parseInt(x),
+        y: Number.parseInt(y),
+      });
+    }
+    return totalPath;
+  }
+
   compute(initial: Vector2, goal: Vector2): Vector2[] | undefined {
-    //unpackage config.
     const cameFrom = new Map<string, string>();
-    const processed: Set<string> = new Set();
-    const processing: Vector2[] = [initial];
+    const visited: Set<string> = new Set();
+    const horizon = new PriorityQueue<[Vector2, number]>(([_, d]) => d);
+
+    // Initialize
+    horizon.insert([initial, 0]);
     cameFrom.set(`${initial.x}:${initial.y}`, "");
 
-    while (processing.length !== 0) {
+    while (horizon.size()) {
       //shift the last node off the array.
-      const current = processing.shift()!;
+      const [current, distance] = horizon.pop()!;
 
       //short circut
-      if (processed.has(`${current.x}:${current.y}`)) {
+      if (visited.has(`${current.x}:${current.y}`)) {
         continue;
       } else {
-        processed.add(`${current.x}:${current.y}`);
+        visited.add(`${current.x}:${current.y}`);
       }
 
       // check to see if the space is where you need to be. If so, exit loop.
       if (Math.Vector.areEqual(current, goal)) {
-        let curStr = `${current.x}:${current.y}`;
-        const totalPath: Vector2[] = [current];
-
-        while (cameFrom.get(curStr)) {
-          const prevStr = cameFrom.get(curStr)!;
-          const [x, y] = prevStr.split(":");
-          curStr = prevStr;
-          totalPath.unshift({
-            x: Number.parseInt(x),
-            y: Number.parseInt(y),
-          });
-        }
-
-        return totalPath;
+        return this.computePathBack(current, cameFrom);
       }
 
       let neighbors = this.getNeighbors(current);
@@ -74,7 +82,9 @@ export class Dijkstra {
       }
 
       for (let n of neighbors) {
-        processing.push(n);
+        if (visited.has(`${n.x}:${n.y}`) === false) {
+          horizon.insert([n, distance + 1]);
+        }
         if (cameFrom.has(`${n.x}:${n.y}`) === false) {
           cameFrom.set(`${n.x}:${n.y}`, `${current!.x}:${current!.y}`);
         }

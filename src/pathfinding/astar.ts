@@ -1,4 +1,4 @@
-import { getRing4, getRing8 } from "../fov/get-ring";
+import { getRing4 } from "../fov/get-ring";
 import * as Math from "../math";
 import { Vector2, PriorityQueue } from "../util";
 
