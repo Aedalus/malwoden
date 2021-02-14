@@ -4,6 +4,7 @@ describe("lib", () => {
   it("has expected modules", () => {
     expect(Malwoden.CharCode).toBeTruthy();
     expect(Malwoden.Color).toBeTruthy();
+    expect(Malwoden.Calc).toBeTruthy();
     expect(Malwoden.FOV).toBeTruthy();
     expect(Malwoden.Generation).toBeTruthy();
     expect(Malwoden.Glyph).toBeTruthy();

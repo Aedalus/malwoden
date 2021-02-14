@@ -1,7 +1,5 @@
-import { Table, Vector2 } from "../util";
+import { Table } from "../util";
 import { IRNG, AleaRNG } from "../rand";
-import { Vector } from "../math";
-import { AStar } from "../pathfinding";
 import { connect, ConnectData } from "./connect";
 
 interface CellularAutomataOptions<T> {

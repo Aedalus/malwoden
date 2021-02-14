@@ -1,4 +1,4 @@
-import { Vector } from "../math";
+import * as Calc from "../calc";
 import { PreciseShadowcasting } from "./precise";
 
 describe("Shadowcasting", () => {
@@ -334,20 +334,20 @@ describe("Shadowcasting", () => {
   it("Can calculate if a shadow overlaps", () => {
     const s = new PreciseShadowcasting({
       lightPasses: (pos) =>
-        !Vector.areEqual(pos, { x: 1, y: 0 }) &&
-        !Vector.areEqual(pos, { x: 1, y: -1 }) &&
-        !Vector.areEqual(pos, { x: 1, y: 1 }) &&
-        !Vector.areEqual(pos, { x: 2, y: 0 }),
+        !Calc.Vector.areEqual(pos, { x: 1, y: 0 }) &&
+        !Calc.Vector.areEqual(pos, { x: 1, y: -1 }) &&
+        !Calc.Vector.areEqual(pos, { x: 1, y: 1 }) &&
+        !Calc.Vector.areEqual(pos, { x: 2, y: 0 }),
       topology: "eight",
     });
 
     const spaces = s.calculateArray({ x: 0, y: 0 }, 2);
 
     const blocked_a = spaces.find((s) =>
-      Vector.areEqual(s.pos, { x: 1, y: 0 })
+      Calc.Vector.areEqual(s.pos, { x: 1, y: 0 })
     );
     const blocked_b = spaces.find((s) =>
-      Vector.areEqual(s.pos, { x: 2, y: 0 })
+      Calc.Vector.areEqual(s.pos, { x: 2, y: 0 })
     );
     expect(blocked_a).toEqual({
       r: 1,
