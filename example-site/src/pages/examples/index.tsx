@@ -22,7 +22,9 @@ import DrunkardsWalkExample from "../../examples/generation/drunkards-walk";
 
 import MouseInputExample from "../../examples/input/mouse-input";
 import MouseInputFontExample from "../../examples/input/mouse-input-font";
+
 import AStarExample from "../../examples/pathfinding/astar";
+import DijkstraExample from "../../examples/pathfinding/dijkstra";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,6 +107,11 @@ const MenuData: IMenuData = {
       name: "AStar",
       example: <AStarExample />,
       srclink: "pathfinding/astar.tsx",
+    },
+    dijkstra: {
+      name: "Dijkstra",
+      example: <DijkstraExample />,
+      srclink: "pathfinding/dijkstra.tsx",
     },
   },
 };
