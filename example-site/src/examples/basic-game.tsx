@@ -18,7 +18,7 @@ const BasicGame = () => {
   useEffect(() => {
     const mount = document.getElementById("example")!;
     const terminal = new Terminal.RetroTerminal({
-      width: 48,
+      width: 50,
       height: 30,
       imageURL: "/agm_16x16.png",
       charWidth: 16,
@@ -27,7 +27,7 @@ const BasicGame = () => {
     });
 
     // Generate Map
-    const map_width = 30;
+    const map_width = 32;
     const map_height = 20;
     const map = new Generation.CellularAutomata(map_width, map_height);
     map.randomize(0.7);
@@ -90,7 +90,6 @@ const BasicGame = () => {
 
     keyboard.setContext(movement);
 
-    // ToDo - Fix this API. 2 Vectors?
     const mapterminal = terminal.port({ x: 17, y: 1 }, map_width, map_height);
 
     const loop = (delta: number) => {
@@ -118,7 +117,7 @@ const BasicGame = () => {
       // World Box
       GUI.box(terminal, {
         x1: 16,
-        x2: 16 + 31,
+        x2: 16 + 33,
         y1: 0,
         y2: 21,
       });
@@ -127,7 +126,7 @@ const BasicGame = () => {
       GUI.box(terminal, {
         title: "Log",
         x1: 0,
-        x2: 16 + 31,
+        x2: 16 + 33,
         y1: 22,
         y2: 29,
       });

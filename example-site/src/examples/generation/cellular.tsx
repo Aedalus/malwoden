@@ -6,8 +6,8 @@ const Cellular = () => {
   useEffect(() => {
     const mount = document.getElementById("example")!;
     const terminal = new Terminal.RetroTerminal({
-      width: 40,
-      height: 40,
+      width: 50,
+      height: 30,
       imageURL: "/font_16.png",
       charWidth: 16,
       charHeight: 16,
