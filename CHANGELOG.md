@@ -1,3 +1,13 @@
+## <small>0.0.1-rc.3 (2021-02-14)</small>
+
+- feat(input/mouse): Added MouseContext to handle mousedown and mouseup (#40) ([af048c4](https://github.com/Aedalus/malwoden/commit/af048c4)), closes [#40](https://github.com/Aedalus/malwoden/issues/40)
+- feat(pathfinding): Added Dijkstra Algorithm ([be87c91](https://github.com/Aedalus/malwoden/commit/be87c91))
+- fix(examples): Fixed example component looping issue (#43) ([89d998a](https://github.com/Aedalus/malwoden/commit/89d998a)), closes [#43](https://github.com/Aedalus/malwoden/issues/43)
+- improvement(input): Added onKeyDown and onMouseDown events to input handlers (#41) ([c8b48cc](https://github.com/Aedalus/malwoden/commit/c8b48cc)), closes [#41](https://github.com/Aedalus/malwoden/issues/41)
+- improvement(fov): Added cartesianRange option for a circular shape (#35) ([94b4132](https://github.com/Aedalus/malwoden/commit/94b4132)), closes [#35](https://github.com/Aedalus/malwoden/issues/35)
+- improvement(generation/drunkards-walk): Changed API to be more concise. ([5b3b9d9](https://github.com/Aedalus/malwoden/commit/5b3b9d9))
+- improvement(pathfinding/astar): Made paths more natural looking. Added AStar example. (#37) ([08bd5f8](https://github.com/Aedalus/malwoden/commit/08bd5f8)), closes [#37](https://github.com/Aedalus/malwoden/issues/37)
+
 ## <small>0.0.1-rc2 (2021-01-14)</small>
 
 - feat(examples): Added an example site (#16) ([e5bfdec](https://github.com/Aedalus/malwoden/commit/e5bfdec)), closes [#16](https://github.com/Aedalus/malwoden/issues/16)

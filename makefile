@@ -39,9 +39,10 @@ tf_apply: ## Applies terraform
 	cd ./infra/terraform
 	terraform apply -var-file="../envs/$(ENV).tfvars"
 
-npm_push_next: dist ## Deploys the library to npm with the next tag
+npm_push: dist ## Deploys the library to npm with the next tag
 	npm publish --tag next
 
-npm_push: dist ## Deploys the library to npm
-	npm publish
+npm_release: dist ## Adds the latest tag to the current npm pkg
+	VERSION=$$(node -e "console.log(require('./package.json').version);")
+	npm dist-tag add malwoden@$$VERSION latest
 
