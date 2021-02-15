@@ -18,6 +18,11 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "malwoden ${var.env} site"
 }
 
+data "aws_route53_zone" "malwoden" {
+  name         = "malwoden.com"
+  private_zone = false
+}
+
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
@@ -33,6 +38,17 @@ data "aws_iam_policy_document" "s3_policy" {
 resource "aws_s3_bucket_policy" "site" {
   bucket = aws_s3_bucket.site.id
   policy = data.aws_iam_policy_document.s3_policy.json
+}
+
+resource "aws_route53_record" "examples" {
+  zone_id = data.aws_route53_zone.malwoden.zone_id
+  name    = var.examples_domain
+  type    = "A"
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.examples.domain_name
+    zone_id                = aws_cloudfront_distribution.examples.hosted_zone_id
+  }
 }
 
 resource "aws_cloudfront_distribution" "examples" {
@@ -96,9 +112,21 @@ resource "aws_cloudfront_distribution" "examples" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = var.acm_arn
+    acm_certificate_arn      = aws_acm_certificate_validation.malwoden.certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
+  }
+}
+
+
+resource "aws_route53_record" "docs" {
+  zone_id = data.aws_route53_zone.malwoden.zone_id
+  name    = var.docs_domain
+  type    = "A"
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.docs.domain_name
+    zone_id                = aws_cloudfront_distribution.docs.hosted_zone_id
   }
 }
 
@@ -164,8 +192,37 @@ resource "aws_cloudfront_distribution" "docs" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = var.acm_arn
+    acm_certificate_arn      = aws_acm_certificate_validation.malwoden.certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
   }
+}
+
+# ACM
+resource "aws_acm_certificate" "malwoden" {
+  domain_name               = var.examples_domain
+  subject_alternative_names = [var.docs_domain]
+  validation_method         = "DNS"
+}
+
+resource "aws_route53_record" "malwoden_dns_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.malwoden.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.malwoden.zone_id
+}
+
+resource "aws_acm_certificate_validation" "malwoden" {
+  certificate_arn         = aws_acm_certificate.malwoden.arn
+  validation_record_fqdns = [for record in aws_route53_record.malwoden_dns_validation : record.fqdn]
 }
