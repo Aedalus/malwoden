@@ -6,25 +6,10 @@ import { Vector2 } from "../util/vector";
 export class Font {
   readonly family: string;
   readonly size: number;
-  readonly charWidth: number;
-  readonly lineHeight: number;
-  readonly x: number;
-  readonly y: number;
 
-  constructor(
-    family: string,
-    size: number,
-    charWidth: number,
-    height: number,
-    x: number,
-    y: number
-  ) {
+  constructor(family: string, size: number) {
     this.family = family;
     this.size = size;
-    this.charWidth = charWidth;
-    this.lineHeight = height;
-    this.x = x;
-    this.y = y;
   }
 }
 
@@ -43,6 +28,9 @@ export class CanvasTerminal extends RenderableTerminal {
   readonly font: Font;
   readonly scale: number = window.devicePixelRatio;
 
+  private charWidth: number;
+  private lineHeight: number;
+
   /**
    * Creates a new CanvasTerminal.
    *
@@ -59,8 +47,21 @@ export class CanvasTerminal extends RenderableTerminal {
     this.canvas = window.document.createElement("canvas");
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
-    const canvasWidth = this.font.charWidth * this.display.width;
-    const canvasHeight = this.font.lineHeight * this.display.height;
+    // Setup font
+    this.context.font = `${this.font.size * this.scale}px ${
+      this.font.family
+    }, monospace`;
+    this.context.textAlign = "center";
+    this.context.textBaseline = "middle";
+
+    this.lineHeight = Math.ceil(this.font.size) * this.scale;
+    this.charWidth =
+      Math.ceil(this.context.measureText("W").width) * this.scale;
+
+    // Setup canvas
+    const canvasWidth = this.charWidth * this.display.width;
+    const canvasHeight = this.lineHeight * this.display.height;
+
     this.canvas.width = canvasWidth * this.scale;
     this.canvas.height = canvasHeight * this.scale;
     this.canvas.style.width = `${canvasWidth}px`;
@@ -89,18 +90,21 @@ export class CanvasTerminal extends RenderableTerminal {
    * Usually drawn once per animation frame.
    */
   render() {
+    // Setup font
     this.context.font = `${this.font.size * this.scale}px ${
       this.font.family
     }, monospace`;
+    this.context.textAlign = "center";
+    this.context.textBaseline = "middle";
 
     this.display.render((pos, glyph) => {
       // Fill the background
       this.context.fillStyle = glyph.back.cssColor();
       this.context.fillRect(
-        pos.x * this.font.charWidth * this.scale,
-        pos.y * this.font.lineHeight * this.scale,
-        this.font.charWidth * this.scale,
-        this.font.lineHeight * this.scale
+        pos.x * this.charWidth * this.scale,
+        pos.y * this.lineHeight * this.scale,
+        this.charWidth * this.scale,
+        this.lineHeight * this.scale
       );
 
       // Dont bother drawing empty characters
@@ -112,8 +116,8 @@ export class CanvasTerminal extends RenderableTerminal {
       this.context.fillStyle = glyph.fore.cssColor();
       this.context.fillText(
         String.fromCharCode(glyph.char),
-        (pos.x * this.font.charWidth + this.font.x) * this.scale,
-        (pos.y * this.font.lineHeight + this.font.y) * this.scale
+        (pos.x * this.charWidth + this.charWidth / 2) * this.scale,
+        (pos.y * this.lineHeight + this.lineHeight / 2) * this.scale
       );
     });
   }
@@ -124,8 +128,8 @@ export class CanvasTerminal extends RenderableTerminal {
   pixelToChar(pixel: Vector2): Vector2 {
     const rect = this.canvas.getBoundingClientRect();
     return {
-      x: Math.floor((pixel.x - rect.left) / this.font.charWidth),
-      y: Math.floor((pixel.y - rect.top) / this.font.lineHeight),
+      x: Math.floor((pixel.x - rect.left) / this.charWidth),
+      y: Math.floor((pixel.y - rect.top) / this.lineHeight),
     };
   }
 
