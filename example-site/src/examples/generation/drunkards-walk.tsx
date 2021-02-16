@@ -14,8 +14,8 @@ const DrunkardsWalk = () => {
     });
 
     const map = new Generation.DrunkardsWalk({
-      height: 40,
-      width: 40,
+      width: 50,
+      height: 30,
     });
 
     map.walkSteps({

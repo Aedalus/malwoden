@@ -2,7 +2,14 @@
   "name": "malwoden",
   "version": "0.0.1-rc.3",
   "description": "",
-  "keywords": [],
+  "keywords": [
+    "rogue",
+    "roguelike",
+    "typescript",
+    "cp437",
+    "ascii",
+    "generation"
+  ],
   "main": "dist/malwoden.umd.js",
   "module": "dist/malwoden.es5.js",
   "typings": "dist/types/malwoden.d.ts",

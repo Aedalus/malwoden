@@ -10,7 +10,6 @@ import {
   Util,
   Rand,
   Pathfinding,
-  Vector2,
 } from "malwoden";
 
 const DijkstraExample = () => {

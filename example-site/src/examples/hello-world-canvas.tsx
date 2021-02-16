@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Glyph, Terminal } from "malwoden";
+import { Terminal } from "malwoden";
 
 const HelloWorld = () => {
   useEffect(() => {
