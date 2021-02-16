@@ -1,5 +1,5 @@
 import { getRing4 } from "../fov/get-ring";
-import * as Math from "../math";
+import * as Calc from "../calc";
 import { Vector2, PriorityQueue } from "../util";
 
 interface AStarConfig {
@@ -59,7 +59,7 @@ export class AStar {
     const openSet = new PriorityQueue<AStarNode>((n) => n.fScore);
     openSet.insert({
       v: start,
-      fScore: Math.Vector.getDistance(start, end, "eight"),
+      fScore: Calc.Vector.getDistance(start, end, "eight"),
     });
 
     // cameFrom maps a node to the one preceding it with the cheapest path
@@ -72,7 +72,7 @@ export class AStar {
 
     while (openSet.size()) {
       const { v: current } = openSet.pop()!;
-      if (Math.Vector.areEqual(current, end)) {
+      if (Calc.Vector.areEqual(current, end)) {
         let curStr = `${current.x}:${current.y}`;
         const totalPath: Vector2[] = [current];
         while (cameFrom.has(curStr)) {
@@ -103,7 +103,7 @@ export class AStar {
           cameFrom.set(`${n.x}:${n.y}`, `${current.x}:${current.y}`);
           gScore.set(`${n.x}:${n.y}`, tentative_gScore);
           const fScore =
-            tentative_gScore + Math.Vector.getDistance(n, end, "eight");
+            tentative_gScore + Calc.Vector.getDistance(n, end, "eight");
           openSet.insert({
             v: n,
             fScore,

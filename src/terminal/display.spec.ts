@@ -1,4 +1,3 @@
-import { Vector } from "../math";
 import { Vector2 } from "../util/vector";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
