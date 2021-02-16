@@ -10,7 +10,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Examples
 import HelloWorldExample from "../../examples/hello-world";
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 250,
     backgroundColor: theme.palette.background.paper,
     borderRight: "1px solid #ddd",
+    paddingBottom: "0",
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -122,25 +123,42 @@ const MenuData: IMenuData = {
   },
 };
 
+function getExampleById(exampleId: string): IMenuItem | undefined {
+  for (let group of Object.values(MenuData)) {
+    for (let id of Object.keys(group)) {
+      if (id === exampleId) {
+        return group[id];
+      }
+    }
+  }
+}
+
 export default function Examples() {
   const classes = useStyles();
+  const params = useParams<{ exampleId: string | undefined }>();
+
+  let example = getExampleById(params.exampleId || "hello-world");
+  let defaultExample = MenuData["General"]["hello-world"];
 
   const [selected, setMenuItem] = useState<IMenuItem>(
-    MenuData["General"]["hello-world"]
+    example || defaultExample
   );
 
   return (
     <div className={classes.layout}>
       <List component="nav" className={classes.root}>
         {Object.entries(MenuData).map(([section, examples]) => (
-          <>
+          <div key={section}>
             <ListItem>
               <ListItemText primary={section} />
             </ListItem>
             <List component="div" disablePadding>
               {Object.entries(examples).map(([id, menuitem]) => (
                 <ListItem
+                  key={id}
                   component={Link}
+                  dense
+                  selected={menuitem.name === selected.name}
                   to={`/examples/${id}`}
                   button
                   className={classes.nested}
@@ -153,17 +171,19 @@ export default function Examples() {
               ))}
             </List>
             <Divider />
-          </>
+          </div>
         ))}
       </List>
 
       {selected && (
         <Card className={classes.exampleCard}>
           <CardContent>{selected.example}</CardContent>
-          <CardActions>
+          <CardActions
+            style={{ float: "right", marginTop: "-15px", marginRight: "5px" }}
+          >
             <Button
-              size="small"
-              href={`https://github.com/Aedalus/malwoden/tree/master/example-site/examples/${selected.srclink}`}
+              // size="small"
+              href={`https://github.com/Aedalus/malwoden/tree/master/example-site/src/examples/${selected.srclink}`}
               endIcon={<GitHubIcon />}
             >
               View Source

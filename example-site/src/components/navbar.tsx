@@ -56,7 +56,7 @@ export default function ButtonAppBar() {
           <Link
             variant="button"
             color="textPrimary"
-            href="#"
+            href="https://docs.malwoden.com"
             className={classes.link}
           >
             TypeDocs

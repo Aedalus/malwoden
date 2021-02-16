@@ -23,8 +23,8 @@ const BasicFOV = () => {
       mountNode: mount,
     });
 
-    const explored = new Util.Table<boolean>(40, 40);
-    const map = new Generation.CellularAutomata(40, 40);
+    const explored = new Util.Table<boolean>(50, 30);
+    const map = new Generation.CellularAutomata(50, 30);
     map.randomize(0.65);
     map.doSimulationStep(3);
     map.connect();

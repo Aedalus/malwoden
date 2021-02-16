@@ -14,7 +14,7 @@ const Cellular = () => {
       mountNode: mount,
     });
 
-    const map = new Generation.CellularAutomata(40, 40);
+    const map = new Generation.CellularAutomata(50, 30);
     map.randomize(0.6);
     map.doSimulationStep(3);
 
