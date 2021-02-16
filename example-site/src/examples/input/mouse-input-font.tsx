@@ -7,7 +7,7 @@ const MouseInputFont = () => {
 
   useEffect(() => {
     const mountNode = document.getElementById("example")!;
-    const font = new Terminal.Font("Courier", 24, 15, 25, 1, 20);
+    const font = new Terminal.Font("Courier New", 24);
     const terminal = new Terminal.CanvasTerminal({
       width: 50,
       height: 20,

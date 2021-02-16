@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 
 // Examples
 import HelloWorldExample from "../../examples/hello-world";
+import HelloWorldCanvasExample from "../../examples/hello-world-canvas";
 import BasicGameExample from "../../examples/basic-game";
 
 import BasicFOVExample from "../../examples/fov/basic-fov";
@@ -64,6 +65,11 @@ const MenuData: IMenuData = {
       name: "Hello World",
       example: <HelloWorldExample />,
       srclink: "hello-world.tsx",
+    },
+    "hello-world-canvas": {
+      name: "Hello World - Font",
+      example: <HelloWorldCanvasExample />,
+      srclink: "hello-world-canvas.tsx",
     },
     "basic-game": {
       name: "Basic Game",

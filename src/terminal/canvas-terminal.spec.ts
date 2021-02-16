@@ -54,7 +54,7 @@ describe("RetroTerminal", () => {
   });
 
   it("Can be created with a font", () => {
-    const font = new Font("Courier", 24, 15, 24, 1, 24);
+    const font = new Font("Courier", 24);
     const terminal = new CanvasTerminal({
       width: 20,
       height: 10,
@@ -66,7 +66,7 @@ describe("RetroTerminal", () => {
     const div = document.createElement("div");
     document.body.appendChild(div);
     expect(div.childNodes).toHaveLength(0);
-    const font = new Font("Courier", 24, 15, 24, 1, 24);
+    const font = new Font("Courier", 24);
     const terminal = new CanvasTerminal({
       width: 20,
       height: 10,
@@ -110,7 +110,7 @@ describe("RetroTerminal", () => {
   //   });
 
   it("Can render", () => {
-    const font = new Font("Courier", 24, 15, 24, 1, 24);
+    const font = new Font("Courier", 24);
     const term = new CanvasTerminal({
       width: 20,
       height: 10,
@@ -138,7 +138,7 @@ describe("RetroTerminal", () => {
   });
 
   it("Can be destroyed", () => {
-    const font = new Font("Courier", 24, 15, 24, 1, 24);
+    const font = new Font("Courier", 24);
     const term = new CanvasTerminal({
       width: 20,
       height: 10,
@@ -154,12 +154,13 @@ describe("RetroTerminal", () => {
   });
 
   it("Can get pixel to char", () => {
-    const font = new Font("Courier", 24, 15, 24, 1, 24);
+    const font = new Font("Courier", 24);
     const term = new CanvasTerminal({
       width: 20,
       height: 20,
       font,
     });
+    term["charWidth"] = 16;
     const pos = term.pixelToChar({ x: 16, y: 25 });
 
     expect(pos).toEqual({ x: 1, y: 1 });
