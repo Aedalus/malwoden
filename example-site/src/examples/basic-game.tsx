@@ -11,6 +11,7 @@ import {
   Rand,
   Vector2,
 } from "malwoden";
+import { green } from "@material-ui/core/colors";
 
 const BasicGame = () => {
   const requestRef = React.useRef<number>(NaN);
@@ -49,6 +50,7 @@ const BasicGame = () => {
       while (logs.length > 5) logs.shift();
     };
     addLog("Collect Coins!");
+    //chamge to something else.
 
     // Entities
     const player = {
@@ -104,10 +106,9 @@ const BasicGame = () => {
       // Player Box
       GUI.box(terminal, {
         title: "Player",
-        x1: 0,
-        x2: 15,
-        y1: 0,
-        y2: 21,
+        origin: { x: 0, y: 0 },
+        width: 15,
+        height: 21,
       });
 
       // HP
@@ -116,20 +117,21 @@ const BasicGame = () => {
 
       // World Box
       GUI.box(terminal, {
-        x1: 16,
-        x2: 16 + 33,
-        y1: 0,
-        y2: 21,
+        origin: { x: 16, y: 0 },
+        width: 33,
+        height: 21,
       });
 
       // Logs
       GUI.box(terminal, {
         title: "Log",
-        x1: 0,
-        x2: 16 + 33,
-        y1: 22,
-        y2: 29,
+        origin: { x: 0, y: 22 },
+        width: 49,
+        height: 7,
       });
+      //test box
+
+
       for (let i = 0; i < logs.length; i++) {
         terminal.writeAt({ x: 1, y: 23 + i }, logs[i]);
       }
