@@ -20,8 +20,8 @@ describe("box", () => {
   it("Can draw a box", () => {
     const t = new TestTerm({ width: 10, height: 10 });
 
-    box(t, { origin: { x: 0, y: 0 }, width: 10, height: 20 });
-
+    box(t, { origin: { x: 0, y: 0 }, width: 5, height: 5 });
+    console.log(t.table.get({ x: 0, y: 0 }));
     // Check corners
     expect(
       t.table
