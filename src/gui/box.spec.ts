@@ -20,8 +20,8 @@ describe("box", () => {
   it("Can draw a box", () => {
     const t = new TestTerm({ width: 10, height: 10 });
 
-    box(t, { x1: 0, y1: 0, x2: 5, y2: 5 });
-
+    box(t, { origin: { x: 0, y: 0 }, width: 5, height: 5 });
+    console.log(t.table.get({ x: 0, y: 0 }));
     // Check corners
     expect(
       t.table
@@ -47,7 +47,7 @@ describe("box", () => {
   it("Can draw a title", () => {
     const t = new TestTerm({ width: 10, height: 10 });
 
-    box(t, { x1: 0, y1: 0, x2: 9, y2: 5, title: "Foo" });
+    box(t, { origin: { x: 0, y: 0 }, width: 6, height: 1, title: "Foo" });
 
     expect(t.table.get({ x: 2, y: 0 })?.isEqual(new Glyph(" "))).toBeTruthy();
     expect(t.table.get({ x: 3, y: 0 })?.isEqual(new Glyph("F"))).toBeTruthy();
