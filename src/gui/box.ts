@@ -1,58 +1,118 @@
 import { BaseTerminal, CharCode, Glyph } from "../terminal";
+import { Vector2 } from "../util";
+import { Color } from "../terminal/color";
 
 interface DrawBoxOptions {
   title?: string;
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
+  foreColor?: Color;
+  barColor?: Color;
+  titleColor?: Color;
+  backColor?: Color;
+  origin: Vector2;
+  width: number;
+  height: number;
 }
 
 export function box(terminal: BaseTerminal, options: DrawBoxOptions) {
-  const { x1, x2, y1, y2, title } = options;
+  const {
+    title,
+    barColor,
+    titleColor,
+    backColor,
+    foreColor,
+    origin,
+    width,
+    height,
+  } = options;
+  const topLeftCorner = origin;
+  const topRightCorner = { x: origin.x + width, y: origin.y };
+  const bottomRightCorner = { x: origin.x + width, y: origin.y + height };
+  const bottomLeftCorner = { x: origin.x, y: origin.y + height };
+
+  terminal.fill(
+    origin,
+    bottomRightCorner,
+    new Glyph(" ", foreColor, backColor)
+  );
+
   // Corners
   terminal.drawGlyph(
-    { x: x1, y: y1 },
-    Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndRight)
+    topLeftCorner,
+    Glyph.fromCharCode(
+      CharCode.boxDrawingsDoubleDownAndRight,
+      barColor,
+      backColor
+    )
   );
   terminal.drawGlyph(
-    { x: x2, y: y1 },
-    Glyph.fromCharCode(CharCode.boxDrawingsDoubleDownAndLeft)
+    topRightCorner,
+    Glyph.fromCharCode(
+      CharCode.boxDrawingsDoubleDownAndLeft,
+      barColor,
+      backColor
+    )
   );
   terminal.drawGlyph(
-    { x: x1, y: y2 },
-    Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndRight)
+    bottomLeftCorner,
+    Glyph.fromCharCode(
+      CharCode.boxDrawingsDoubleUpAndRight,
+      barColor,
+      backColor
+    )
   );
   terminal.drawGlyph(
-    { x: x2, y: y2 },
-    Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndLeft)
+    bottomRightCorner,
+    Glyph.fromCharCode(CharCode.boxDrawingsDoubleUpAndLeft, barColor, backColor)
   );
 
   // Horizontal Bars
-  for (let dx = x1 + 1; dx < x2; dx++) {
+  //top width bar
+  for (let dx = origin.x + 1; dx < topRightCorner.x; dx++) {
     terminal.drawGlyph(
-      { x: dx, y: y1 },
-      Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal)
+      { x: dx, y: origin.y },
+      Glyph.fromCharCode(
+        CharCode.boxDrawingsDoubleHorizontal,
+        barColor,
+        backColor
+      )
     );
+    //botom  width bar.
     terminal.drawGlyph(
-      { x: dx, y: y2 },
-      Glyph.fromCharCode(CharCode.boxDrawingsDoubleHorizontal)
+      { x: dx, y: bottomRightCorner.y },
+      Glyph.fromCharCode(
+        CharCode.boxDrawingsDoubleHorizontal,
+        barColor,
+        backColor
+      )
     );
   }
 
   // Vertical Bars
-  for (let dy = y1 + 1; dy < y2; dy++) {
+  for (let dy = origin.y + 1; dy < Math.abs(origin.y + height); dy++) {
     terminal.drawGlyph(
-      { x: x1, y: dy },
-      Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical)
+      { x: origin.x, y: dy },
+      Glyph.fromCharCode(
+        CharCode.boxDrawingsDoubleVertical,
+        barColor,
+        backColor
+      )
     );
     terminal.drawGlyph(
-      { x: x2, y: dy },
-      Glyph.fromCharCode(CharCode.boxDrawingsDoubleVertical)
+      { x: topRightCorner.x, y: dy },
+      Glyph.fromCharCode(
+        CharCode.boxDrawingsDoubleVertical,
+        barColor,
+        backColor
+      )
     );
   }
 
   if (title) {
-    terminal.writeAt({ x: x1 + 2, y: y1 }, ` ${title} `);
+    terminal.writeAt(
+      { x: origin.x + 2, y: origin.y },
+      ` ${title} `,
+      titleColor,
+      backColor
+    );
   }
 }
