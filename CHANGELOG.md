@@ -1,3 +1,9 @@
+## <small>0.1.1 (2021-02-23)</small>
+
+* fix(npm): removed cruft dependencies ([75fa1fb](https://github.com/Aedalus/malwoden/commit/75fa1fb))
+
+
+
 ## 0.1.0 (2021-02-23)
 
 - improvement(input): Added onKeyDown and onMouseDown events to input handlers: (#41) ([c8b48cc](https://github.com/Aedalus/malwoden/commit/c8b48cc)), closes [#41](https://github.com/Aedalus/malwoden/issues/41)
