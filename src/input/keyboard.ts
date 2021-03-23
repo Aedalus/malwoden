@@ -19,13 +19,13 @@ export class KeyboardHandler {
   private onKeyDownEvent(e: KeyboardEvent) {
     this._isDown.add(e.keyCode);
     this.context && this.context.fireOnDown(e.keyCode);
-    e.preventDefault();
+    e.stopPropagation();
   }
 
   private onKeyUpEvent(e: KeyboardEvent) {
     this._isDown.delete(e.keyCode);
     this.context && this.context.fireOnUp(e.keyCode);
-    e.preventDefault();
+    e.stopPropagation();
   }
 
   /**
