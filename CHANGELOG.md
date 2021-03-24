@@ -1,3 +1,10 @@
+## <small>0.1.2 (2021-03-24)</small>
+
+* fix(input): fixed prevent default on keypress, allowing for devtool shortcuts ([9055a33](https://github.com/Aedalus/malwoden/commit/9055a33))
+* fix(input/mouse): fixed issue where scrolling caused mouse to be computed incorrectly ([347bae7](https://github.com/Aedalus/malwoden/commit/347bae7))
+
+
+
 ## <small>0.1.1 (2021-02-23)</small>
 
 * fix(npm): removed cruft dependencies ([75fa1fb](https://github.com/Aedalus/malwoden/commit/75fa1fb))

@@ -2,6 +2,9 @@ include ./globals.mk
 
 ENV := "dev"
 
+changelog: ## Generates the changelog
+	npm run changelog
+
 node_modules: package.json
 	npm ci
 
