@@ -68,7 +68,7 @@ describe("MouseHandler", () => {
   it("Will update on mouse movement", () => {
     const m = new MouseHandler();
 
-    m["onMouseUpdateEvent"]({ pageX: 5, pageY: 10 } as any);
+    m["onMouseUpdateEvent"]({ clientX: 5, clientY: 10 } as any);
 
     expect(m.getPos()).toEqual({ x: 5, y: 10 });
   });

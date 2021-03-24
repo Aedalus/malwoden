@@ -32,8 +32,8 @@ export class MouseHandler {
   private onMouseDownEvent(e: MouseEvent) {
     this._isDown.add(e.button);
     if (this.context) {
-      const x = e.pageX;
-      const y = e.pageY;
+      const x = e.clientX;
+      const y = e.clientY;
       this.context.callOnMouseDown({ x, y }, e.button);
     }
   }
@@ -41,15 +41,15 @@ export class MouseHandler {
   private onMouseUpEvent(e: MouseEvent) {
     this._isDown.delete(e.button);
     if (this.context) {
-      const x = e.pageX;
-      const y = e.pageY;
+      const x = e.clientX;
+      const y = e.clientY;
       this.context.callOnMouseUp({ x, y }, e.button);
     }
   }
 
   private onMouseUpdateEvent(e: MouseEvent) {
-    this.x = e.pageX;
-    this.y = e.pageY;
+    this.x = e.clientX;
+    this.y = e.clientY;
   }
 
   /**
