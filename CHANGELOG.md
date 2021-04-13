@@ -1,3 +1,32 @@
+## <small>0.1.2 (2021-03-24)</small>
+
+* fix(input): fixed prevent default on keypress, allowing for devtool shortcuts ([9055a33](https://github.com/Aedalus/malwoden/commit/9055a33))
+* fix(input/mouse): fixed issue where scrolling caused mouse to be computed incorrectly ([347bae7](https://github.com/Aedalus/malwoden/commit/347bae7))
+
+
+
+## <small>0.1.1 (2021-02-23)</small>
+
+* fix(npm): removed cruft dependencies ([75fa1fb](https://github.com/Aedalus/malwoden/commit/75fa1fb))
+
+
+
+## 0.1.0 (2021-02-23)
+
+- improvement(input): Added onKeyDown and onMouseDown events to input handlers: (#41) ([c8b48cc](https://github.com/Aedalus/malwoden/commit/c8b48cc)), closes [#41](https://github.com/Aedalus/malwoden/issues/41)
+- improvement(fov): Added cartesianRange option for a circular shape (#35) ([94b4132](https://github.com/Aedalus/malwoden/commit/94b4132)), closes [#35](https://github.com/Aedalus/malwoden/issues/35)
+- improvement(generation/drunkards-walk): Changed API to be more concise. ([5b3b9d9](https://github.com/Aedalus/malwoden/commit/5b3b9d9))
+- improvement(gui/box): api is now origin point and width/height ([c38874a](https://github.com/Aedalus/malwoden/commit/c38874a))
+- improvement(pathfinding/astar): Made paths more natural looking. Added AStar example. (#37) ([08bd5f8](https://github.com/Aedalus/malwoden/commit/08bd5f8)), closes [#37](https://github.com/Aedalus/malwoden/issues/37)
+- improvement(canvas-terminal): Now calculates font width/height automatically, reducing params ([19a1a02](https://github.com/Aedalus/malwoden/commit/19a1a02))
+- feat(calc): Added calc module with vector helper methods (#46) ([a93442d](https://github.com/Aedalus/malwoden/commit/a93442d)), closes [#46](https://github.com/Aedalus/malwoden/issues/46)
+- feat(input/mouse): Added MouseContext to handle mousedown and mouseup (#40) ([af048c4](https://github.com/Aedalus/malwoden/commit/af048c4)), closes [#40](https://github.com/Aedalus/malwoden/issues/40)
+- feat(pathfinding): Added Dijkstra Algorithm ([be87c91](https://github.com/Aedalus/malwoden/commit/be87c91))
+- feat(website): added basic google analytics ([49ea5aa](https://github.com/Aedalus/malwoden/commit/49ea5aa))
+- feat(website): Added prod website (#47) ([c1a22e7](https://github.com/Aedalus/malwoden/commit/c1a22e7)), closes [#47](https://github.com/Aedalus/malwoden/issues/47)
+- fix(examples): Fixed example component looping issue (#43) ([89d998a](https://github.com/Aedalus/malwoden/commit/89d998a)), closes [#43](https://github.com/Aedalus/malwoden/issues/43)
+- build: Added CI pipeline for test/build ([2cc0574](https://github.com/Aedalus/malwoden/commit/2cc0574))
+
 ## <small>0.0.1-rc.3 (2021-02-14)</small>
 
 - feat(input/mouse): Added MouseContext to handle mousedown and mouseup (#40) ([af048c4](https://github.com/Aedalus/malwoden/commit/af048c4)), closes [#40](https://github.com/Aedalus/malwoden/issues/40)
