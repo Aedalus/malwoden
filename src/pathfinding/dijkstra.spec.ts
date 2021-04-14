@@ -57,21 +57,17 @@ describe("dijkstra", () => {
   });
 
   it("recognizes basic paths - 8", () => {
-    const a = new Dijkstra({ topology: "eight" });
+    const a = new Dijkstra({
+      topology: "eight",
+    });
 
-    const path = a.compute({ x: 0, y: 0 }, { x: 10, y: 10 });
+    const path = a.compute({ x: 0, y: 0 }, { x: 4, y: 0 });
     expect(path).toEqual([
       { x: 0, y: 0, r: 0 },
-      { x: 1, y: 1, r: 1 },
-      { x: 2, y: 2, r: 2 },
-      { x: 3, y: 3, r: 3 },
-      { x: 4, y: 4, r: 4 },
-      { x: 5, y: 5, r: 5 },
-      { x: 6, y: 6, r: 6 },
-      { x: 7, y: 7, r: 7 },
-      { x: 8, y: 8, r: 8 },
-      { x: 9, y: 9, r: 9 },
-      { x: 10, y: 10, r: 10 },
+      { x: 1, y: 0, r: 1 },
+      { x: 2, y: 0, r: 2 },
+      { x: 3, y: 0, r: 3 },
+      { x: 4, y: 0, r: 4 },
     ]);
   });
 

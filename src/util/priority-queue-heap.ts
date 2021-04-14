@@ -1,12 +1,12 @@
 /**
  * HeapPriorityQueue allows for push/pop based on an attribute
  * of the inserted objects. The heap based implementation
- * underneath has theoretic O(log(n)) insert time and O(c)
- * pop/peek time.
+ * underneath has theoretic O(log(n)) insert/pop time and O(c)
+ * peek time.
  *
- * The queue will return items with the lowest priority scores.
- * All scores being equal, it will return objects in the order
- * they were inserted.
+ * Because the bubble up/down might not preserve order within
+ * items of the same priority, the array-priority-queue can be
+ * a better though slower choice in some cases.
  */
 export class HeapPriorityQueue<T> {
   private heap: T[] = [];
@@ -18,7 +18,7 @@ export class HeapPriorityQueue<T> {
    *
    * A lower score is higher priority.
    *
-   * Ex. (user) => user.age
+   * Ex. (monster) => monster.speed
    */
   constructor(priorityFunc: (t: T) => number) {
     this.priorityFunc = priorityFunc;
@@ -107,7 +107,8 @@ export class HeapPriorityQueue<T> {
   }
 
   /**
-   * Get the item with the lowest priority score
+   * Get the item with the lowest priority score,
+   * removing it from the queue.
    * @returns - The lowest priority item
    */
   pop() {
@@ -116,11 +117,20 @@ export class HeapPriorityQueue<T> {
     return toRemove;
   }
 
+  /**
+   * Get the item with the lowest priotity score,
+   * WITHOUT removing it.
+   * @returns - The lowest priority item
+   */
   peek() {
     return this.heap[0];
   }
 
-  size() {
+  /**
+   * Returns the number of items in the queue.
+   * @returns - Number of items in the queue.
+   */
+  size(): number {
     return this.heap.length;
   }
 }

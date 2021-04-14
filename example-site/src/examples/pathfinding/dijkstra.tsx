@@ -9,6 +9,7 @@ import {
   Util,
   Rand,
   Pathfinding,
+  Vector2,
 } from "malwoden";
 
 const DijkstraExample = () => {
@@ -53,8 +54,19 @@ const DijkstraExample = () => {
     const dijkstra = new Pathfinding.Dijkstra({
       isBlockedCallback: (pos) => map.table.get(pos) !== 0,
       getDistanceCallback: (_, to) => (sand.table.get(to) ? 4 : 0.5),
-      topology: "four",
+      topology: "eight",
     });
+
+    // Get path only when the mouse moves tiles
+    let path = dijkstra.compute(player, { x: 0, y: 0 });
+    let prevMouse = { x: 0, y: 0 };
+    function updatePath(newMouse: Vector2) {
+      if (prevMouse.x === newMouse.x && prevMouse.y === newMouse.y) return;
+      else {
+        path = dijkstra.compute(player, newMouse);
+        prevMouse = newMouse;
+      }
+    }
 
     function loop() {
       terminal.clear();
@@ -79,12 +91,9 @@ const DijkstraExample = () => {
       const tilePos = terminal.pixelToChar(mousePos);
       terminal.drawCharCode(tilePos, CharCode.asterisk, Color.Cyan);
 
-      // Get path
-      const path = dijkstra.compute(player, tilePos);
-      if (path) {
-        for (let p of path) {
-          terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
-        }
+      updatePath(tilePos);
+      for (let p of path ?? []) {
+        terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
       }
 
       // Draw Player

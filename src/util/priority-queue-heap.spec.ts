@@ -1,4 +1,4 @@
-import { HeapPriorityQueue } from "./priority-queue";
+import { HeapPriorityQueue } from "./priority-queue-heap";
 import { Vector2 } from "./vector";
 
 describe("PriorityQueue", () => {

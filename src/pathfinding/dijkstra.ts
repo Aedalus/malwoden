@@ -1,4 +1,4 @@
-import { Vector2, HeapPriorityQueue } from "../util";
+import { Vector2, ArrayPriorityQueue } from "../util";
 import * as Calc from "../calc";
 import { getRing4 } from "../fov/get-ring";
 import {
@@ -65,6 +65,7 @@ export class Dijkstra {
         r,
       });
     }
+    console.log({ cameFrom, visited });
     return totalPath;
   }
 
@@ -73,7 +74,7 @@ export class Dijkstra {
     const visited = new Map<string, number>();
 
     // Horizon are tiles we've visited, but still need to check neighbors
-    const horizon = new HeapPriorityQueue<RangeVector2>((v) => v.r);
+    const horizon = new ArrayPriorityQueue<RangeVector2>((v) => v.r);
 
     // Initialize
     visited.set(`${start.x}:${start.y}`, 0);
