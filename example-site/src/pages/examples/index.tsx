@@ -26,6 +26,7 @@ import MouseInputFontExample from "../../examples/input/mouse-input-font";
 
 import AStarExample from "../../examples/pathfinding/astar";
 import DijkstraExample from "../../examples/pathfinding/dijkstra";
+import RangeFinderExample from "../../examples/pathfinding/range-finder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,6 +120,11 @@ const MenuData: IMenuData = {
       name: "Dijkstra",
       example: <DijkstraExample />,
       srclink: "pathfinding/dijkstra.tsx",
+    },
+    rangeFinder: {
+      name: "Range Finder",
+      example: <RangeFinderExample />,
+      srclink: "pathfinding/range-finder.tsx",
     },
   },
 };

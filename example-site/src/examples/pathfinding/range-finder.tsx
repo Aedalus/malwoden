@@ -9,10 +9,9 @@ import {
   Util,
   Rand,
   Pathfinding,
-  Vector2,
 } from "malwoden";
 
-const DijkstraExample = () => {
+const RangeFinderExample = () => {
   const requestRef = React.useRef<number>(NaN);
 
   useEffect(() => {
@@ -28,7 +27,6 @@ const DijkstraExample = () => {
       mountNode: mount,
     });
 
-    const mouse = new Input.MouseHandler();
     const map = new Generation.CellularAutomata(width, height);
     map.randomize();
     map.doSimulationStep(4);
@@ -51,27 +49,53 @@ const DijkstraExample = () => {
 
     const player = new Rand.AleaRNG().nextItem(freeSpots)!;
 
-    const dijkstra = new Pathfinding.Dijkstra({
-      isBlockedCallback: (pos) => map.table.get(pos) !== 0,
-      getDistanceCallback: (_, to) => (sand.table.get(to) ? 4 : 0.5),
+    const rangeFinder = new Pathfinding.RangeFinder({
       topology: "eight",
+      getDistanceCallback: (_, to) => {
+        if (map.table.get(to)) return 10;
+        if (sand.table.get(to)) return 2;
+
+        return 1;
+      },
     });
 
-    // Get path only when the mouse moves tiles
-    let path = dijkstra.compute(player, { x: 0, y: 0 });
-    let prevMouse = { x: 0, y: 0 };
-    function updatePath(newMouse: Vector2) {
-      if (prevMouse.x === newMouse.x && prevMouse.y === newMouse.y) return;
-      else {
-        path = dijkstra.compute(player, newMouse);
-        prevMouse = newMouse;
+    // Mark this as dirty as needed
+    let range = rangeFinder.compute({
+      start: player,
+      maxRange: 5,
+      minRange: 1,
+    });
+
+    function move(dx: number, dy: number) {
+      const x = player.x + dx;
+      const y = player.y + dy;
+      if (map.table.isInBounds({ x, y }) && map.table.get({ x, y }) === 0) {
+        player.x = x;
+        player.y = y;
       }
+
+      // Recompute range on move
+      // Mark this as dirty as needed
+      range = rangeFinder.compute({
+        start: player,
+        maxRange: 5,
+        minRange: 1,
+      });
     }
+
+    // Keyboard
+    const keyboard = new Input.KeyboardHandler();
+    const movement = new Input.KeyboardContext()
+      .onDown(Input.KeyCode.DownArrow, () => move(0, 1))
+      .onDown(Input.KeyCode.LeftArrow, () => move(-1, 0))
+      .onDown(Input.KeyCode.RightArrow, () => move(1, 0))
+      .onDown(Input.KeyCode.UpArrow, () => move(0, -1));
+
+    keyboard.setContext(movement);
 
     function loop() {
       terminal.clear();
 
-      // Draw Map
       for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
           const isSand = sand.table.get({ x, y });
@@ -86,14 +110,9 @@ const DijkstraExample = () => {
         }
       }
 
-      // Draw Mouse
-      const mousePos = mouse.getPos();
-      const tilePos = terminal.pixelToChar(mousePos);
-      terminal.drawCharCode(tilePos, CharCode.asterisk, Color.Cyan);
-
-      updatePath(tilePos);
-      for (let p of path ?? []) {
-        terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
+      // Draw range
+      for (let r of range) {
+        terminal.drawCharCode(r, CharCode.asterisk, Color.DarkCyan);
       }
 
       // Draw Player
@@ -109,4 +128,4 @@ const DijkstraExample = () => {
   return <div id="example"></div>;
 };
 
-export default DijkstraExample;
+export default RangeFinderExample;
