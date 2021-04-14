@@ -6,7 +6,7 @@ describe("range-finder", () => {
     const distanceFunc = () => 1.5;
     const rf = new RangeFinder({
       topology: "four",
-      getDistance: distanceFunc,
+      getDistanceCallback: distanceFunc,
     });
     expect(rf).not.toBeUndefined();
     expect(rf["getDistance"]).toBe(distanceFunc);
@@ -16,7 +16,7 @@ describe("range-finder", () => {
     const rf = new RangeFinder({
       topology: "eight",
     });
-    const range = rf.findRange({
+    const range = rf.compute({
       start: { x: 0, y: 0 },
       maxRange: 0,
     });
@@ -27,7 +27,7 @@ describe("range-finder", () => {
     const rf = new RangeFinder({
       topology: "four",
     });
-    const range = rf.findRange({
+    const range = rf.compute({
       start: { x: 0, y: 0 },
       maxRange: 2,
       minRange: 1,
@@ -56,7 +56,7 @@ describe("range-finder", () => {
     const rf = new RangeFinder({
       topology: "eight",
     });
-    const range = rf.findRange({
+    const range = rf.compute({
       start: { x: 0, y: 0 },
       maxRange: 2,
       minRange: 1,
@@ -98,9 +98,9 @@ describe("range-finder", () => {
 
     const fs = new RangeFinder({
       topology: "four",
-      getDistance: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
+      getDistanceCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
     });
-    const range = fs.findRange({
+    const range = fs.compute({
       start: { x: 0, y: 0 },
       maxRange: 4,
     });
@@ -118,9 +118,9 @@ describe("range-finder", () => {
 
     const fs = new RangeFinder({
       topology: "eight",
-      getDistance: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
+      getDistanceCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
     });
-    const range = fs.findRange({
+    const range = fs.compute({
       start: { x: 0, y: 0 },
       maxRange: 4,
     });
@@ -136,7 +136,7 @@ describe("range-finder", () => {
   it("will change if it found a shorter path", () => {
     const fs = new RangeFinder({
       topology: "four",
-      getDistance: (from, to) => {
+      getDistanceCallback: (from, to) => {
         if (Vector.areEqual(from, { x: 0, y: -1 })) {
           return 0.5;
         } else {
@@ -145,7 +145,7 @@ describe("range-finder", () => {
       },
     });
 
-    const range = fs.findRange({
+    const range = fs.compute({
       start: { x: 0, y: 0 },
       minRange: 0,
       maxRange: 2,

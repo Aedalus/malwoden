@@ -1,6 +1,6 @@
 import { getRing4 } from "../fov/get-ring";
 import * as Calc from "../calc";
-import { Vector2, PriorityQueue } from "../util";
+import { Vector2, HeapPriorityQueue } from "../util";
 
 interface AStarConfig {
   isBlockedCallback?: IsBlockedCallback;
@@ -56,7 +56,7 @@ export class AStar {
    */
   compute(start: Vector2, end: Vector2): Vector2[] | undefined {
     // openSet is the set of discovered nodes, and more might be found
-    const openSet = new PriorityQueue<AStarNode>((n) => n.fScore);
+    const openSet = new HeapPriorityQueue<AStarNode>((n) => n.fScore);
     openSet.insert({
       v: start,
       fScore: Calc.Vector.getDistance(start, end, "eight"),

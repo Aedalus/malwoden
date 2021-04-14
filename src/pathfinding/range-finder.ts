@@ -1,37 +1,24 @@
 import { getRing4 } from "../fov/get-ring";
-import { Vector2, PriorityQueue } from "../util";
-
-/** A Vector2 that includes a range from an origin point */
-interface RangeVector {
-  /** The x coordinate */
-  x: number;
-  /** The y coordinate */
-  y: number;
-  /** The range */
-  r: number;
-}
-
-interface DistanceFunction {
-  (from: Vector2, to: Vector2): number;
-}
+import { Vector2, HeapPriorityQueue } from "../util";
+import { DistanceCallback, RangeVector2 } from "./pathfinding-common";
 
 /** Used to find a range from a central point, like movement or ranged attacks in turn-based games. */
 export class RangeFinder {
-  private getDistance: DistanceFunction = () => 1;
+  private getDistance: DistanceCallback = () => 1;
   readonly topology: "four" | "eight";
 
   /**
    * @param config - Configuration for the RangeFinder
    * @param config.topology - four | eight
-   * @param config.getDistance - Override the distance function for terrain costs or blocked spaces.
+   * @param config.getDistanceCallback - Override the distance function for terrain costs or blocked spaces.
    */
   constructor(config: {
-    getDistance?: DistanceFunction;
+    getDistanceCallback?: DistanceCallback;
     topology: "four" | "eight";
   }) {
     this.topology = config.topology;
-    if (config.getDistance) {
-      this.getDistance = config.getDistance;
+    if (config.getDistanceCallback) {
+      this.getDistance = config.getDistanceCallback;
     }
   }
 
@@ -56,21 +43,19 @@ export class RangeFinder {
    * @param config.minRange - The minimum range allowed (optional)
    * @returns - RangeVector[] ({x,y,r}[])
    */
-  findRange(config: {
+  compute(config: {
     start: Vector2;
     maxRange: number;
     minRange?: number;
-  }): RangeVector[] {
+  }): RangeVector2[] {
     const { start, maxRange: range, minRange = 0 } = config;
 
     // Nodes we will process neighbors of
-    const horizon = new PriorityQueue<RangeVector>((v) => v.r);
+    const horizon = new HeapPriorityQueue<RangeVector2>((v) => v.r);
     horizon.insert({ ...start, r: 0 });
 
     const explored = new Map<string, number>();
     explored.set(`${start.x}:${start.y}`, 0);
-
-    const breadcrumbs = new Map<string, string>();
 
     while (horizon.size()) {
       // Handle current node first
@@ -85,28 +70,21 @@ export class RangeFinder {
         // See if it's even in range
         if (neighbor.r > range) continue;
 
-        // If we've not seen it before, just add it and reprocess neighbors
-        if (!explored.has(`${neighbor.x}:${neighbor.y}`)) {
-          explored.set(`${neighbor.x}:${neighbor.y}`, neighbor.r);
-        } else {
-          // Otherwise check if it's a shorter path, ignore if not
-          const existingDistance = explored.get(`${neighbor.x}:${neighbor.y}`)!;
-          if (neighbor.r < existingDistance) {
-            explored.set(`${neighbor.x}:${neighbor.y}`, neighbor.r);
-            breadcrumbs.set(
-              `${neighbor.x}:${neighbor.y}`,
-              `${current.x}:${current.y}`
-            );
-          }
-        }
+        // We pay attention only if we haven't seen it before,
+        // or we just found a shorter path
+        const importantNeighbor =
+          !explored.has(`${neighbor.x}:${neighbor.y}`) ||
+          neighbor.r < explored.get(`${neighbor.x}:${neighbor.y}`)!;
 
-        // Either way, add it to the horizon for its neighbors to be processed.
-        horizon.insert(neighbor);
+        if (importantNeighbor) {
+          explored.set(`${neighbor.x}:${neighbor.y}`, neighbor.r);
+          horizon.insert(neighbor);
+        }
       }
     }
 
     // Return everything in range
-    const result: RangeVector[] = [];
+    const result: RangeVector2[] = [];
     explored.forEach((distance, vs) => {
       // Return if not in the right range
       if (distance < minRange || distance > range) return;

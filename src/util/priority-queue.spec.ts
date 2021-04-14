@@ -1,9 +1,9 @@
-import { PriorityQueue } from "./priority-queue";
+import { HeapPriorityQueue } from "./priority-queue";
 import { Vector2 } from "./vector";
 
 describe("PriorityQueue", () => {
   it("Can take in numbers", () => {
-    const q = new PriorityQueue((n: number) => n);
+    const q = new HeapPriorityQueue((n: number) => n);
 
     q.insert(1000);
     q.insert(100);
@@ -17,7 +17,7 @@ describe("PriorityQueue", () => {
   });
 
   it("Can peek at the top entry", () => {
-    const q = new PriorityQueue((n: number) => n);
+    const q = new HeapPriorityQueue((n: number) => n);
 
     q.insert(100);
     q.insert(50);
@@ -29,19 +29,19 @@ describe("PriorityQueue", () => {
   });
 
   it("Will return undefined when peeking at an empty queue", () => {
-    const q = new PriorityQueue((n: number) => n);
+    const q = new HeapPriorityQueue((n: number) => n);
 
     expect(q.peek()).toEqual(undefined);
   });
 
   it("Will return undefined when popping an empty queue", () => {
-    const q = new PriorityQueue((n: number) => n);
+    const q = new HeapPriorityQueue((n: number) => n);
 
     expect(q.pop()).toEqual(undefined);
   });
 
   it("Can take in objects", () => {
-    const q = new PriorityQueue((v: Vector2) => v.x);
+    const q = new HeapPriorityQueue((v: Vector2) => v.x);
 
     q.insert({ x: 100, y: 10 });
     q.insert({ x: 10, y: 10 });
@@ -59,7 +59,7 @@ describe("PriorityQueue", () => {
   });
 
   it("Will prioritize object inserted first", () => {
-    const q = new PriorityQueue((v: Vector2) => v.x);
+    const q = new HeapPriorityQueue((v: Vector2) => v.x);
 
     for (let y = 0; y < 100; y++) {
       q.insert({ x: 0, y });
