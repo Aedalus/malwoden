@@ -6,7 +6,7 @@ import {
   Terminal,
   Input,
   Generation,
-  Glyph,
+  Util,
   Rand,
   Pathfinding,
   Vector2,
@@ -28,15 +28,20 @@ const AStarExample = () => {
       mountNode: mount,
     });
 
-    // ToDo
     const mouse = new Input.MouseHandler();
     const map = new Generation.CellularAutomata(width, height);
     map.randomize();
     map.doSimulationStep(4);
     map.connect();
 
+    const sand = new Generation.CellularAutomata(width, height, {
+      rng: new Rand.AleaRNG("foo"),
+    });
+    sand.randomize(0.65);
+    sand.doSimulationStep(6);
+
     // Get a random free spot
-    const freeSpots: Vector2[] = [];
+    const freeSpots: Util.Vector2[] = [];
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const wall = map.table.get({ x, y });
@@ -48,8 +53,20 @@ const AStarExample = () => {
 
     const astar = new Pathfinding.AStar({
       isBlockedCallback: (pos) => map.table.get(pos) !== 0,
+      getTerrainCallback: (_, to) => (sand.table.get(to) ? 4 : 0.5),
       topology: "eight",
     });
+
+    // Get path only when the mouse moves tiles
+    let path = astar.compute(player, { x: 0, y: 0 });
+    let prevMouse = { x: 0, y: 0 };
+    function updatePath(newMouse: Vector2) {
+      if (prevMouse.x === newMouse.x && prevMouse.y === newMouse.y) return;
+      else {
+        path = astar.compute(player, newMouse);
+        prevMouse = newMouse;
+      }
+    }
 
     function loop() {
       terminal.clear();
@@ -57,12 +74,15 @@ const AStarExample = () => {
       // Draw Map
       for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-          const wall = map.table.get({ x, y });
-          if (wall)
-            terminal.drawGlyph(
-              { x, y },
-              Glyph.fromCharCode(CharCode.blackClubSuit, Color.Green)
-            );
+          const isSand = sand.table.get({ x, y });
+          let background = isSand
+            ? Color.DarkOliveGreen.blend(Color.Black, 0.6)
+            : undefined;
+          const isWall = map.table.get({ x, y });
+          let foreground = isWall ? Color.Green : Color.Black;
+          let charcode = isWall ? CharCode.blackClubSuit : CharCode.blackSquare;
+
+          terminal.drawCharCode({ x, y }, charcode, foreground, background);
         }
       }
 
@@ -71,12 +91,9 @@ const AStarExample = () => {
       const tilePos = terminal.pixelToChar(mousePos);
       terminal.drawCharCode(tilePos, CharCode.asterisk, Color.Cyan);
 
-      // Get path
-      const path = astar.compute(player, tilePos);
-      if (path) {
-        for (let p of path) {
-          terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
-        }
+      updatePath(tilePos);
+      for (let p of path ?? []) {
+        terminal.drawCharCode(p, CharCode.asterisk, Color.DarkCyan);
       }
 
       // Draw Player
@@ -89,7 +106,6 @@ const AStarExample = () => {
     requestRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(requestRef.current);
   }, []);
-
   return <div id="example"></div>;
 };
 
