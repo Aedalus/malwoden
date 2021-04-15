@@ -51,7 +51,7 @@ const RangeFinderExample = () => {
 
     const rangeFinder = new Pathfinding.RangeFinder({
       topology: "eight",
-      getDistanceCallback: (_, to) => {
+      getTerrainCallback: (_, to) => {
         if (map.table.get(to)) return 10;
         if (sand.table.get(to)) return 2;
 

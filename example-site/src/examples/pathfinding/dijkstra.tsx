@@ -53,7 +53,7 @@ const DijkstraExample = () => {
 
     const dijkstra = new Pathfinding.Dijkstra({
       isBlockedCallback: (pos) => map.table.get(pos) !== 0,
-      getDistanceCallback: (_, to) => (sand.table.get(to) ? 4 : 0.5),
+      getTerrainCallback: (_, to) => (sand.table.get(to) ? 4 : 0.5),
       topology: "eight",
     });
 

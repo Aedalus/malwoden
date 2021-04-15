@@ -10,10 +10,10 @@ export interface IsBlockedCallback {
 }
 
 /**
- * A function that returns the distance between two points.
- * Commonly used to get terrain costs, with 'from' being ignored.
+ * A function that returns the terrain cost. The 'from' parameter
+ * can usually be ignored, unless the starting terrain factors in.
  */
-export interface DistanceCallback {
+export interface TerrainCallback {
   (from: Vector2, to: Vector2): number;
 }
 

@@ -6,10 +6,10 @@ describe("range-finder", () => {
     const distanceFunc = () => 1.5;
     const rf = new RangeFinder({
       topology: "four",
-      getDistanceCallback: distanceFunc,
+      getTerrainCallback: distanceFunc,
     });
     expect(rf).not.toBeUndefined();
-    expect(rf["getDistance"]).toBe(distanceFunc);
+    expect(rf["getTerrain"]).toBe(distanceFunc);
   });
 
   it("can get a range of 0", () => {
@@ -98,7 +98,7 @@ describe("range-finder", () => {
 
     const fs = new RangeFinder({
       topology: "four",
-      getDistanceCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
+      getTerrainCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
     });
     const range = fs.compute({
       start: { x: 0, y: 0 },
@@ -118,7 +118,7 @@ describe("range-finder", () => {
 
     const fs = new RangeFinder({
       topology: "eight",
-      getDistanceCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
+      getTerrainCallback: (_, to) => (Vector.areEqual(to, wall) ? 5 : 1),
     });
     const range = fs.compute({
       start: { x: 0, y: 0 },
@@ -136,7 +136,7 @@ describe("range-finder", () => {
   it("will change if it found a shorter path", () => {
     const fs = new RangeFinder({
       topology: "four",
-      getDistanceCallback: (from, to) => {
+      getTerrainCallback: (from, to) => {
         if (Vector.areEqual(from, { x: 0, y: -1 })) {
           return 0.5;
         } else {

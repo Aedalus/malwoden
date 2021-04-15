@@ -2,26 +2,40 @@ import { Vector2, ArrayPriorityQueue } from "../util";
 import * as Calc from "../calc";
 import { getRing4 } from "../fov/get-ring";
 import {
-  DistanceCallback,
+  TerrainCallback,
   IsBlockedCallback,
   RangeVector2,
 } from "./pathfinding-common";
 
 interface DijkstraConfig {
   isBlockedCallback?: IsBlockedCallback;
-  getDistanceCallback?: DistanceCallback;
+  getTerrainCallback?: TerrainCallback;
   topology: "four" | "eight";
 }
 
+/**
+ * Dijkstra's algorithm is a breadth first search to find the goal.
+ * This makes it slower than AStar in most cases, as it doesn't know
+ * how to 'guess' if a tile is closer to the goal or not. However in
+ * most cases the difference in speed is negligible, and this
+ * version of Dijkstra's algorithm can occasionally result in more
+ * 'normal' looking paths.
+ */
 export class Dijkstra {
   readonly topology: "four" | "eight";
   private readonly _isBlocked?: IsBlockedCallback;
-  private readonly _getDistance: DistanceCallback = () => 1;
+  private readonly _getDistance: TerrainCallback = () => 1;
 
+  /**
+   * @param config - General parameters for the AStar Pathfinder
+   * @param config.isBlockedCallback - Return true if the position is blocked.
+   * @param config.getTerrainCallback - Provide terrain costs for movement (optional)
+   * @param config.topology - four | eight
+   */
   constructor(config: DijkstraConfig) {
     this.topology = config.topology;
-    if (config.getDistanceCallback) {
-      this._getDistance = config.getDistanceCallback;
+    if (config.getTerrainCallback) {
+      this._getDistance = config.getTerrainCallback;
     }
     if (config.isBlockedCallback) {
       this._isBlocked = config.isBlockedCallback;
@@ -65,10 +79,20 @@ export class Dijkstra {
         r,
       });
     }
-    console.log({ cameFrom, visited });
     return totalPath;
   }
 
+  /**
+   * Computes a given path from a start and end point. If not path is found,
+   * it will return undefined. Both the start + end points will be returned
+   * in the path.
+   *
+   * @param start Vector2 - The starting point
+   * @param end  Vector2 - The ending point
+   *
+   * @returns RangeVector2[] | undefined - Returns the path,
+   * including start + end, or undefined if no path is found.
+   */
   compute(start: Vector2, end: Vector2): Vector2[] | undefined {
     const breadcrumbs = new Map<string, string>();
     const visited = new Map<string, number>();

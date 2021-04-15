@@ -1,24 +1,28 @@
 import { getRing4 } from "../fov/get-ring";
 import { Vector2, HeapPriorityQueue } from "../util";
-import { DistanceCallback, RangeVector2 } from "./pathfinding-common";
+import { TerrainCallback, RangeVector2 } from "./pathfinding-common";
 
-/** Used to find a range from a central point, like movement or ranged attacks in turn-based games. */
+/**
+ * Used to find a range from a central point, like movement or ranged attacks in
+ * turn-based games. This uses a search similar to Dijkstra or AStar, but returns
+ * a list of tiles in range of a starting point, rather than a path to a goal.
+ */
 export class RangeFinder {
-  private getDistance: DistanceCallback = () => 1;
+  private getTerrain: TerrainCallback = () => 1;
   readonly topology: "four" | "eight";
 
   /**
    * @param config - Configuration for the RangeFinder
    * @param config.topology - four | eight
-   * @param config.getDistanceCallback - Override the distance function for terrain costs or blocked spaces.
+   * @param config.getTerrainCallback - Override the distance function for terrain costs or blocked spaces.
    */
   constructor(config: {
-    getDistanceCallback?: DistanceCallback;
+    getTerrainCallback?: TerrainCallback;
     topology: "four" | "eight";
   }) {
     this.topology = config.topology;
-    if (config.getDistanceCallback) {
-      this.getDistance = config.getDistanceCallback;
+    if (config.getTerrainCallback) {
+      this.getTerrain = config.getTerrainCallback;
     }
   }
 
@@ -38,10 +42,10 @@ export class RangeFinder {
   /**
    * Find the range from a given point.
    * @param config - Configuration for the findRange
-   * @param config.start - Vector2 - The starting position
+   * @param config.start - Vector2 - The starting point
    * @param config.maxRange - The maximum range allowed
    * @param config.minRange - The minimum range allowed (optional)
-   * @returns - RangeVector[] ({x,y,r}[])
+   * @returns - RangeVector2[] ({x,y,r}[])
    */
   compute(config: {
     start: Vector2;
@@ -64,7 +68,7 @@ export class RangeFinder {
       // Handle neighbors
       const neighbors = this.getNeighbors(current);
       for (let n of neighbors) {
-        const distance = current.r + this.getDistance(current, n);
+        const distance = current.r + this.getTerrain(current, n);
         const neighbor = { ...n, r: distance };
 
         // See if it's even in range

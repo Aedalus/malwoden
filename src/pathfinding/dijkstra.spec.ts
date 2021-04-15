@@ -142,7 +142,7 @@ describe("dijkstra", () => {
   it("recognizes basic terrain", () => {
     const a = new Dijkstra({
       topology: "four",
-      getDistanceCallback: () => 0.5,
+      getTerrainCallback: () => 0.5,
     });
 
     const path = a.compute({ x: 0, y: 0 }, { x: 5, y: 5 });
@@ -164,7 +164,7 @@ describe("dijkstra", () => {
   it("recognizes terrain obstacles", () => {
     const a = new Dijkstra({
       topology: "four",
-      getDistanceCallback: (_, to) =>
+      getTerrainCallback: (_, to) =>
         Calc.Vector.areEqual(to, { x: 1, y: 0 }) ? 2 : 0.5,
     });
 
