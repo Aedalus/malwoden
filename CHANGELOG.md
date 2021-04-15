@@ -1,15 +1,17 @@
+## 0.2.0 (2021-04-15)
+
+- feat(pathfinding/astar): Added terrain weights (#66) ([08cad94](https://github.com/Aedalus/malwoden/commit/08cad94)), closes [#66](https://github.com/Aedalus/malwoden/issues/66)
+- feat(pathfinding/dijkstra): Added terrain weights (#66) ([08cad94](https://github.com/Aedalus/malwoden/commit/08cad94)), closes [#66](https://github.com/Aedalus/malwoden/issues/66
+- feat(pathfinding/rangefinder): Added a new class to find tiles within a given range (#65) ([ea5a464](https://github.com/Aedalus/malwoden/commit/ea5a464)), closes [#65](https://github.com/Aedalus/malwoden/issues/65)
+
 ## <small>0.1.2 (2021-03-24)</small>
 
-* fix(input): fixed prevent default on keypress, allowing for devtool shortcuts ([9055a33](https://github.com/Aedalus/malwoden/commit/9055a33))
-* fix(input/mouse): fixed issue where scrolling caused mouse to be computed incorrectly ([347bae7](https://github.com/Aedalus/malwoden/commit/347bae7))
-
-
+- fix(input): fixed prevent default on keypress, allowing for devtool shortcuts ([9055a33](https://github.com/Aedalus/malwoden/commit/9055a33))
+- fix(input/mouse): fixed issue where scrolling caused mouse to be computed incorrectly ([347bae7](https://github.com/Aedalus/malwoden/commit/347bae7))
 
 ## <small>0.1.1 (2021-02-23)</small>
 
-* fix(npm): removed cruft dependencies ([75fa1fb](https://github.com/Aedalus/malwoden/commit/75fa1fb))
-
-
+- fix(npm): removed cruft dependencies ([75fa1fb](https://github.com/Aedalus/malwoden/commit/75fa1fb))
 
 ## 0.1.0 (2021-02-23)
 
