@@ -62,7 +62,7 @@ npm link malwoden
 ## Showcase
 
 - [Mal](https://aedalus.itch.io/malwoden-7drl) - A short 7drl made by the malwoden team showcasing basic features. Source code available at https://github.com/Aedalus/malwoden-7drl
-- [Firefighter RL](http://indspenceable.com/7drl-2021/) - Another 7drl with fantastic fire fighting mechanics, made by Indspenceable.
+- [Firefighter RL](http://indspenceable.com/7drl-2021/) - A 7drl with fantastic fire fighting mechanics, made by Indspenceable.
 
 Have a project you'd like added to the list? Feel free to open an issue on the repo with a link!
 
