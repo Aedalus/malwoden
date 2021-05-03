@@ -57,3 +57,14 @@ npm link malwoden
 - Rand - Seedable RNG
 - Terminal - Draw Fonts or Tilesets
 - Util - Misc Structs + Functions
+
+
+## Showcase
+
+- [Mal](https://aedalus.itch.io/malwoden-7drl) - A short 7drl made by the malwoden team showcasing basic features. Source code available at https://github.com/Aedalus/malwoden-7drl
+
+Have a project you'd like added to the list? Feel free to open an issue on the repo with a link!
+
+## Resources
+
+- [Project Setup Tutorial](https://www.youtube.com/watch?v=bN2bI7AlxG0) - A great youtube video made by Rakaneth, showing how to set up a new project from scratch with Malwoden and Webpack. The result can be seen at https://github.com/Rakaneth/malwoden-tut
