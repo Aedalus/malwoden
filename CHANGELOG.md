@@ -1,3 +1,7 @@
+## 0.3.0 (2021-06-27)
+
+- feat(generation): added bsp-dungeon generation (#74) ([24db44f](https://github.com/Aedalus/malwoden/commit/24db44f)), closes [#74](https://github.com/Aedalus/malwoden/issues/74)
+
 ## 0.2.0 (2021-04-15)
 
 - feat(pathfinding/astar): Added terrain weights (#66) ([08cad94](https://github.com/Aedalus/malwoden/commit/08cad94)), closes [#66](https://github.com/Aedalus/malwoden/issues/66)
