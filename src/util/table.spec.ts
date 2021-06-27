@@ -33,6 +33,7 @@ describe("table", () => {
     expect(t.get({ x: 10, y: -10 })).toEqual(undefined);
     expect(t.get({ x: -10, y: -10 })).toEqual(undefined);
   });
+
   it("can set and unset values", () => {
     const t = new Table<number>(10, 10);
 
@@ -167,5 +168,17 @@ describe("table", () => {
     for (let v of vs) {
       expect(selection).toContainEqual(v);
     }
+  });
+
+  it("can clear a value", () => {
+    const t = new Table(20, 20);
+
+    const pos = { x: 10, y: 5 };
+
+    t.set(pos, 100);
+    expect(t.get(pos)).toEqual(100);
+
+    t.clear(pos);
+    expect(t.get(pos)).toEqual(undefined);
   });
 });

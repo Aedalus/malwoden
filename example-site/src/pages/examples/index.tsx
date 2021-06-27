@@ -20,6 +20,7 @@ import BasicGameExample from "../../examples/basic-game";
 import BasicFOVExample from "../../examples/fov/basic-fov";
 import CellularAutomataExample from "../../examples/generation/cellular";
 import DrunkardsWalkExample from "../../examples/generation/drunkards-walk";
+import BSPDungeonExample from "../../examples/generation/bsp-dungeon";
 
 import MouseInputExample from "../../examples/input/mouse-input";
 import MouseInputFontExample from "../../examples/input/mouse-input-font";
@@ -108,6 +109,11 @@ const MenuData: IMenuData = {
       name: "Drunkard's Walk",
       example: <DrunkardsWalkExample />,
       srclink: "generation/drunkards-walk.tsx",
+    },
+    "bsp-dungeon": {
+      name: "BSP Dungeon",
+      example: <BSPDungeonExample />,
+      srclink: "generation/bsp-dungeon.tsx",
     },
   },
   Pathfinding: {
