@@ -1,6 +1,8 @@
 import * as Calc from "../calc";
 import { AStar } from "../pathfinding/astar";
+import { IRNG } from "../rand";
 import { Table, Vector2 } from "../util";
+import { Rect } from "../util/rect";
 
 export interface ConnectData {
   groups: Vector2[][];
@@ -82,4 +84,29 @@ export function connect<T>(table: Table<T>, value: T): ConnectData {
     groups,
     paths,
   };
+}
+
+export function getSimpleHallwayFromRooms(a: Rect, b: Rect): Vector2[] {
+  const hallway: Vector2[] = [];
+
+  const start = a.center();
+  const end = b.center();
+
+  const minX = Math.min(start.x, end.x);
+  const maxX = Math.max(start.x, end.x);
+
+  const minY = Math.min(start.y, end.y);
+  const maxY = Math.max(start.y, end.y);
+
+  // Connect the vertical
+  // Connect the horizontal
+  for (let y = minY; y <= maxY; y++) {
+    hallway.push({ x: start.x, y });
+  }
+
+  for (let x = minX + 1; x <= maxX; x++) {
+    hallway.push({ x: x, y: end.y });
+  }
+
+  return hallway;
 }

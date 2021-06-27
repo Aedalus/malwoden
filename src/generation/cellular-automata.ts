@@ -1,6 +1,6 @@
 import { Table } from "../util";
 import { IRNG, AleaRNG } from "../rand";
-import { connect, ConnectData } from "./connect";
+import { connect, ConnectData } from "./util";
 
 interface CellularAutomataOptions<T> {
   aliveValue: T;

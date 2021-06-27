@@ -64,4 +64,12 @@ describe("rect", () => {
       expect(r2.intersects(r1)).toEqual(bool);
     }
   });
+
+  it("can get a center", () => {
+    const rectEven = new Rect({ x: 0, y: 0 }, { x: 5, y: 5 });
+    const rectOdd = new Rect({ x: 0, y: 0 }, { x: 4, y: 4 });
+
+    expect(rectOdd.center()).toEqual({ x: 2, y: 2 });
+    expect(rectEven.center()).toEqual({ x: 2, y: 2 });
+  });
 });

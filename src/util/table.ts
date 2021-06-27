@@ -32,6 +32,11 @@ export class Table<T> {
     else delete this.items[index];
   }
 
+  clear(pos: Vector2) {
+    const index = pos.y * this.width + pos.x;
+    delete this.items[index];
+  }
+
   isInBounds({ x, y }: Vector2) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
       return false;

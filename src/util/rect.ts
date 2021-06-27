@@ -31,6 +31,13 @@ export class Rect {
     return Math.abs(this.v2.y - this.v1.y) + 1;
   }
 
+  center(): Vector2 {
+    return {
+      x: Math.round((this.v1.x + this.v2.x - 1) / 2),
+      y: Math.round((this.v1.y + this.v2.y - 1) / 2),
+    };
+  }
+
   intersects(rect: Rect): boolean {
     if (this.v1.x > rect.v2.x || rect.v1.x > this.v2.x) return false;
     if (this.v1.y > rect.v2.y || rect.v1.y > this.v2.y) return false;
