@@ -11,23 +11,15 @@ node_modules: package.json
 dist: node_modules
 	npm run build
 
-deploy_docs: dist ## Deploys the document site
-	aws s3 sync ./docs s3://malwoden-$(ENV)/docs --delete
+.PHONY: deploy_sites
+deploy_sites: example-site/build dist ## Deploy to firebase
+	firebase -P malwoden-$(ENV) deploy
 
 example-site/build:
 	cd example-site
 	npm ci
 	npm install ..
 	npm run build
-
-deploy_examples: example-site/build ## Deploys the example site
-	aws s3 sync ./example-site/build s3://malwoden-$(ENV)/examples --delete
-	echo "DEPLOYED EXAMPLE SITE"
-
-deploy: deploy_examples
-deploy: deploy_docs
-deploy: ## Deploys both documentation sites
-	echo "Deployed Everything!"
 
 tf_init: ## Initializes terraform
 	cd ./infra/terraform
