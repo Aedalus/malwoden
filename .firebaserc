@@ -1,0 +1,27 @@
+{
+  "projects": {
+    "default": "malwoden-dev"
+  },
+  "targets": {
+    "malwoden-dev": {
+      "hosting": {
+        "main": [
+          "malwoden-dev"
+        ],
+        "docs": [
+          "malwoden-dev-docs"
+        ]
+      }
+    },
+    "malwoden-prod": {
+      "hosting": {
+        "main": [
+          "malwoden-prod"
+        ],
+        "docs": [
+          "malwoden-prod-docs"
+        ]
+      }
+    }
+  }
+}
