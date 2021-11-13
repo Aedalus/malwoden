@@ -1,6 +1,3 @@
-// https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
-// Johannes Baagøe <baagoe@baagoe.com>, 2010
-
 import { IRNG } from "./rng";
 
 function Mash() {
@@ -24,6 +21,11 @@ function Mash() {
   return mash;
 }
 
+/**
+ * AleaRNG is an implementation based on
+ * https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
+ * Johannes Baagøe <baagoe@baagoe.com>, 2010
+ */
 export class AleaRNG implements IRNG {
   private seed: string;
   private s0 = 0;
@@ -31,12 +33,19 @@ export class AleaRNG implements IRNG {
   private s2 = 0;
   private c = 0;
 
+  /**
+   * Creates a new AleaRNG
+   * @param seed - An optional string to seed the generation. Defaults to new Date() if not provided.
+   */
   constructor(seed?: string) {
     // Initialize seed if needed
     this.seed = seed === undefined ? new Date().toString() : seed;
     this.reset();
   }
 
+  /**
+   * Resets the RNG to the original seed
+   */
   reset() {
     let mash = Mash();
 
@@ -74,24 +83,52 @@ export class AleaRNG implements IRNG {
     ); // 2^-53
   }
 
+  /**
+   * Returns a number between [min, max). Use nextInt() for integers.
+   * @param min - The min (inclusive). Default 0.
+   * @param max - The max (exclusive). Default 1.
+   * @returns - A float between [min, max)
+   */
   next(min = 0, max = 1): number {
     return this.nextRand() * (max - min) + min;
   }
 
+  /**
+   * Returns an integer between [min, max). Use next() for floats.
+   * @param min - The min (inclusive). Default 0.
+   * @param max - The max (exclusive). Default 100.
+   * @returns - An integer between [min, max)
+   */
   nextInt(min = 0, max = 100): number {
     return Math.floor(this.next() * (max - min) + min);
   }
 
+  /**
+   * Returns a boolean.
+   * @returns - Either true or false
+   */
   nextBoolean(): boolean {
     return this.nextRand() > 0.5;
   }
 
+  /**
+   * Returns a random item from the given array. This does *not* remove the item from the array,
+   * and multiple calls with the same array may yield the same item. If looking to randomize an array,
+   * use shuffle().
+   * @param array - An array of items.
+   * @returns - A single item from the array.
+   */
   nextItem<T>(array: T[]): T | undefined {
     if (array.length === 0) return undefined;
     const i = this.nextInt(0, array.length);
     return array[i];
   }
 
+  /**
+   * Shuffles all values inside an array. Returns a copy, and does not edit the original.
+   * @param array - An array of items
+   * @returns - A clone of the original array with all values shuffled.
+   */
   shuffle<T>(array: T[]): T[] {
     const result: T[] = [];
     const clone = array.slice();
@@ -102,12 +139,17 @@ export class AleaRNG implements IRNG {
     return result;
   }
 
+  /**
+   * Returns a copy of the AleaRNG, with the seed and current step value.
+   * @returns - A copy of the AleaRNG
+   */
   clone(): AleaRNG {
     const a = new AleaRNG();
     a.s0 = this.s0;
     a.s1 = this.s1;
     a.s2 = this.s2;
     a.c = this.c;
+    a.seed = this.seed;
     return a;
   }
 }
