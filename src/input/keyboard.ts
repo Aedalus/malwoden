@@ -52,6 +52,46 @@ export class KeyboardHandler {
   isKeyDown(keyCode: number): boolean {
     return this._isDown.has(keyCode);
   }
+
+  /**
+   * Returns a promise that will resolve the next time a given keyCode is released.
+   * If no keyCode is given, it will return the next keyCode released.
+   * @param keyCode - The keyCode to listen to. If not provided, will monitor for any keycode.
+   * @returns - The pressed keyCode.
+   */
+  async waitForKeyUp(keyCode?: number): Promise<number> {
+    return new Promise((resolve) => {
+      const listener = (e: KeyboardEvent) => {
+        if (keyCode === undefined || keyCode === e.keyCode) {
+          document.removeEventListener("keyup", listener);
+          resolve(e.keyCode);
+        }
+      };
+      document.addEventListener("keyup", listener, {
+        once: keyCode !== undefined,
+      });
+    });
+  }
+
+  /**
+   * Returns a promise that will resolve the next time a given keyCode is pressed down. If
+   * no keyCode is given, it will return the next keyCode pressed.
+   * @param keyCode
+   * @returns - The pressed keyCode.
+   */
+  async waitForKeyDown(keyCode?: number): Promise<number> {
+    return new Promise((resolve) => {
+      const listener = (e: KeyboardEvent) => {
+        if (keyCode === undefined || keyCode === e.keyCode) {
+          document.removeEventListener("keydown", listener);
+          resolve(e.keyCode);
+        }
+      };
+      document.addEventListener("keydown", listener, {
+        once: keyCode !== undefined,
+      });
+    });
+  }
 }
 
 type ContextCallback = () => void;
