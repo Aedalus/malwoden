@@ -110,4 +110,40 @@ describe("KeyboardHandler", () => {
     c.fireOnUp(KeyCode.A);
     c.fireOnDown(KeyCode.A);
   });
+
+  it("Can wait for a keyDown", async () => {
+    const k = new KeyboardHandler();
+
+    let promise = k.waitForKeyDown();
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { keyCode: KeyCode.A })
+    );
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { keyCode: KeyCode.B })
+    );
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { keyCode: KeyCode.C })
+    );
+
+    const keyDown = await promise;
+    expect(keyDown).toEqual(KeyCode.A);
+  });
+
+  it("Can wait for a keyUp", async () => {
+    const k = new KeyboardHandler();
+
+    let promise = k.waitForKeyUp();
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { keyCode: KeyCode.B })
+    );
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { keyCode: KeyCode.C })
+    );
+    document.dispatchEvent(new KeyboardEvent("keyup", { keyCode: KeyCode.A }));
+    document.dispatchEvent(new KeyboardEvent("keyup", { keyCode: KeyCode.B }));
+    document.dispatchEvent(new KeyboardEvent("keyup", { keyCode: KeyCode.C }));
+
+    const keyDown = await promise;
+    expect(keyDown).toEqual(KeyCode.A);
+  });
 });
