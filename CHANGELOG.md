@@ -1,3 +1,8 @@
+## 0.4.0 (2021-11-15)
+
+- feat(input/keyboard): Added waitForKeyUp and waitForKeyDown promise based methods (#78) ([f7754d2](https://github.com/Aedalus/malwoden/commit/f7754d2)), closes [#78](https://github.com/Aedalus/malwoden/issues/78)
+- fix(AleaRNG): AleaRNG's clone method now copies the seed value properly. (#77) ([1e7bd31](https://github.com/Aedalus/malwoden/commit/1e7bd31)), closes [#77](https://github.com/Aedalus/malwoden/issues/77)
+
 ## 0.3.0 (2021-06-27)
 
 - feat(generation): added bsp-dungeon generation (#74) ([24db44f](https://github.com/Aedalus/malwoden/commit/24db44f)), closes [#74](https://github.com/Aedalus/malwoden/issues/74)
