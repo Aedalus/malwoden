@@ -103,4 +103,18 @@ export class Vector {
 
     return closest;
   }
+
+  static add(v1: Vector2, v2: Vector2): Vector2 {
+    return {
+      x: v1.x + v2.x,
+      y: v1.y + v2.y,
+    };
+  }
+
+  static subtract(v1: Vector2, v2: Vector2): Vector2 {
+    return {
+      x: v1.x - v2.x,
+      y: v1.y - v2.y,
+    };
+  }
 }
