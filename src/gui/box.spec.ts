@@ -1,6 +1,6 @@
 import { BaseTerminal, CharCode, Glyph } from "../terminal";
 import { TerminalConfig } from "../terminal/terminal";
-import { Table, Vector2 } from "../util";
+import { Table, Vector2 } from "../struct";
 import { box } from "./box";
 
 class TestTerm extends BaseTerminal {

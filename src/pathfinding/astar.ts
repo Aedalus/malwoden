@@ -1,6 +1,6 @@
 import { getRing4 } from "../fov/get-ring";
 import * as Calc from "../calc";
-import { Vector2, ArrayPriorityQueue } from "../util";
+import { Vector2, ArrayPriorityQueue } from "../struct";
 import {
   TerrainCallback,
   IsBlockedCallback,

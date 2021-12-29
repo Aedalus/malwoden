@@ -1,4 +1,4 @@
-import { Table, Vector2 } from "../util";
+import { Table, Vector2 } from "../struct";
 import { AleaRNG, IRNG } from "../rand";
 import { getRing4, getRing8 } from "../fov/get-ring";
 

@@ -1,5 +1,5 @@
 import { AleaRNG } from "../rand";
-import { Rect } from "../util/rect";
+import { Rect } from "../struct/rect";
 import { BSPDungeon, BSPNode } from "./bsp-dungeon";
 
 describe("bsp-dungeon", () => {

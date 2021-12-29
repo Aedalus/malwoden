@@ -1,5 +1,5 @@
 import { getRing4 } from "../fov/get-ring";
-import { Vector2, HeapPriorityQueue } from "../util";
+import { Vector2, HeapPriorityQueue } from "../struct";
 import { TerrainCallback, RangeVector2 } from "./pathfinding-common";
 
 /**

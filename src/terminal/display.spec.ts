@@ -1,4 +1,4 @@
-import { Vector2 } from "../util/vector";
+import { Vector2 } from "../struct/vector";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
 

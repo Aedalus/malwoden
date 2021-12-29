@@ -12,6 +12,6 @@ describe("lib", () => {
     expect(Malwoden.Rand).toBeTruthy();
     expect(Malwoden.Input).toBeTruthy();
     expect(Malwoden.Terminal).toBeTruthy();
-    expect(Malwoden.Util).toBeTruthy();
+    expect(Malwoden.Struct).toBeTruthy();
   });
 });

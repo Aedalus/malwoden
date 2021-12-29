@@ -1,6 +1,6 @@
 import { Glyph } from "./glyph";
-import { Vector2 } from "../util/vector";
-import { Table } from "../util/table";
+import { Vector2 } from "../struct/vector";
+import { Table } from "../struct/table";
 
 type RenderGlyph = (pos: Vector2, glyph: Glyph) => any;
 

@@ -1,4 +1,4 @@
-import { Table } from "../util";
+import { Table } from "../struct";
 import { IRNG, AleaRNG } from "../rand";
 import { connect, ConnectData } from "./util";
 
