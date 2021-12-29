@@ -1,5 +1,5 @@
 import { BaseTerminal, CharCode, Glyph } from "../terminal";
-import { Vector2 } from "../util";
+import { Vector2 } from "../struct";
 import { Color } from "../terminal/color";
 
 interface DrawBoxOptions {

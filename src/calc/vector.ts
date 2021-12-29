@@ -1,4 +1,4 @@
-import { Vector2 } from "../util/vector";
+import { Vector2 } from "../struct/vector";
 
 /** Contains math for common vector operations. */
 export class Vector {

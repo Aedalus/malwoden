@@ -1,5 +1,5 @@
 import { format } from "path";
-import { Table, Vector2 } from "../util";
+import { Table, Vector2 } from "../struct";
 import { CharCode } from "./char-code";
 import { Color } from "./color";
 import { Glyph } from "./glyph";

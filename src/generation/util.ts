@@ -1,8 +1,8 @@
 import * as Calc from "../calc";
 import { AStar } from "../pathfinding/astar";
 import { IRNG } from "../rand";
-import { Table, Vector2 } from "../util";
-import { Rect } from "../util/rect";
+import { Table, Vector2 } from "../struct";
+import { Rect } from "../struct/rect";
 
 export interface ConnectData {
   groups: Vector2[][];

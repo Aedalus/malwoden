@@ -1,4 +1,4 @@
-import { Rect } from "../util/rect";
+import { Rect } from "../struct/rect";
 import { getSimpleHallwayFromRooms } from "./util";
 
 describe("getSimpleHallwayFromRooms", () => {
