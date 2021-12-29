@@ -1,6 +1,6 @@
 import { AleaRNG, IRNG } from "../rand";
-import { Table, Vector2 } from "../util";
-import { Rect } from "../util/rect";
+import { Table, Vector2 } from "../struct";
+import { Rect } from "../struct/rect";
 import { getSimpleHallwayFromRooms } from "./util";
 
 interface BSPDungeonOptions {

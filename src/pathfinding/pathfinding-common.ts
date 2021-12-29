@@ -1,4 +1,4 @@
-import { Vector2 } from "../util";
+import { Vector2 } from "../struct";
 
 /**
  * A function used to tell if a space is blocked.

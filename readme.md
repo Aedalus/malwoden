@@ -52,11 +52,11 @@ npm link malwoden
 - Generation - General Map Creation
 - GUI - Useful UI Widgets
 - Input - Keyboard + Mouse Abstractions
-- Calc - Helpful Math Functions
+- Calc - Helpful Math Functions, Like Vector Addition
 - Pathfinding - Pathfinding Implementations
 - Rand - Seedable RNG
 - Terminal - Draw Fonts or Tilesets
-- Util - Misc Structs + Functions
+- Struct - Common Useful Data Structures
 
 ## Showcase
 

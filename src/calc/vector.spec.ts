@@ -1,4 +1,4 @@
-import { Vector2 } from "../util";
+import { Vector2 } from "../struct";
 import { Vector } from "./vector";
 
 describe("areEqual", () => {

@@ -5,7 +5,7 @@ import { Color } from "./color";
 import { Glyph } from "./glyph";
 import { unicodeMap } from "./unicodemap";
 import { CharCode } from "./char-code";
-import { Vector2 } from "../util/vector";
+import { Vector2 } from "../struct/vector";
 
 interface RetroTerminalConfig extends TerminalConfig {
   charWidth: number;
