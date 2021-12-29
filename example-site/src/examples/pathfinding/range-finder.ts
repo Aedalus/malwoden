@@ -23,7 +23,7 @@ export class RangeFinderExample implements IExample {
   width = 50;
   height = 30;
 
-  range: { x: number; y: number; r: number }[];
+  range: Pathfinding.RangeVector2[];
 
   constructor() {
     this.mount = document.getElementById("example")!;
