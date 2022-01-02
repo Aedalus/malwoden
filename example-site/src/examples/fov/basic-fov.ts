@@ -1,13 +1,13 @@
 import { IExample } from "../example";
 import {
   Terminal,
-  Util,
   Generation,
   FOV,
   Input,
   CharCode,
   Color,
   Vector2,
+  Struct,
 } from "malwoden";
 
 export class BasicFoVExample implements IExample {
@@ -16,9 +16,9 @@ export class BasicFoVExample implements IExample {
   terminal: Terminal.RetroTerminal;
   fov: FOV.PreciseShadowcasting;
   player: Vector2;
-  explored: Util.Table<boolean>;
-  fov_spaces: { pos: Util.Vector2; r: number; v: number }[] = [];
-  map: Util.Table<number>;
+  explored: Struct.Table<boolean>;
+  fov_spaces: { pos: Vector2; r: number; v: number }[] = [];
+  map: Struct.Table<number>;
 
   constructor() {
     this.mount = document.getElementById("example")!;
@@ -31,21 +31,18 @@ export class BasicFoVExample implements IExample {
       mountNode: this.mount,
     });
 
-    this.explored = new Util.Table<boolean>(50, 30);
-    const gen = new Generation.CellularAutomata<number>(50, 30);
+    this.explored = new Struct.Table<boolean>(50, 30);
+    const gen = new Generation.CellularAutomataBuilder<number>({
+      width: 50,
+      height: 30,
+      wallValue: 1,
+      floorValue: 0,
+    });
     gen.randomize(0.65);
     gen.doSimulationStep(3);
     gen.connect();
-    this.map = gen.table;
-
-    const free = [];
-    for (let x = 0; x < this.map.width; x++) {
-      for (let y = 0; y < this.map.height; y++) {
-        if (this.map.get({ x, y }) !== gen.aliveValue) {
-          free.push({ x, y });
-        }
-      }
-    }
+    this.map = gen.getMap();
+    const free = this.map.find((_, val) => val === 0);
 
     this.player = {
       x: free[0].x,

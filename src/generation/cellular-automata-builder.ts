@@ -1,42 +1,37 @@
 import { Table } from "../struct";
 import { IRNG, AleaRNG } from "../rand";
 import { connect, ConnectData } from "./util";
+import { Builder } from "./builder";
 
 interface CellularAutomataOptions<T> {
-  aliveValue: T;
-  deadValue: T;
-  rng: IRNG;
+  width: number;
+  height: number;
+  wallValue: T;
+  floorValue: T;
+  rng?: IRNG;
 }
 
 /** Used to create CellularAutomata Maps. */
-export class CellularAutomata<T> {
-  table: Table<T>;
-
-  readonly aliveValue: T;
-  readonly deadValue: T;
+export class CellularAutomataBuilder<T> extends Builder<T> {
+  private aliveValue: T;
+  private deadValue: T;
 
   private rng: IRNG;
 
   /**
    * Creates a Cellular Automata Map Generator
    *
-   * @param width The width of the map.
-   * @param height The height of the map.
-   * @param options Additional options.
+   * @param config.width The width of the map.
+   * @param config.height The height of the map.
+   * @param config.aliveValue The value to use for alive tiles
+   * @param config.deadValue The value to use for dead tiles
    */
-  constructor(
-    width: number,
-    height: number,
-    options: Partial<CellularAutomataOptions<T>> = {}
-  ) {
-    this.table = new Table<T>(width, height);
+  constructor(options: CellularAutomataOptions<T>) {
+    super(options);
 
-    // Set up defaults
-    this.aliveValue =
-      options.aliveValue === undefined ? (1 as any) : options.aliveValue;
-    this.deadValue =
-      options.deadValue === undefined ? (0 as any) : options.deadValue;
-    this.rng = options.rng === undefined ? new AleaRNG() : options.rng;
+    this.aliveValue = options.wallValue;
+    this.deadValue = options.floorValue;
+    this.rng = options.rng ?? new AleaRNG();
   }
 
   /**
@@ -45,13 +40,13 @@ export class CellularAutomata<T> {
    * @param isAliveChance The chance for a cell to be set to the 'alive' value.
    */
   randomize(isAliveChance = 0.6) {
-    for (let x = 0; x < this.table.width; x++) {
-      for (let y = 0; y < this.table.height; y++) {
+    for (let x = 0; x < this.map.width; x++) {
+      for (let y = 0; y < this.map.height; y++) {
         const isAlive = this.rng.next() > isAliveChance;
         if (isAlive) {
-          this.table.set({ x, y }, this.aliveValue);
+          this.map.set({ x, y }, this.aliveValue);
         } else {
-          this.table.set({ x, y }, this.deadValue);
+          this.map.set({ x, y }, this.deadValue);
         }
       }
     }
@@ -67,11 +62,11 @@ export class CellularAutomata<T> {
         if (i == 0 && j == 0) {
           //this code is supposed to do nothing as it is the focal point we're checking around.
         } else if (
-          this.table.isInBounds({ x: neighbor_x, y: neighbor_y }) == false
+          this.map.isInBounds({ x: neighbor_x, y: neighbor_y }) == false
         ) {
           count++;
         } else if (
-          this.table.get({ x: neighbor_x, y: neighbor_y }) == this.aliveValue
+          this.map.get({ x: neighbor_x, y: neighbor_y }) == this.aliveValue
         ) {
           count++;
         }
@@ -88,8 +83,8 @@ export class CellularAutomata<T> {
    */
   doSimulationStep(stepCount = 1) {
     for (let step = 0; step < stepCount; step++) {
-      const newMap = new Table<T>(this.table.width, this.table.height);
-      const oldMap = this.table; //this just renames the table to prevent 'this' all over the place.
+      const newMap = new Table<T>(this.map.width, this.map.height);
+      const oldMap = this.map; //this just renames the table to prevent 'this' all over the place.
       for (let x = 0; x < oldMap.width; x++) {
         for (let y = 0; y < oldMap.height; y++) {
           let nbs = this.countAliveNeighbors(x, y);
@@ -108,7 +103,7 @@ export class CellularAutomata<T> {
           }
         }
       }
-      this.table = newMap;
+      this.map = newMap;
     }
   }
 
@@ -122,6 +117,6 @@ export class CellularAutomata<T> {
    * @param value The value to connect (default this.deadValue)
    */
   connect(value = this.deadValue): ConnectData {
-    return connect(this.table, value);
+    return connect(this.map, value);
   }
 }

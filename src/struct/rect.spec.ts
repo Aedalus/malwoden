@@ -72,4 +72,16 @@ describe("rect", () => {
     expect(rectOdd.center()).toEqual({ x: 2, y: 2 });
     expect(rectEven.center()).toEqual({ x: 2, y: 2 });
   });
+
+  it("can create a rect from width/height", () => {
+    const r = Rect.FromWidthHeight({ x: 3, y: 5 }, 2, 5);
+    expect(r.v1).toEqual({ x: 3, y: 5 });
+    expect(r.v2).toEqual({ x: 4, y: 9 });
+  });
+
+  it("will throw an error on invalid width/height", () => {
+    expect(() => Rect.FromWidthHeight({ x: 0, y: 0 }, 0, 0)).toThrow();
+    expect(() => Rect.FromWidthHeight({ x: 0, y: 0 }, 0, 1)).toThrow();
+    expect(() => Rect.FromWidthHeight({ x: 0, y: 0 }, 1, 0)).toThrow();
+  });
 });
