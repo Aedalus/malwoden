@@ -1,4 +1,5 @@
-import { Terminal, Generation, CharCode, Color, Rand, Glyph } from "malwoden";
+import { Terminal, Generation, CharCode, Color, Rand, Struct } from "malwoden";
+import { BSPDungeonNode } from "../../../../dist/types/generation";
 
 import { IExample } from "../example";
 
@@ -6,11 +7,14 @@ export class BSPDungeonExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  dungeon: Generation.BSPDungeon;
+  builder: Generation.BSPDungeonBuilder<number>;
   rng = new Rand.AleaRNG(Date.now().toString());
   colors: Color[];
+  map: Struct.Table<number>;
+  nodes: BSPDungeonNode[];
 
   constructor() {
+    console.log("foo");
     this.mount = document.getElementById("example")!;
     this.terminal = new Terminal.RetroTerminal({
       width: 50,
@@ -21,18 +25,24 @@ export class BSPDungeonExample implements IExample {
       mountNode: this.mount,
     });
 
-    this.dungeon = new Generation.BSPDungeon(50, 40, { rng: this.rng })
-      .split({ depth: 3 })
-      .createRooms({
-        minWidth: 3,
-        minHeight: 3,
-      })
-      .createSimpleHallways();
+    this.builder = new Generation.BSPDungeonBuilder({
+      width: 50,
+      height: 40,
+      wallTile: 1,
+      floorTile: 0,
+    });
 
-    this.colors = this.dungeon
+    this.builder.splitByCount(4);
+    this.builder.createRooms({ minWidth: 3, minHeight: 3, padding: 1 });
+    this.builder.createSimpleHallways();
+    this.nodes = this.builder.getLeafNodes();
+    console.log(this.nodes);
+    this.map = this.builder.getMap();
+
+    this.colors = this.builder
       .getLeafNodes()
       .map(
-        (x) =>
+        (_) =>
           new Color(
             this.rng.nextInt(50, 150),
             this.rng.nextInt(50, 150),
@@ -44,16 +54,13 @@ export class BSPDungeonExample implements IExample {
   }
 
   loop() {
-    const nodes = this.dungeon.getLeafNodes();
-    const map = this.dungeon.getMapTable(true);
-
     // Draw all the nodes as colored, just for example
-    for (let i = 0; i < nodes.length; i++) {
-      const area = nodes[i];
+    for (let i = 0; i < this.nodes.length; i++) {
+      const area = this.nodes[i];
       const areaColor = this.colors[i];
 
-      for (let x = area.v1.x; x < area.v2.x; x++) {
-        for (let y = area.v1.y; y < area.v2.y; y++) {
+      for (let x = area.v1.x; x <= area.v2.x; x++) {
+        for (let y = area.v1.y; y <= area.v2.y; y++) {
           this.terminal.drawCharCode(
             { x, y },
             CharCode.blackSpadeSuit,
@@ -65,15 +72,15 @@ export class BSPDungeonExample implements IExample {
 
     // Use the map for collisions. Here we can carve out the rooms
     // from the general areas.
-    for (let x = 0; x < map.width; x++) {
-      for (let y = 0; y < map.width; y++) {
-        if (!map.get({ x, y })) {
+    for (let x = 0; x < this.map.width; x++) {
+      for (let y = 0; y < this.map.width; y++) {
+        if (!this.map.get({ x, y })) {
           this.terminal.drawCharCode({ x, y }, CharCode.space, Color.Black);
         }
       }
     }
 
-    for (let hallway of this.dungeon.getHallways()) {
+    for (let hallway of this.builder.getHallways()) {
       for (let step of hallway) {
         this.terminal.drawCharCode(step, CharCode.period, Color.DarkGray);
       }

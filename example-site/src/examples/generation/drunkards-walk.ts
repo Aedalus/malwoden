@@ -1,11 +1,12 @@
-import { Terminal, Generation, CharCode, Color } from "malwoden";
+import { Terminal, Generation, CharCode, Color, Struct } from "malwoden";
 import { IExample } from "../example";
 
 export class DrunkardsWalkExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  map: Generation.DrunkardsWalk;
+  builder: Generation.DrunkardsWalkBuilder<number>;
+  map: Struct.Table<number>;
 
   constructor() {
     this.mount = document.getElementById("example")!;
@@ -18,25 +19,30 @@ export class DrunkardsWalkExample implements IExample {
       mountNode: this.mount,
     });
 
-    this.map = new Generation.DrunkardsWalk({
+    this.builder = new Generation.DrunkardsWalkBuilder({
       width: 50,
       height: 30,
+      floorTile: 0,
+      wallTile: 1,
     });
 
-    this.map.walkSteps({
+    this.builder.walk({
+      pathCount: 10,
       start: { x: 20, y: 20 },
-      steps: Infinity,
-      maxCoveredTiles: 400,
+      stepsMin: 10,
+      stepsMax: 200,
+      maxCoverage: 0.6,
     });
+    this.map = this.builder.getMap();
 
     this.animRef = requestAnimationFrame(() => this.loop());
   }
 
   loop() {
     this.terminal.clear();
-    for (let x = 0; x < this.map.table.width; x++) {
-      for (let y = 0; y < this.map.table.height; y++) {
-        if (this.map.table.get({ x, y }) === 1) {
+    for (let x = 0; x < this.map.width; x++) {
+      for (let y = 0; y < this.map.height; y++) {
+        if (this.map.get({ x, y }) === 0) {
           this.terminal.drawCharCode(
             { x, y },
             CharCode.blackSquare,

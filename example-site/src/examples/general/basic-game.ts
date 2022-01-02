@@ -8,7 +8,7 @@ import {
   GUI,
   Rand,
   Vector2,
-  Util,
+  Struct,
 } from "malwoden";
 import { IExample } from "../example";
 
@@ -20,7 +20,7 @@ export class BasicGameExample implements IExample {
   rng = new Rand.AleaRNG();
   openPositions: Vector2[] = [];
 
-  map: Util.Table<number>;
+  map: Struct.Table<number>;
   map_width = 32;
   map_height = 20;
 
@@ -45,13 +45,15 @@ export class BasicGameExample implements IExample {
     );
 
     // Generate Map
-    const gen = new Generation.CellularAutomata<number>(
-      this.map_width,
-      this.map_height
-    );
+    const gen = new Generation.CellularAutomataBuilder<number>({
+      width: this.map_width,
+      height: this.map_height,
+      wallValue: 1,
+      floorValue: 0,
+    });
     gen.randomize(0.7);
     gen.doSimulationStep();
-    this.map = gen.table;
+    this.map = gen.getMap();
 
     for (let x = 0; x < this.map.width; x++) {
       for (let y = 0; y < this.map.height; y++) {

@@ -181,4 +181,35 @@ describe("table", () => {
     t.clear(pos);
     expect(t.get(pos)).toEqual(undefined);
   });
+
+  it("can filter vectors", () => {
+    const t = new Table(20, 20);
+    t.set({ x: 1, y: 5 }, 1);
+    const f = t.find((x, v) => v === 1);
+
+    expect(f).toEqual([{ x: 1, y: 5 }]);
+  });
+
+  it("can clone a table", () => {
+    const t1 = new Table(10, 10);
+
+    const v = { x: 1, y: 5 };
+    t1.set(v, 5);
+    const t2 = t1.clone();
+
+    expect(t1.get(v)).toEqual(5);
+    expect(t2.get(v)).toEqual(5);
+
+    t1.set(v, 10);
+    expect(t1.get(v)).toEqual(10);
+    expect(t2.get(v)).toEqual(5);
+  });
+
+  it("can tell if it's the same size as another table", () => {
+    const t = new Table(10, 20);
+
+    expect(t.isSameSize(new Table(10, 20))).toEqual(true);
+    expect(t.isSameSize(new Table(20, 20))).toEqual(false);
+    expect(t.isSameSize(new Table(20, 10))).toEqual(false);
+  });
 });

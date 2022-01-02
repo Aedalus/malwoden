@@ -4,7 +4,7 @@ import {
   Terminal,
   Input,
   Generation,
-  Util,
+  Struct,
   Rand,
   Pathfinding,
   Vector2,
@@ -15,8 +15,8 @@ export class RangeFinderExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  map: Util.Table<number>;
-  sandMap: Util.Table<number>;
+  map: Struct.Table<number>;
+  sandMap: Struct.Table<number>;
   player: Vector2;
   rangeFinder: Pathfinding.RangeFinder;
 
@@ -36,28 +36,30 @@ export class RangeFinderExample implements IExample {
       mountNode: this.mount,
     });
 
-    const gen = new Generation.CellularAutomata<number>(
-      this.width,
-      this.height
-    );
+    const gen = new Generation.CellularAutomataBuilder<number>({
+      width: this.width,
+      height: this.height,
+      wallValue: 1,
+      floorValue: 0,
+    });
     gen.randomize();
     gen.doSimulationStep(4);
     gen.connect();
-    this.map = gen.table;
+    this.map = gen.getMap();
 
-    const sandGen = new Generation.CellularAutomata<number>(
-      this.width,
-      this.height,
-      {
-        rng: new Rand.AleaRNG("foo"),
-      }
-    );
+    const sandGen = new Generation.CellularAutomataBuilder<number>({
+      width: this.width,
+      height: this.height,
+      wallValue: 1,
+      floorValue: 0,
+      rng: new Rand.AleaRNG("foo"),
+    });
     sandGen.randomize(0.65);
     sandGen.doSimulationStep(6);
-    this.sandMap = sandGen.table;
+    this.sandMap = sandGen.getMap();
 
     // Get a random free spot
-    const freeSpots: Util.Vector2[] = [];
+    const freeSpots: Vector2[] = [];
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const wall = this.map.get({ x, y });

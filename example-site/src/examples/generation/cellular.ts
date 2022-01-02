@@ -1,11 +1,12 @@
-import { Terminal, Generation, CharCode, Color } from "malwoden";
+import { Terminal, Generation, CharCode, Color, Struct } from "malwoden";
 import { IExample } from "../example";
 
 export class CellularAutomataExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  map: Generation.CellularAutomata<number>;
+  builder: Generation.CellularAutomataBuilder<number>;
+  map: Struct.Table<number>;
 
   constructor() {
     this.mount = document.getElementById("example")!;
@@ -18,9 +19,15 @@ export class CellularAutomataExample implements IExample {
       mountNode: this.mount,
     });
 
-    this.map = new Generation.CellularAutomata<number>(50, 30);
-    this.map.randomize(0.6);
-    this.map.doSimulationStep(3);
+    this.builder = new Generation.CellularAutomataBuilder({
+      width: 50,
+      height: 30,
+      wallValue: 1,
+      floorValue: 0,
+    });
+    this.builder.randomize(0.6);
+    this.builder.doSimulationStep(3);
+    this.map = this.builder.getMap();
 
     this.animRef = requestAnimationFrame(() => this.loop());
   }
@@ -29,7 +36,7 @@ export class CellularAutomataExample implements IExample {
     this.terminal.clear();
     for (let x = 0; x < 80; x++) {
       for (let y = 0; y < 50; y++) {
-        const isAlive = this.map.table.get({ x: x, y: y }) === 1;
+        const isAlive = this.map.get({ x: x, y: y }) === 1;
         if (isAlive) {
           this.terminal.drawCharCode(
             { x, y },

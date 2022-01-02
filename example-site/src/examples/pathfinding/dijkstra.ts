@@ -5,7 +5,7 @@ import {
   Terminal,
   Input,
   Generation,
-  Util,
+  Struct,
   Rand,
   Pathfinding,
   Vector2,
@@ -16,12 +16,12 @@ export class DijkstraExample implements IExample {
   animRef: number;
   terminal: Terminal.RetroTerminal;
   mouse: Input.MouseHandler;
-  map: Util.Table<number>;
-  sandMap: Util.Table<number>;
+  map: Struct.Table<number>;
+  sandMap: Struct.Table<number>;
   player: Vector2;
   dijkstra: Pathfinding.Dijkstra;
   prevMouse = { x: 0, y: 0 };
-  path: Util.Vector2[] | undefined;
+  path: Vector2[] | undefined;
 
   width = 50;
   height = 30;
@@ -38,28 +38,30 @@ export class DijkstraExample implements IExample {
     });
 
     this.mouse = new Input.MouseHandler();
-    const gen = new Generation.CellularAutomata<number>(
-      this.width,
-      this.height
-    );
+    const gen = new Generation.CellularAutomataBuilder<number>({
+      width: this.width,
+      height: this.height,
+      wallValue: 1,
+      floorValue: 0,
+    });
     gen.randomize();
     gen.doSimulationStep(4);
     gen.connect();
-    this.map = gen.table;
+    this.map = gen.getMap();
 
-    const sandGen = new Generation.CellularAutomata<number>(
-      this.width,
-      this.height,
-      {
-        rng: new Rand.AleaRNG("foo"),
-      }
-    );
+    const sandGen = new Generation.CellularAutomataBuilder<number>({
+      width: this.width,
+      height: this.height,
+      wallValue: 1,
+      floorValue: 0,
+      rng: new Rand.AleaRNG("foo"),
+    });
     sandGen.randomize(0.65);
     sandGen.doSimulationStep(6);
-    this.sandMap = sandGen.table;
+    this.sandMap = sandGen.getMap();
 
     // Get a random free spot
-    const freeSpots: Util.Vector2[] = [];
+    const freeSpots: Vector2[] = [];
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const wall = this.map.get({ x, y });

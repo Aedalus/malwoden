@@ -109,7 +109,6 @@ export default function Album() {
             </div>
           </Container>
         </div>
-   
       </main>
 
       {/* Footer */}

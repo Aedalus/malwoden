@@ -1,4 +1,3 @@
-// export { BSPTreeRect } from "./bsp-tree";
-export { CellularAutomata } from "./cellular-automata";
-export { DrunkardsWalk } from "./drunkards-walk";
-export { BSPDungeon, BSPNode } from "./bsp-dungeon";
+export { CellularAutomataBuilder } from "./cellular-automata-builder";
+export { DrunkardsWalkBuilder } from "./drunkards-walk-builder";
+export { BSPDungeonBuilder, BSPDungeonNode } from "./bsp-dungeon-builder";
