@@ -1,5 +1,5 @@
 import * as Calc from "../calc";
-import { Vector2 } from "../util/vector";
+import { Vector2 } from "../struct/vector";
 import { getRing4, getRing8 } from "./get-ring";
 
 type RationalNum = [number, number];

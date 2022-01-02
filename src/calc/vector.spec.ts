@@ -1,4 +1,4 @@
-import { Vector2 } from "../util";
+import { Vector2 } from "../struct";
 import { Vector } from "./vector";
 
 describe("areEqual", () => {
@@ -160,5 +160,36 @@ describe("getClosest", () => {
     expect(() => Vector.getClosest([], { x: 0, y: 0 })).toThrow(
       "Error: Trying to find closest position of an empty area"
     );
+  });
+});
+
+describe("add", () => {
+  it("Can add vectors", () => {
+    expect(Vector.add({ x: 0, y: 0 }, { x: 1, y: 2 })).toEqual({ x: 1, y: 2 });
+    expect(Vector.add({ x: -1, y: -2 }, { x: 1, y: 2 })).toEqual({
+      x: 0,
+      y: 0,
+    });
+    expect(Vector.add({ x: -1, y: -2 }, { x: -1, y: -2 })).toEqual({
+      x: -2,
+      y: -4,
+    });
+  });
+});
+
+describe("subtract", () => {
+  it("Can subtract vectors", () => {
+    expect(Vector.subtract({ x: 0, y: 0 }, { x: 1, y: 2 })).toEqual({
+      x: -1,
+      y: -2,
+    });
+    expect(Vector.subtract({ x: -1, y: -2 }, { x: 1, y: 2 })).toEqual({
+      x: -2,
+      y: -4,
+    });
+    expect(Vector.subtract({ x: -1, y: -2 }, { x: -1, y: -2 })).toEqual({
+      x: 0,
+      y: 0,
+    });
   });
 });

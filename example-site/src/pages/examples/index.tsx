@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -13,21 +13,19 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import { Link, useParams } from "react-router-dom";
 
 // Examples
-import HelloWorldExample from "../../examples/hello-world";
-import HelloWorldCanvasExample from "../../examples/hello-world-canvas";
-import BasicGameExample from "../../examples/basic-game";
-
-import BasicFOVExample from "../../examples/fov/basic-fov";
-import CellularAutomataExample from "../../examples/generation/cellular";
-import DrunkardsWalkExample from "../../examples/generation/drunkards-walk";
-import BSPDungeonExample from "../../examples/generation/bsp-dungeon";
-
-import MouseInputExample from "../../examples/input/mouse-input";
-import MouseInputFontExample from "../../examples/input/mouse-input-font";
-
-import AStarExample from "../../examples/pathfinding/astar";
-import DijkstraExample from "../../examples/pathfinding/dijkstra";
-import RangeFinderExample from "../../examples/pathfinding/range-finder";
+import { IExample } from "../../examples/example";
+import { HelloWorldExample } from "../../examples/general/hello-world";
+import { HelloWorldCanvasExample } from "../../examples/general/hello-world-canvas";
+import { BasicGameExample } from "../../examples/general/basic-game";
+import { BasicFoVExample } from "../../examples/fov/basic-fov";
+import { CellularAutomataExample } from "../../examples/generation/cellular";
+import { DrunkardsWalkExample } from "../../examples/generation/drunkards-walk";
+import { BSPDungeonExample } from "../../examples/generation/bsp-dungeon";
+import { MouseInputExample } from "../../examples/input/mouse-input";
+import { MouseInputFontExample } from "../../examples/input/mouse-input-font";
+import { AStarExample } from "../../examples/pathfinding/astar";
+import { DijkstraExample } from "../../examples/pathfinding/dijkstra";
+import { RangeFinderExample } from "../../examples/pathfinding/range-finder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +56,7 @@ interface IMenuData {
 
 interface IMenuItem {
   name: string;
-  example: JSX.Element;
+  example: { new (): IExample };
   srclink: string;
 }
 
@@ -66,71 +64,71 @@ const MenuData: IMenuData = {
   General: {
     "hello-world": {
       name: "Hello World",
-      example: <HelloWorldExample />,
-      srclink: "hello-world.tsx",
+      example: HelloWorldExample,
+      srclink: "general/hello-world.ts",
     },
     "hello-world-canvas": {
       name: "Hello World - Font",
-      example: <HelloWorldCanvasExample />,
-      srclink: "hello-world-canvas.tsx",
+      example: HelloWorldCanvasExample,
+      srclink: "general/hello-world-canvas.ts",
     },
     "basic-game": {
       name: "Basic Game",
-      example: <BasicGameExample />,
-      srclink: "basic-game.tsx",
+      example: BasicGameExample,
+      srclink: "general/basic-game.ts",
     },
   },
   Input: {
     mouse: {
       name: "Mouse",
-      example: <MouseInputExample />,
-      srclink: "input/mouse-input.tsx",
+      example: MouseInputExample,
+      srclink: "input/mouse-input.ts",
     },
     "mouse-font": {
       name: "Mouse - Font",
-      example: <MouseInputFontExample />,
-      srclink: "input/mouse-input-font.tsx",
+      example: MouseInputFontExample,
+      srclink: "input/mouse-input-font.ts",
     },
   },
   FOV: {
     "basic-fov": {
       name: "Basic FOV",
-      example: <BasicFOVExample />,
-      srclink: "fov/basic-fov.tsx",
+      example: BasicFoVExample,
+      srclink: "fov/basic-fov.ts",
     },
   },
   Generation: {
     "cellular-automata": {
       name: "Cellular Automata",
-      example: <CellularAutomataExample />,
-      srclink: "generation/cellular.tsx",
+      example: CellularAutomataExample,
+      srclink: "generation/cellular.ts",
     },
     "drunkards-walk": {
       name: "Drunkard's Walk",
-      example: <DrunkardsWalkExample />,
-      srclink: "generation/drunkards-walk.tsx",
+      example: DrunkardsWalkExample,
+      srclink: "generation/drunkards-walk.ts",
     },
     "bsp-dungeon": {
       name: "BSP Dungeon",
-      example: <BSPDungeonExample />,
-      srclink: "generation/bsp-dungeon.tsx",
+      example: BSPDungeonExample,
+      srclink: "generation/bsp-dungeon.ts",
     },
   },
   Pathfinding: {
     "a-star": {
       name: "AStar",
-      example: <AStarExample />,
-      srclink: "pathfinding/astar.tsx",
+      example: AStarExample,
+      srclink: "pathfinding/astar.ts",
     },
     dijkstra: {
       name: "Dijkstra",
-      example: <DijkstraExample />,
-      srclink: "pathfinding/dijkstra.tsx",
+      example: DijkstraExample,
+      srclink: "pathfinding/dijkstra.ts",
     },
     rangeFinder: {
       name: "Range Finder",
-      example: <RangeFinderExample />,
-      srclink: "pathfinding/range-finder.tsx",
+      example: RangeFinderExample,
+      srclink: "pathfinding/range-finder.ts",
     },
   },
 };
@@ -151,10 +149,22 @@ export default function Examples() {
 
   let example = getExampleById(params.exampleId || "hello-world");
   let defaultExample = MenuData["General"]["hello-world"];
+  let runningExample = useRef<IExample | undefined>();
 
   const [selected, setMenuItem] = useState<IMenuItem>(
     example || defaultExample
   );
+
+  useEffect(() => {
+    console.log("Use Effect!");
+    if (runningExample.current) {
+      runningExample.current.cleanup();
+    }
+
+    console.log("Running example");
+
+    runningExample.current = new selected.example();
+  }, [params.exampleId]);
 
   return (
     <div className={classes.layout}>
@@ -189,7 +199,9 @@ export default function Examples() {
 
       {selected && (
         <Card className={classes.exampleCard}>
-          <CardContent>{selected.example}</CardContent>
+          <CardContent>
+            <div id="example"></div>
+          </CardContent>
           <CardActions
             style={{ float: "right", marginTop: "-15px", marginRight: "5px" }}
           >

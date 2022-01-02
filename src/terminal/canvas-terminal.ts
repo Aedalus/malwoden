@@ -1,7 +1,7 @@
 import { RenderableTerminal, TerminalConfig } from "./terminal";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
-import { Vector2 } from "../util/vector";
+import { Vector2 } from "../struct/vector";
 
 export class Font {
   readonly family: string;

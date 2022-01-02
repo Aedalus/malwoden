@@ -1,4 +1,4 @@
-import { Vector2, ArrayPriorityQueue } from "../util";
+import { Vector2, ArrayPriorityQueue } from "../struct";
 import * as Calc from "../calc";
 import { getRing4 } from "../fov/get-ring";
 import {
