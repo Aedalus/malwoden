@@ -1,5 +1,5 @@
+import { Vector2 } from "../struct";
 import { BaseTerminal, CharCode, Color, Glyph } from "../terminal";
-import { Vector2 } from "../util";
 
 type RoundType = "up" | "down" | "default";
 
@@ -11,7 +11,7 @@ interface GUIBarOptions {
   currentValue: number;
   foreGlyph?: Glyph;
   backGlyph?: Glyph;
-  round?: RoundType;
+  roundType?: RoundType;
 }
 
 function getRoundedPercent(percent: number, divisor: number, round: RoundType) {
@@ -34,7 +34,7 @@ export function bar(terminal: BaseTerminal, options: GUIBarOptions) {
     currentValue,
     foreGlyph = Glyph.fromCharCode(CharCode.fullBlock, Color.White),
     backGlyph = Glyph.fromCharCode(CharCode.fullBlock, Color.Gray),
-    round = "default",
+    roundType: round = "default",
   } = options;
 
   const percent = (currentValue - minValue) / (maxValue - minValue);

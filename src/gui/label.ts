@@ -1,5 +1,5 @@
+import { Vector2 } from "../struct";
 import { BaseTerminal, CharCode, Color } from "../terminal";
-import { Vector2 } from "../util";
 
 interface GUILabelOptions {
   pos: Vector2;
