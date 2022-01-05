@@ -1,3 +1,4 @@
+import { BorderStyle } from "@material-ui/icons";
 import {
   Glyph,
   Terminal,
@@ -28,6 +29,8 @@ export class BasicGameExample implements IExample {
   player: { x: number; y: number; coins: number; hp: number };
   coin: Vector2;
 
+  gui: GUI.Widget<any, BasicGameExample>;
+
   constructor() {
     this.mount = document.getElementById("example")!;
     this.terminal = new Terminal.RetroTerminal({
@@ -54,12 +57,7 @@ export class BasicGameExample implements IExample {
     gen.randomize(0.7);
     gen.doSimulationStep();
     this.map = gen.getMap();
-
-    for (let x = 0; x < this.map.width; x++) {
-      for (let y = 0; y < this.map.height; y++) {
-        if (this.map.get({ x, y }) === 0) this.openPositions.push({ x, y });
-      }
-    }
+    this.openPositions = this.map.filter((_, val) => val === 0);
 
     const rng = new Rand.AleaRNG();
     const start = rng.nextItem(this.openPositions)!;
@@ -90,7 +88,95 @@ export class BasicGameExample implements IExample {
 
     keyboard.setContext(movement);
 
+    this.gui = this.createGUI();
+
     this.animRef = requestAnimationFrame(() => this.loop());
+  }
+
+  // Sets up common GUI elements we'll render each frame
+  createGUI(): GUI.Widget<any, BasicGameExample> {
+    const container = new GUI.ContainerWidget<BasicGameExample>({
+      terminal: this.terminal,
+      initialState: {},
+    });
+
+    container.addChild(
+      new GUI.PanelWidget<BasicGameExample>({
+        terminal: this.terminal,
+        initialState: {
+          width: 16,
+          height: 22,
+          borderStyle: "double-bar",
+        },
+      })
+    );
+
+    container.addChild(
+      new GUI.TextWidget<BasicGameExample>({
+        terminal: this.terminal,
+        origin: { x: 2, y: 0 },
+        initialState: {
+          text: " Player ",
+        },
+      })
+    );
+
+    container
+      .addChild(
+        new GUI.TextWidget<BasicGameExample>({
+          terminal: this.terminal,
+          origin: { x: 2, y: 2 },
+          initialState: {
+            text: `HP: ${this.player.hp}/10`,
+            foreColor: Color.Red,
+          },
+        })
+      )
+      .setUpdateFunc(() => ({
+        text: `HP: ${this.player.hp}/10`,
+      }));
+
+    container
+      .addChild(
+        new GUI.TextWidget<BasicGameExample>({
+          terminal: this.terminal,
+          origin: { x: 2, y: 4 },
+          initialState: {
+            text: `Gold : ${this.player.coins}`,
+            foreColor: Color.Yellow,
+          },
+        })
+      )
+      .setUpdateFunc(() => ({
+        text: `Gold : ${this.player.coins}`,
+      }));
+
+    // Map Panel
+    container.addChild(
+      new GUI.PanelWidget<BasicGameExample>({
+        origin: { x: 16, y: 0 },
+        terminal: this.terminal,
+        initialState: {
+          width: 34,
+          height: 22,
+          borderStyle: "double-bar",
+        },
+      })
+    );
+
+    container.addChild(
+      new GUI.PanelWidget<BasicGameExample>({
+        origin: { x: 0, y: 22 },
+        terminal: this.terminal,
+        initialState: {
+          width: 50,
+          height: 8,
+          borderStyle: "double-bar",
+        },
+      })
+    );
+
+    return container;
   }
 
   addLog(txt: string) {
@@ -124,40 +210,11 @@ export class BasicGameExample implements IExample {
     // Rendering
     this.terminal.clear();
 
-    // Player Box
-    GUI.box(this.terminal, {
-      title: "Player",
-      origin: { x: 0, y: 0 },
-      width: 15,
-      height: 21,
-    });
-
-    // HP
-    this.terminal.writeAt(
-      { x: 2, y: 2 },
-      `HP : ${this.player.hp}/10`,
-      Color.Red
-    );
-    this.terminal.writeAt(
-      { x: 2, y: 4 },
-      `Gold : ${this.player.coins}`,
-      Color.Yellow
-    );
-
-    // World Box
-    GUI.box(this.terminal, {
-      origin: { x: 16, y: 0 },
-      width: 33,
-      height: 21,
-    });
+    // Draw common elements
+    this.gui.updateCascade(this);
+    this.gui.renderCascade();
 
     // Logs
-    GUI.box(this.terminal, {
-      title: "Log",
-      origin: { x: 0, y: 22 },
-      width: 49,
-      height: 7,
-    });
     for (let i = 0; i < this.logs.length; i++) {
       this.terminal.writeAt({ x: 1, y: 23 + i }, this.logs[i]);
     }

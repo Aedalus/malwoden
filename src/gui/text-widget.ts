@@ -13,7 +13,7 @@ export function truncateText(config: {
   }
 }
 
-interface TextWidgetState {
+export interface TextWidgetState {
   text: string;
 
   // Colors
@@ -26,7 +26,7 @@ interface TextWidgetState {
 }
 
 export class TextWidget<D> extends Widget<TextWidgetState, D> {
-  render(): void {
+  onRender(): void {
     const origin = this.getAbsoluteOrigin();
 
     let text = this.state.text;

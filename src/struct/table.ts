@@ -115,12 +115,12 @@ export class Table<T> {
     return fill;
   }
 
-  find(filter: (v: Vector2, val: T | undefined) => boolean): Vector2[] {
+  filter(match: (v: Vector2, val: T | undefined) => boolean): Vector2[] {
     const matches: Vector2[] = [];
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        if (filter({ x, y }, this.get({ x, y }))) {
+        if (match({ x, y }, this.get({ x, y }))) {
           matches.push({ x, y });
         }
       }

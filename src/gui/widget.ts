@@ -1,4 +1,4 @@
-import { BaseTerminal } from "../terminal";
+import { BaseTerminal, Color } from "../terminal";
 import { Vector2 } from "../struct";
 import * as Calc from "../calc";
 
@@ -20,11 +20,12 @@ export abstract class Widget<S, D> {
   protected parent?: Widget<any, D>;
   protected children: Widget<any, D>[] = [];
   protected state: S;
+  protected disabled = false;
 
   constructor(config: WidgetConfig<S>) {
     this.terminal = config.terminal;
-    this.state = config.initialState;
     this.origin = config.origin ?? { x: 0, y: 0 };
+    this.state = config.initialState;
     this.absoluteOrigin = this.origin;
   }
 
@@ -43,6 +44,14 @@ export abstract class Widget<S, D> {
     for (const c of this.children) {
       c.updateAbsoluteOrigin();
     }
+  }
+
+  isDisabled(): boolean {
+    return this.disabled;
+  }
+
+  setDisabled(status: boolean): void {
+    this.disabled = status;
   }
 
   getAbsoluteOrigin(): Vector2 {
@@ -107,7 +116,12 @@ export abstract class Widget<S, D> {
     }
   }
 
-  abstract render(): void;
+  render(): void {
+    if (this.disabled) return;
+    this.onRender();
+  }
+
+  abstract onRender(): void;
 }
 
 // ###########################

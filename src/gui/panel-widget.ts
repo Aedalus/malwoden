@@ -18,6 +18,12 @@ export interface PanelWidgetState {
 export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
   constructor(config: WidgetConfig<PanelWidgetState>) {
     super(config);
+
+    this.state = {
+      foreColor: Color.White,
+      backColor: Color.Black,
+      ...config.initialState,
+    };
   }
 
   private getAbsTopLeft(): Vector2 {
@@ -27,7 +33,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
   private getAbsTopRight(): Vector2 {
     const o = this.getAbsoluteOrigin();
     return {
-      x: o.x + this.state.width + 1,
+      x: o.x + this.state.width - 1,
       y: o.y,
     };
   }
@@ -36,15 +42,15 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
     const o = this.getAbsoluteOrigin();
     return {
       x: o.x,
-      y: o.y + this.state.height + 1,
+      y: o.y + this.state.height - 1,
     };
   }
 
   private getAbsBottomRight(): Vector2 {
     const o = this.getAbsoluteOrigin();
     return {
-      x: o.x + this.state.width + 1,
-      y: o.y + this.state.height + 1,
+      x: o.x + this.state.width - 1,
+      y: o.y + this.state.height - 1,
     };
   }
 
@@ -133,7 +139,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
     }
   }
 
-  render(): void {
+  onRender(): void {
     const { backColor, foreColor } = this.state;
 
     const bgGlyph = new Glyph(" ", foreColor, backColor);

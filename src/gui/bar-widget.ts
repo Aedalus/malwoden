@@ -44,7 +44,7 @@ export class BarWidget<D> extends Widget<BarWidgetState, D> {
     };
   }
 
-  render(): void {
+  onRender(): void {
     const origin = this.getAbsoluteOrigin();
     const percent =
       (this.state.currentValue - this.state.minValue!) /

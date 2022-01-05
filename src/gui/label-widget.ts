@@ -54,7 +54,7 @@ export class LabelWidget<D> extends Widget<LabelWidgetState, D> {
     );
   }
 
-  render(): void {
+  onRender(): void {
     if (this.state.direction === "left") {
       this.renderLeftLabel();
     } else {
