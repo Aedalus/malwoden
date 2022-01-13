@@ -1,6 +1,6 @@
-import { CharCode } from "../terminal";
+import { BaseTerminal, CharCode } from "../terminal";
 import { Color } from "../terminal/color";
-import { Widget } from "./widget";
+import { Widget, WidgetDrawCtx } from "./widget";
 
 export interface LabelWidgetState {
   text: string;
@@ -12,17 +12,18 @@ export interface LabelWidgetState {
 }
 
 export class LabelWidget<D> extends Widget<LabelWidgetState, D> {
-  private renderLeftLabel(): void {
+  private renderLeftLabel(terminal: BaseTerminal): void {
     const origin = this.getAbsoluteOrigin();
     const { text, foreColor, backColor } = this.state;
     const start = { x: origin.x - text.length - 2, y: origin.y };
-    this.terminal.writeAt(start, text, foreColor, backColor);
-    this.terminal.drawCharCode(
+
+    terminal.writeAt(start, text, foreColor, backColor);
+    terminal.drawCharCode(
       { x: start.x + text.length, y: origin.y },
       CharCode.fullBlock,
       backColor
     );
-    this.terminal.drawCharCode(
+    terminal.drawCharCode(
       { x: start.x + text.length + 1, y: origin.y },
       CharCode.rightwardsArrow,
       backColor,
@@ -30,23 +31,19 @@ export class LabelWidget<D> extends Widget<LabelWidgetState, D> {
     );
   }
 
-  private renderRightLabel(): void {
+  private renderRightLabel(terminal: BaseTerminal): void {
     const origin = this.getAbsoluteOrigin();
     const { text, foreColor, backColor } = this.state;
     const start = { x: origin.x + 1, y: origin.y };
-    this.terminal.drawCharCode(
-      start,
-      CharCode.leftwardsArrow,
-      backColor,
-      foreColor
-    );
-    this.terminal.drawCharCode(
+
+    terminal.drawCharCode(start, CharCode.leftwardsArrow, backColor, foreColor);
+    terminal.drawCharCode(
       { x: start.x + 1, y: start.y },
       CharCode.fullBlock,
       backColor,
       foreColor
     );
-    this.terminal.writeAt(
+    terminal.writeAt(
       { x: start.x + 2, y: start.y },
       text,
       foreColor,
@@ -54,11 +51,11 @@ export class LabelWidget<D> extends Widget<LabelWidgetState, D> {
     );
   }
 
-  onRender(): void {
+  onDraw(ctx: WidgetDrawCtx): void {
     if (this.state.direction === "left") {
-      this.renderLeftLabel();
+      this.renderLeftLabel(ctx.terminal);
     } else {
-      this.renderRightLabel();
+      this.renderRightLabel(ctx.terminal);
     }
   }
 }

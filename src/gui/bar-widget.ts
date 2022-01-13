@@ -1,5 +1,5 @@
-import { CharCode, Color, Glyph } from "../terminal";
-import { Widget, WidgetConfig } from "./widget";
+import { BaseTerminal, CharCode, Color, Glyph } from "../terminal";
+import { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
 
 type RoundMode = "up" | "down" | "default";
 
@@ -10,7 +10,7 @@ export interface BarWidgetState {
   // values
   minValue?: number;
   maxValue: number;
-  currentValue: number;
+  currentValue?: number;
   roundMode?: RoundMode;
 
   // Glyphs
@@ -38,13 +38,14 @@ export class BarWidget<D> extends Widget<BarWidgetState, D> {
     this.state = {
       roundMode: "default",
       minValue: 0,
+      currentValue: 0,
       foreGlyph: Glyph.fromCharCode(CharCode.fullBlock, Color.White),
       backGlyph: Glyph.fromCharCode(CharCode.fullBlock, Color.Gray),
       ...config.initialState,
     };
   }
 
-  onRender(): void {
+  onDraw(ctx: WidgetDrawCtx): void {
     const origin = this.getAbsoluteOrigin();
     const percent =
       (this.state.currentValue - this.state.minValue!) /
@@ -58,9 +59,9 @@ export class BarWidget<D> extends Widget<BarWidgetState, D> {
     for (let x = origin.x; x <= origin.x + this.state.width; x++) {
       const p = (x - origin.x) / this.state.width;
       if (p <= roundedPercent) {
-        this.terminal.drawGlyph({ x, y: origin.y }, this.state.foreGlyph);
+        ctx.terminal.drawGlyph({ x, y: origin.y }, this.state.foreGlyph);
       } else {
-        this.terminal.drawGlyph({ x, y: origin.y }, this.state.backGlyph);
+        ctx.terminal.drawGlyph({ x, y: origin.y }, this.state.backGlyph);
       }
     }
   }

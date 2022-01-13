@@ -185,7 +185,7 @@ describe("table", () => {
   it("can filter vectors", () => {
     const t = new Table(20, 20);
     t.set({ x: 1, y: 5 }, 1);
-    const f = t.find((x, v) => v === 1);
+    const f = t.filter((x, v) => v === 1);
 
     expect(f).toEqual([{ x: 1, y: 5 }]);
   });

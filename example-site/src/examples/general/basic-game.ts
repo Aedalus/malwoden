@@ -1,4 +1,3 @@
-import { BorderStyle } from "@material-ui/icons";
 import {
   Glyph,
   Terminal,
@@ -95,86 +94,65 @@ export class BasicGameExample implements IExample {
 
   // Sets up common GUI elements we'll render each frame
   createGUI(): GUI.Widget<any, BasicGameExample> {
-    const container = new GUI.ContainerWidget<BasicGameExample>({
-      terminal: this.terminal,
-      initialState: {},
-    });
+    // Create a new container for the UI
+    const container = new GUI.ContainerWidget<BasicGameExample>();
 
-    container.addChild(
-      new GUI.PanelWidget<BasicGameExample>({
-        terminal: this.terminal,
-        initialState: {
-          width: 16,
-          height: 22,
-          borderStyle: "double-bar",
-        },
-      })
-    );
+    new GUI.PanelWidget<BasicGameExample>({
+      initialState: {
+        width: 16,
+        height: 22,
+        borderStyle: "double-bar",
+      },
+    }).setParent(container);
 
-    container.addChild(
-      new GUI.TextWidget<BasicGameExample>({
-        terminal: this.terminal,
-        origin: { x: 2, y: 0 },
-        initialState: {
-          text: " Player ",
-        },
-      })
-    );
+    new GUI.TextWidget<BasicGameExample>({
+      origin: { x: 2, y: 0 },
+      initialState: {
+        text: " Player ",
+      },
+    }).setParent(container);
 
-    container
-      .addChild(
-        new GUI.TextWidget<BasicGameExample>({
-          terminal: this.terminal,
-          origin: { x: 2, y: 2 },
-          initialState: {
-            text: `HP: ${this.player.hp}/10`,
-            foreColor: Color.Red,
-          },
-        })
-      )
+    new GUI.TextWidget<BasicGameExample>({
+      origin: { x: 2, y: 2 },
+      initialState: {
+        text: `HP: ${this.player.hp}/10`,
+        foreColor: Color.Red,
+      },
+    })
       .setUpdateFunc(() => ({
         text: `HP: ${this.player.hp}/10`,
-      }));
+      }))
+      .setParent(container);
 
-    container
-      .addChild(
-        new GUI.TextWidget<BasicGameExample>({
-          terminal: this.terminal,
-          origin: { x: 2, y: 4 },
-          initialState: {
-            text: `Gold : ${this.player.coins}`,
-            foreColor: Color.Yellow,
-          },
-        })
-      )
+    new GUI.TextWidget<BasicGameExample>({
+      origin: { x: 2, y: 4 },
+      initialState: {
+        text: `Gold : ${this.player.coins}`,
+        foreColor: Color.Yellow,
+      },
+    })
       .setUpdateFunc(() => ({
         text: `Gold : ${this.player.coins}`,
-      }));
+      }))
+      .setParent(container);
 
-    // Map Panel
-    container.addChild(
-      new GUI.PanelWidget<BasicGameExample>({
-        origin: { x: 16, y: 0 },
-        terminal: this.terminal,
-        initialState: {
-          width: 34,
-          height: 22,
-          borderStyle: "double-bar",
-        },
-      })
-    );
+    new GUI.PanelWidget<BasicGameExample>({
+      origin: { x: 16, y: 0 },
+      initialState: {
+        width: 34,
+        height: 22,
+        borderStyle: "double-bar",
+      },
+    }).setParent(container);
 
-    container.addChild(
-      new GUI.PanelWidget<BasicGameExample>({
-        origin: { x: 0, y: 22 },
-        terminal: this.terminal,
-        initialState: {
-          width: 50,
-          height: 8,
-          borderStyle: "double-bar",
-        },
-      })
-    );
+    new GUI.PanelWidget<BasicGameExample>({
+      origin: { x: 0, y: 22 },
+      initialState: {
+        width: 50,
+        height: 8,
+        borderStyle: "double-bar",
+      },
+    }).setParent(container);
 
     return container;
   }
@@ -211,8 +189,8 @@ export class BasicGameExample implements IExample {
     this.terminal.clear();
 
     // Draw common elements
-    this.gui.updateCascade(this);
-    this.gui.renderCascade();
+    this.gui.cascadeUpdate(this);
+    this.gui.cascadeDraw(this.terminal);
 
     // Logs
     for (let i = 0; i < this.logs.length; i++) {

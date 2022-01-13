@@ -84,4 +84,18 @@ describe("rect", () => {
     expect(() => Rect.FromWidthHeight({ x: 0, y: 0 }, 0, 1)).toThrow();
     expect(() => Rect.FromWidthHeight({ x: 0, y: 0 }, 1, 0)).toThrow();
   });
+
+  it("can detect if it contains a point", () => {
+    const r = new Rect({ x: 0, y: 0 }, { x: 10, y: 10 });
+
+    expect(r.contains({ x: -1, y: 0 })).toBeFalsy();
+    expect(r.contains({ x: 0, y: 0 })).toBeTruthy();
+    expect(r.contains({ x: 10, y: 0 })).toBeTruthy();
+    expect(r.contains({ x: 11, y: 0 })).toBeFalsy();
+
+    expect(r.contains({ x: 5, y: -1 })).toBeFalsy();
+    expect(r.contains({ x: 5, y: 0 })).toBeTruthy();
+    expect(r.contains({ x: 5, y: 10 })).toBeTruthy();
+    expect(r.contains({ x: 5, y: 11 })).toBeFalsy();
+  });
 });

@@ -1,6 +1,6 @@
 import { Vector2 } from "../struct";
-import { CharCode, Color, Glyph } from "../terminal";
-import { Widget, WidgetConfig } from "./widget";
+import { BaseTerminal, CharCode, Color, Glyph } from "../terminal";
+import { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
 
 export interface PanelWidgetState {
   // Bounds
@@ -54,7 +54,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
     };
   }
 
-  private renderBorder() {
+  private renderBorder(terminal: BaseTerminal) {
     const origin = this.getAbsoluteOrigin();
     const { foreColor, backColor } = this.state;
 
@@ -64,7 +64,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
     const bottomLeftCorner = this.getAbsBottomLeft();
 
     // Corners
-    this.terminal.drawGlyph(
+    terminal.drawGlyph(
       topLeftCorner,
       Glyph.fromCharCode(
         CharCode.boxDrawingsDoubleDownAndRight,
@@ -72,7 +72,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
         backColor
       )
     );
-    this.terminal.drawGlyph(
+    terminal.drawGlyph(
       topRightCorner,
       Glyph.fromCharCode(
         CharCode.boxDrawingsDoubleDownAndLeft,
@@ -80,7 +80,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
         backColor
       )
     );
-    this.terminal.drawGlyph(
+    terminal.drawGlyph(
       bottomLeftCorner,
       Glyph.fromCharCode(
         CharCode.boxDrawingsDoubleUpAndRight,
@@ -88,7 +88,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
         backColor
       )
     );
-    this.terminal.drawGlyph(
+    terminal.drawGlyph(
       bottomRightCorner,
       Glyph.fromCharCode(
         CharCode.boxDrawingsDoubleUpAndLeft,
@@ -99,7 +99,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
 
     // Horizontal Bars
     for (let dx = origin.x + 1; dx < topRightCorner.x; dx++) {
-      this.terminal.drawGlyph(
+      terminal.drawGlyph(
         { x: dx, y: origin.y },
         Glyph.fromCharCode(
           CharCode.boxDrawingsDoubleHorizontal,
@@ -108,7 +108,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
         )
       );
       //bottom width bar.
-      this.terminal.drawGlyph(
+      terminal.drawGlyph(
         { x: dx, y: bottomRightCorner.y },
         Glyph.fromCharCode(
           CharCode.boxDrawingsDoubleHorizontal,
@@ -120,7 +120,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
 
     // Vertical Bars
     for (let dy = origin.y + 1; dy < bottomLeftCorner.y; dy++) {
-      this.terminal.drawGlyph(
+      terminal.drawGlyph(
         { x: origin.x, y: dy },
         Glyph.fromCharCode(
           CharCode.boxDrawingsDoubleVertical,
@@ -128,7 +128,7 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
           backColor
         )
       );
-      this.terminal.drawGlyph(
+      terminal.drawGlyph(
         { x: topRightCorner.x, y: dy },
         Glyph.fromCharCode(
           CharCode.boxDrawingsDoubleVertical,
@@ -139,14 +139,16 @@ export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
     }
   }
 
-  onRender(): void {
+  onDraw(ctx: WidgetDrawCtx): void {
     const { backColor, foreColor } = this.state;
 
     const bgGlyph = new Glyph(" ", foreColor, backColor);
-    this.terminal.fill(this.getAbsTopLeft(), this.getAbsBottomRight(), bgGlyph);
+    const tl = this.getAbsTopLeft();
+    const br = this.getAbsBottomRight();
+    ctx.terminal.fill(tl, br, bgGlyph);
 
     if (this.state.borderStyle) {
-      this.renderBorder();
+      this.renderBorder(ctx.terminal);
     }
   }
 }
