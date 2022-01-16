@@ -1,7 +1,7 @@
-import { BaseTerminal, CharCode, Color, Glyph } from "../terminal";
+import { CharCode, Color, Glyph } from "../terminal";
 import { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
 
-type RoundMode = "up" | "down" | "default";
+export type RoundMode = "up" | "down" | "default";
 
 export interface BarWidgetState {
   // Bounds
@@ -18,7 +18,11 @@ export interface BarWidgetState {
   backGlyph?: Glyph;
 }
 
-function getRoundedPercent(percent: number, divisor: number, round: RoundMode) {
+export function getRoundedPercent(
+  percent: number,
+  divisor: number,
+  round: RoundMode
+) {
   let roundFunc = Math.round;
   if (round === "up") {
     roundFunc = Math.ceil;
