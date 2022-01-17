@@ -28,7 +28,7 @@ export class BasicGameExample implements IExample {
   player: { x: number; y: number; coins: number; hp: number };
   coin: Vector2;
 
-  gui: GUI.Widget<any, BasicGameExample>;
+  gui: GUI.Widget<any>;
 
   constructor() {
     this.mount = document.getElementById("example")!;
@@ -93,11 +93,11 @@ export class BasicGameExample implements IExample {
   }
 
   // Sets up common GUI elements we'll render each frame
-  createGUI(): GUI.Widget<any, BasicGameExample> {
+  createGUI(): GUI.Widget<any> {
     // Create a new container for the UI
-    const container = new GUI.ContainerWidget<BasicGameExample>();
+    const container = new GUI.ContainerWidget();
 
-    new GUI.PanelWidget<BasicGameExample>({
+    new GUI.PanelWidget({
       initialState: {
         width: 16,
         height: 22,
@@ -105,14 +105,14 @@ export class BasicGameExample implements IExample {
       },
     }).setParent(container);
 
-    new GUI.TextWidget<BasicGameExample>({
+    new GUI.TextWidget({
       origin: { x: 2, y: 0 },
       initialState: {
         text: " Player ",
       },
     }).setParent(container);
 
-    new GUI.TextWidget<BasicGameExample>({
+    new GUI.TextWidget({
       origin: { x: 2, y: 2 },
       initialState: {
         text: `HP: ${this.player.hp}/10`,
@@ -124,7 +124,7 @@ export class BasicGameExample implements IExample {
       }))
       .setParent(container);
 
-    new GUI.TextWidget<BasicGameExample>({
+    new GUI.TextWidget({
       origin: { x: 2, y: 4 },
       initialState: {
         text: `Gold : ${this.player.coins}`,
@@ -136,7 +136,7 @@ export class BasicGameExample implements IExample {
       }))
       .setParent(container);
 
-    new GUI.PanelWidget<BasicGameExample>({
+    new GUI.PanelWidget({
       origin: { x: 16, y: 0 },
       initialState: {
         width: 34,
@@ -145,7 +145,7 @@ export class BasicGameExample implements IExample {
       },
     }).setParent(container);
 
-    new GUI.PanelWidget<BasicGameExample>({
+    new GUI.PanelWidget({
       origin: { x: 0, y: 22 },
       initialState: {
         width: 50,
@@ -189,8 +189,8 @@ export class BasicGameExample implements IExample {
     this.terminal.clear();
 
     // Draw common elements
-    this.gui.cascadeUpdate(this);
-    this.gui.cascadeDraw(this.terminal);
+    this.gui.cascadeUpdate();
+    this.gui.cascadeDraw({ terminal: this.terminal });
 
     // Logs
     for (let i = 0; i < this.logs.length; i++) {

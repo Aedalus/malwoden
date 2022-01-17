@@ -1,14 +1,20 @@
 import { WidgetConfig } from ".";
-import { Widget } from "./widget";
+import { Widget, WidgetDrawCtx } from "./widget";
 
 export interface ContainerWidgetState {}
 
-export class ContainerWidget<D> extends Widget<ContainerWidgetState, D> {
+/**
+ * An empty widget, used to hold other widgets.
+ */
+export class ContainerWidget extends Widget<ContainerWidgetState> {
   constructor(config?: Partial<WidgetConfig<ContainerWidgetState>>) {
     super({
       initialState: {},
       ...config,
     });
   }
-  onDraw(): void {}
+
+  onDraw(ctx: WidgetDrawCtx): void {
+    return;
+  }
 }

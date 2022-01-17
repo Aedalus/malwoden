@@ -28,6 +28,7 @@ import { DijkstraExample } from "../../examples/pathfinding/dijkstra";
 import { RangeFinderExample } from "../../examples/pathfinding/range-finder";
 import { BasicWidgetExample } from "../../examples/gui/basic-widget";
 import { BarWidgetExample } from "../../examples/gui/bar-widget";
+import { LabelWidgetExample } from "../../examples/gui/label-widget";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,6 +127,11 @@ const MenuData: IMenuData = {
       name: "Bar Widget",
       example: BarWidgetExample,
       srclink: "gui/bar-widget.ts",
+    },
+    "label-widget": {
+      name: "Label Widget",
+      example: LabelWidgetExample,
+      srclink: "gui/label-widget.ts",
     },
   },
   Pathfinding: {

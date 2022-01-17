@@ -5,8 +5,8 @@ export class BasicWidgetExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  gui: GUI.Widget<any, BasicWidgetExample>;
-  mainPanel: GUI.Widget<any, BasicWidgetExample>;
+  gui: GUI.Widget<any>;
+  mainPanel: GUI.Widget<any>;
 
   constructor() {
     this.mount = document.getElementById("example")!;
@@ -24,7 +24,7 @@ export class BasicWidgetExample implements IExample {
       initialState: {},
     });
 
-    this.mainPanel = new GUI.PanelWidget<BasicWidgetExample>({
+    this.mainPanel = new GUI.PanelWidget({
       origin: { x: 3, y: 3 },
       initialState: {
         width: 40,
@@ -34,7 +34,7 @@ export class BasicWidgetExample implements IExample {
       },
     }).setParent(this.gui);
 
-    new GUI.TextWidget<BasicWidgetExample>({
+    new GUI.TextWidget({
       origin: { x: 1, y: 0 },
       initialState: {
         text: " Widgets! ",
@@ -42,7 +42,7 @@ export class BasicWidgetExample implements IExample {
       },
     }).setParent(this.mainPanel);
 
-    new GUI.TextWidget<BasicWidgetExample>({
+    new GUI.TextWidget({
       origin: { x: 2, y: 2 },
       initialState: {
         text:
@@ -68,8 +68,8 @@ export class BasicWidgetExample implements IExample {
       y: 3 + Math.round(curveY),
     });
 
-    this.gui.cascadeUpdate(this);
-    this.gui.cascadeDraw(this.terminal);
+    this.gui.cascadeUpdate();
+    this.gui.cascadeDraw({ terminal: this.terminal });
     this.terminal.render();
 
     this.animRef = requestAnimationFrame(() => this.loop());

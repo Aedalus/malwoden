@@ -1,7 +1,7 @@
 import { MemoryTerminal } from "../terminal/memory-terminal";
 import { Widget, WidgetDrawCtx, WidgetMouseEvent } from "./widget";
 
-class TestWidget<S, D> extends Widget<S, D> {
+class TestWidget<S> extends Widget<S> {
   onDraw(ctx: WidgetDrawCtx): void {}
 }
 
@@ -58,7 +58,7 @@ describe("widget", () => {
     const w = new TestWidget({ initialState: { number: 0 } });
     expect(w.getState()).toEqual({ number: 0 });
     w.setUpdateFunc(() => ({ number: 1 }));
-    w.update({});
+    w.update();
     expect(w.getState()).toEqual({ number: 1 });
   });
 
@@ -67,7 +67,7 @@ describe("widget", () => {
     expect(w.getState()).toEqual({ number: 0 });
     w.setUpdateFunc(() => ({ number: 1 }));
     w.clearUpdateFunc();
-    w.update({});
+    w.update();
     expect(w.getState()).toEqual({ number: 0 });
   });
 
@@ -120,22 +120,49 @@ describe("widget", () => {
 
     c.setParent(p);
 
-    c.setUpdateFunc((_, w) => ({ n: w.getState().n + 1 }));
-    p.setUpdateFunc((_, w) => ({ n: w.getState().n + 1 }));
+    c.setUpdateFunc(() => ({ n: c.getState().n + 1 }));
+    p.setUpdateFunc(() => ({ n: p.getState().n + 1 }));
 
     expect(c.getState()).toEqual({ n: 0 });
     expect(p.getState()).toEqual({ n: 0 });
 
-    p.cascadeUpdate({});
+    p.cascadeUpdate();
 
     expect(c.getState()).toEqual({ n: 1 });
     expect(p.getState()).toEqual({ n: 1 });
 
+    // Test after clear
     p.clearUpdateFunc();
-    p.cascadeUpdate({});
+    p.cascadeUpdate();
 
     expect(c.getState()).toEqual({ n: 2 });
     expect(p.getState()).toEqual({ n: 1 });
+  });
+
+  it("won't update if disabled", () => {
+    const w = new TestWidget({ initialState: { n: 0 } })
+      .setDisabled()
+      .setUpdateFunc(() => ({ n: 1 }));
+
+    w.update();
+    expect(w.getState().n).toEqual(0);
+  });
+
+  it("won't cascade update if disabled", () => {
+    const p = new TestWidget({ initialState: { n: 0 } }).setDisabled();
+    const c = new TestWidget({ initialState: { n: 0 } })
+      .setUpdateFunc(() => ({
+        n: 1,
+      }))
+      .setParent(p);
+
+    p.cascadeUpdate();
+    expect(c.getState().n).toEqual(0);
+
+    p.setDisabled(false);
+
+    p.cascadeUpdate();
+    expect(c.getState().n).toEqual(1);
   });
 
   it("can cascade draw", () => {

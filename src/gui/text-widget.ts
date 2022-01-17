@@ -1,3 +1,4 @@
+import { WidgetConfig } from ".";
 import { Color } from "../terminal";
 import { Widget, WidgetDrawCtx } from "./widget";
 
@@ -42,20 +43,40 @@ export function wrapText(config: { text: string; wrapAt: number }): string[] {
   return lines;
 }
 
+/**
+ * The State of a TextWidget
+ */
 export interface TextWidgetState {
+  /** The text to display */
   text: string;
-  wrapAt?: number;
 
   // Colors
+  /** The color to use for the text. Default White. */
   foreColor?: Color;
+  /** The color to use for the background. Default Black*/
   backColor?: Color;
 
   // Truncate
+  /** Truncate the text after this amount */
   truncateAfter?: number;
+  /** Change the last three chars of a truncated text to ... */
   truncateAddEllipsis?: boolean;
+  /** Wrap the text after this number */
+  wrapAt?: number;
 }
 
-export class TextWidget<D> extends Widget<TextWidgetState, D> {
+/**
+ * Represents text to draw to the screen, potentially truncated or wrapped.
+ */
+export class TextWidget extends Widget<TextWidgetState> {
+  constructor(config: WidgetConfig<TextWidgetState>) {
+    super(config);
+    this.state = {
+      foreColor: Color.White,
+      backColor: Color.Black,
+      ...config.initialState,
+    };
+  }
   private getLines(text: string): string[] {
     if (this.state.wrapAt) return wrapText({ text, wrapAt: this.state.wrapAt });
     else return [text];

@@ -1,3 +1,4 @@
+import { MemoryTerminal } from "../terminal/memory-terminal";
 import { ContainerWidget } from "./container-widget";
 
 describe("ContainerWidget", () => {
@@ -6,7 +7,8 @@ describe("ContainerWidget", () => {
   });
 
   it("will render nothing", () => {
+    const terminal = new MemoryTerminal({ width: 10, height: 10 });
     const w = new ContainerWidget();
-    w.onDraw();
+    w.onDraw({ terminal });
   });
 });

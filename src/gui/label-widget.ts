@@ -1,17 +1,36 @@
+import { WidgetConfig } from ".";
 import { BaseTerminal, CharCode } from "../terminal";
 import { Color } from "../terminal/color";
 import { Widget, WidgetDrawCtx } from "./widget";
 
 export interface LabelWidgetState {
+  /** The text to display, should be short. */
   text: string;
+
+  /** The direction the text should be, relative to the origin. */
   direction: "left" | "right";
 
   // Colors
+  /** The primary color of the label. Default white. */
   foreColor?: Color;
+  /** The secondary color of the label. Default black. */
   backColor?: Color;
 }
 
-export class LabelWidget<D> extends Widget<LabelWidgetState, D> {
+/**
+ * Represents a label drawn on the screen, often for help text.
+ * The direction can be controlled to make sure the label doesn't
+ * get cut off on the edge of the screen.
+ */
+export class LabelWidget extends Widget<LabelWidgetState> {
+  constructor(config: WidgetConfig<LabelWidgetState>) {
+    super(config);
+    this.state = {
+      foreColor: Color.White,
+      backColor: Color.Black,
+      ...config.initialState,
+    };
+  }
   private renderLeftLabel(terminal: BaseTerminal): void {
     const origin = this.getAbsoluteOrigin();
     const { text, foreColor, backColor } = this.state;

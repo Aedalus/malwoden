@@ -4,18 +4,26 @@ import { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
 
 export interface PanelWidgetState {
   // Bounds
+  /** The width of the panel */
   width: number;
+  /** The height of the panel */
   height: number;
 
   // Colors
+  /** The color of any border. Default White. */
   foreColor?: Color;
+  /** The color of the panel. Default Black */
   backColor?: Color;
 
   // Borders
+  /** An optional border style. Default undefined for none. */
   borderStyle?: "double-bar";
 }
 
-export class PanelWidget<D> extends Widget<PanelWidgetState, D> {
+/**
+ * Represents a rectangle drawn on the screen, often with a border.
+ */
+export class PanelWidget extends Widget<PanelWidgetState> {
   constructor(config: WidgetConfig<PanelWidgetState>) {
     super(config);
 
