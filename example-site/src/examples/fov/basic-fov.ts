@@ -42,7 +42,7 @@ export class BasicFoVExample implements IExample {
     gen.doSimulationStep(3);
     gen.connect();
     this.map = gen.getMap();
-    const free = this.map.find((_, val) => val === 0);
+    const free = this.map.filter((_, val) => val === 0);
 
     this.player = {
       x: free[0].x,

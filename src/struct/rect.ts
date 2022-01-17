@@ -63,4 +63,11 @@ export class Rect {
 
     return true;
   }
+
+  contains(point: Vector2): boolean {
+    if (this.v1.x > point.x || this.v2.x < point.x) return false;
+    if (this.v1.y > point.y || this.v2.y < point.y) return false;
+
+    return true;
+  }
 }

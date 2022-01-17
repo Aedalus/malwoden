@@ -60,7 +60,10 @@ export class MouseHandler {
     return this._isDown.has(mouseButton);
   }
 
-  /** Gets the current window position of the mouse */
+  /**
+   * Gets the current position of the mouse
+   * @returns Vector2
+   */
   getPos(): Vector2 {
     return {
       x: this.x,
