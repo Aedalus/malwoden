@@ -1,3 +1,13 @@
 export { KeyCode } from "./keycode";
-export { KeyboardContext, KeyboardHandler, KeyHandlerEvent } from "./keyboard";
-export { MouseHandler, MouseContext } from "./mouse";
+export {
+  KeyboardContext,
+  KeyboardHandler,
+  KeyboardHandlerEvent,
+  KeyboardContextCallback,
+} from "./keyboard";
+export {
+  MouseHandler,
+  MouseContext,
+  MouseHandlerEvent,
+  MouseContextCallback,
+} from "./mouse";

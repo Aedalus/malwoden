@@ -1,12 +1,15 @@
 import { JSDOM } from "jsdom";
-import { KeyHandlerEvent } from ".";
-import { KeyboardHandler, KeyboardContext } from "./keyboard";
+import {
+  KeyboardHandler,
+  KeyboardContext,
+  KeyboardHandlerEvent,
+} from "./keyboard";
 import { KeyCode } from "./keycode";
 
 function keyEventFromKey(
   event: "keyup" | "keydown",
   key: KeyCode
-): KeyHandlerEvent {
+): KeyboardHandlerEvent {
   return {
     key,
     ctrlKey: false,

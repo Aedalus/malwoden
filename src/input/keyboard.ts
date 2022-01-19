@@ -1,10 +1,10 @@
 import { KeyCode } from "./keycode";
 
-export interface KeyContextCallback {
-  (event: KeyHandlerEvent): void;
+export interface KeyboardContextCallback {
+  (event: KeyboardHandlerEvent): void;
 }
 
-export interface KeyHandlerEvent {
+export interface KeyboardHandlerEvent {
   key: KeyCode;
   repeat: boolean;
   metaKey: boolean;
@@ -36,7 +36,7 @@ export class KeyboardHandler {
   private static keyEventFromDomEvent(
     event: "keyup" | "keydown",
     e: KeyboardEvent
-  ): KeyHandlerEvent {
+  ): KeyboardHandlerEvent {
     return {
       key: e.keyCode,
       repeat: e.repeat,
@@ -151,24 +151,24 @@ export class KeyboardHandler {
  * pressed, etc.
  */
 export class KeyboardContext {
-  private _onDown = new Map<number | string, KeyContextCallback[]>();
-  private _onUp = new Map<number | string, KeyContextCallback[]>();
+  private _onDown = new Map<number | string, KeyboardContextCallback[]>();
+  private _onUp = new Map<number | string, KeyboardContextCallback[]>();
 
   private _anyKey = "any";
 
-  private _getOnDownFns(key: number | string): KeyContextCallback[] {
+  private _getOnDownFns(key: number | string): KeyboardContextCallback[] {
     return this._onDown.get(key) ?? [];
   }
-  private _getOnUpFns(key: number | string): KeyContextCallback[] {
+  private _getOnUpFns(key: number | string): KeyboardContextCallback[] {
     return this._onUp.get(key) ?? [];
   }
-  private _addOnDown(key: number | string, callback: KeyContextCallback) {
+  private _addOnDown(key: number | string, callback: KeyboardContextCallback) {
     const existing = this._getOnDownFns(key);
     existing.push(callback);
     this._onDown.set(key, existing);
   }
 
-  private _addOnUp(key: number | string, callback: KeyContextCallback) {
+  private _addOnUp(key: number | string, callback: KeyboardContextCallback) {
     const existing = this._getOnUpFns(key);
     existing.push(callback);
     this._onUp.set(key, existing);
@@ -180,7 +180,10 @@ export class KeyboardContext {
    * @param callback (KeyHandlerEvent) => void - The callback
    * @returns - The KeyboardContext
    */
-  onDown(key: KeyCode | number, callback: KeyContextCallback): KeyboardContext {
+  onDown(
+    key: KeyCode | number,
+    callback: KeyboardContextCallback
+  ): KeyboardContext {
     this._addOnDown(key, callback);
     return this;
   }
@@ -191,7 +194,7 @@ export class KeyboardContext {
    * @param key KeyCode - The keycode to clear onDown.
    * @param callback If no existing event is provided, will clear all
    */
-  clearOnDown(key: KeyCode | number, callback?: KeyContextCallback) {
+  clearOnDown(key: KeyCode | number, callback?: KeyboardContextCallback) {
     const filtered = callback
       ? this._getOnDownFns(key).filter((f) => f !== callback)
       : [];
@@ -203,7 +206,7 @@ export class KeyboardContext {
    * @param callback (KeyHandlerEvent) => void - The callback
    * @returns - The KeyboardContext
    */
-  onAnyDown(callback: KeyContextCallback): KeyboardContext {
+  onAnyDown(callback: KeyboardContextCallback): KeyboardContext {
     this._addOnDown(this._anyKey, callback);
     return this;
   }
@@ -213,7 +216,7 @@ export class KeyboardContext {
    * all callbacks on listening for any keys.
    * @param callback If no existing event is provided, will clear all
    */
-  clearOnAnyDown(callback?: KeyContextCallback) {
+  clearOnAnyDown(callback?: KeyboardContextCallback) {
     const filtered = callback
       ? this._getOnDownFns(this._anyKey).filter((f) => f !== callback)
       : [];
@@ -226,7 +229,10 @@ export class KeyboardContext {
    * @param callback (KeyHandlerEvent) => void - The callback
    * @returns - The KeyboardContext
    */
-  onUp(key: KeyCode | number, callback: KeyContextCallback): KeyboardContext {
+  onUp(
+    key: KeyCode | number,
+    callback: KeyboardContextCallback
+  ): KeyboardContext {
     this._addOnUp(key, callback);
     return this;
   }
@@ -237,7 +243,7 @@ export class KeyboardContext {
    * @param key KeyCode - The keycode to clear onUp.
    * @param callback If no existing event is provided, will clear all
    */
-  clearOnUp(key: KeyCode | number, callback?: KeyContextCallback) {
+  clearOnUp(key: KeyCode | number, callback?: KeyboardContextCallback) {
     const filtered = callback
       ? this._getOnUpFns(key).filter((f) => f !== callback)
       : [];
@@ -249,7 +255,7 @@ export class KeyboardContext {
    * @param callback (KeyHandlerEvent) => void - The callback
    * @returns - The KeyboardContext
    */
-  onAnyUp(callback: KeyContextCallback): KeyboardContext {
+  onAnyUp(callback: KeyboardContextCallback): KeyboardContext {
     this._addOnUp(this._anyKey, callback);
     return this;
   }
@@ -259,7 +265,7 @@ export class KeyboardContext {
    * all callbacks on listening for any keys.
    * @param callback If no existing event is provided, will clear all
    */
-  clearOnAnyUp(callback?: KeyContextCallback) {
+  clearOnAnyUp(callback?: KeyboardContextCallback) {
     const filtered = callback
       ? this._getOnUpFns(this._anyKey).filter((f) => f !== callback)
       : [];
@@ -270,7 +276,7 @@ export class KeyboardContext {
    * Programmatically call all callbacks as if a key was pressed.
    * @param key KeyHandlerEvent
    */
-  callOnDown(event: KeyHandlerEvent) {
+  callOnDown(event: KeyboardHandlerEvent) {
     const anyFns = this._onDown.get(this._anyKey) ?? [];
     const fns = this._onDown.get(event.key) ?? [];
     for (const f of anyFns) {
@@ -285,7 +291,7 @@ export class KeyboardContext {
    * Programmatically call all callbacks as if a key was lifted.
    * @param key KeyHandlerEvent
    */
-  callOnUp(event: KeyHandlerEvent) {
+  callOnUp(event: KeyboardHandlerEvent) {
     const anyFns = this._onUp.get(this._anyKey) ?? [];
     const fns = this._onUp.get(event.key) ?? [];
     for (const f of anyFns) {

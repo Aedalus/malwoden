@@ -1,6 +1,6 @@
 import { Vector2 } from "../struct";
 import * as Calc from "../calc";
-import { MouseHandler } from "../input";
+import { MouseHandler, MouseHandlerEvent } from "../input";
 import { Terminal } from "../malwoden";
 
 /**
@@ -24,16 +24,6 @@ export interface WidgetUpdateFunc<S> {
 export interface WidgetDrawCtx {
   terminal: Terminal.BaseTerminal;
   mouse?: MouseHandler;
-}
-
-/**
- * Passed through widgets on mouse events
- */
-export interface WidgetMouseEvent {
-  x: number;
-  y: number;
-  button: number;
-  type: "mousedown" | "mouseup";
 }
 
 /**
@@ -285,7 +275,7 @@ export abstract class Widget<S> {
     this.onDraw(ctx);
   }
 
-  cascadeClick(mouse: WidgetMouseEvent): boolean {
+  cascadeClick(mouse: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
     for (let i = this.children.length - 1; i >= 0; i--) {
       const c = this.children[i];
@@ -295,7 +285,7 @@ export abstract class Widget<S> {
     return this.click(mouse);
   }
 
-  click(mouse: WidgetMouseEvent): boolean {
+  click(mouse: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
     return this.onClick(mouse);
   }
@@ -306,7 +296,7 @@ export abstract class Widget<S> {
    * @param absolutePosition Vector2 - The absolute position of the rendering terminal
    * @returns boolean - Capture the event
    */
-  onClick(mouse: WidgetMouseEvent): boolean {
+  onClick(mouse: MouseHandlerEvent): boolean {
     return false;
   }
 
