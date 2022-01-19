@@ -1,10 +1,22 @@
 import { Vector2 } from "../struct";
 
-interface MouseCallback {
-  (pos: Vector2): void;
+export interface MouseContextCallback {
+  (pos: MouseHandlerEvent): void;
 }
 
-/** Abstracts browser mouse input */
+export interface MouseHandlerEvent {
+  x: number;
+  y: number;
+  button: number;
+  type: "mousedown" | "mouseup";
+}
+
+/**
+ * Represents a global mouse. Will likely only create one per app.
+ *
+ * You can bind/switch MouseContexts to the MouseHandler
+ * to change input 'modes'.
+ */
 export class MouseHandler {
   private x: number = 0;
   private y: number = 0;
@@ -34,7 +46,12 @@ export class MouseHandler {
     if (this.context) {
       const x = e.clientX;
       const y = e.clientY;
-      this.context.callOnMouseDown({ x, y }, e.button);
+      this.context.callOnMouseDown({
+        x,
+        y,
+        button: e.button,
+        type: "mousedown",
+      });
     }
   }
 
@@ -43,7 +60,7 @@ export class MouseHandler {
     if (this.context) {
       const x = e.clientX;
       const y = e.clientY;
-      this.context.callOnMouseUp({ x, y }, e.button);
+      this.context.callOnMouseUp({ x, y, button: e.button, type: "mouseup" });
     }
   }
 
@@ -85,63 +102,84 @@ export class MouseHandler {
   }
 }
 
+/**
+ * MouseContext represents a single 'mode' of the game's mouse controls.
+ * For instance, you might have one context to use for the overworld, another for
+ * menus, another for inventory, etc.
+ *
+ * You can set the active context through a MouseHandler's setContext(ctx)
+ * and clearContext() methods.
+ *
+ *
+ * You can register multiple callbacks for onUp/onDown.
+ */
 export class MouseContext {
-  private onDown = new Map<number, MouseCallback>();
-  private onUp = new Map<number, MouseCallback>();
+  private _onDown: MouseContextCallback[] = [];
+  private _onUp: MouseContextCallback[] = [];
 
   /**
-   * Registers a callback for a mousedown event
+   * Registers a callback for a mousedown event.
    * @param callback - The function to call on mousedown
-   * @param mouseButton - The mouse button number. Default 0 for left click.
+   * @return this
    */
-  onMouseDown(callback: MouseCallback, mouseButton: number = 0): MouseContext {
-    this.onDown.set(mouseButton, callback);
+  onMouseDown(callback: MouseContextCallback): this {
+    this._onDown.push(callback);
     return this;
   }
 
   /**
-   * Registers a callback for a mouseup event
-   * @param callback - The function to call on mouseup
-   * @param mouseButton - The mouse button number. Default 0 for left click.
+   * Registers a callback for a mouseup event.
+   * @param callback - The function to call on mousedown
+   * @return this
    */
-  onMouseUp(callback: MouseCallback, mouseButton: number = 0): MouseContext {
-    this.onUp.set(mouseButton, callback);
+  onMouseUp(callback: MouseContextCallback): this {
+    this._onUp.push(callback);
     return this;
   }
 
   /**
-   * Clears a registered function for mousedown
-   * @param mouseButton - The mouse button to clear. Default 0 for left click.
+   * Clears a registered function for mousedown. If no callback is provided will clear all.
+   * @param callback - The callback to clear.
    */
-  clearMouseDown(mouseButton: number = 0) {
-    this.onDown.delete(mouseButton);
+  clearMouseDown(callback?: MouseContextCallback): this {
+    if (callback) {
+      this._onDown = this._onDown.filter((x) => x !== callback);
+    } else {
+      this._onDown = [];
+    }
+    return this;
   }
 
   /**
-   * Clears a registered function for mouseup
-   * @param mouseButton - The mouse button to clear. Default 0 for left click.
+   * Clears a registered function for mouseup. If no callback is provided will clear all.
+   * @param callback - The callback to clear.
    */
-  clearMouseUp(mouseButton: number = 0) {
-    this.onUp.delete(mouseButton);
+  clearMouseUp(callback?: MouseContextCallback): this {
+    if (callback) {
+      this._onUp = this._onUp.filter((x) => x !== callback);
+    } else {
+      this._onUp = [];
+    }
+    return this;
   }
 
   /**
    * Invokes a registered callback for mousedown
-   * @param pos Vector2 - The pos for the mouse
-   * @param mouseButton - The mouse button pressed
+   * @param e MouseHandlerEvent
    */
-  callOnMouseDown(pos: Vector2, mouseButton: number = 0) {
-    const callback = this.onDown.get(mouseButton);
-    if (callback) callback(pos);
+  callOnMouseDown(e: MouseHandlerEvent) {
+    for (const f of this._onDown) {
+      f(e);
+    }
   }
 
   /**
    * Invokes a registered callback for mouseup
-   * @param pos
-   * @param mouseButton
+   * @param e MouseHandlerEvent
    */
-  callOnMouseUp(pos: Vector2, mouseButton: number = 0) {
-    const callback = this.onUp.get(mouseButton);
-    if (callback) callback(pos);
+  callOnMouseUp(e: MouseHandlerEvent) {
+    for (const f of this._onUp) {
+      f(e);
+    }
   }
 }

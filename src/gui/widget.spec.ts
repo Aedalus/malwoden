@@ -1,5 +1,6 @@
+import { MouseHandlerEvent } from "../input";
 import { MemoryTerminal } from "../terminal/memory-terminal";
-import { Widget, WidgetDrawCtx, WidgetMouseEvent } from "./widget";
+import { Widget, WidgetDrawCtx } from "./widget";
 
 class TestWidget<S> extends Widget<S> {
   onDraw(ctx: WidgetDrawCtx): void {}
@@ -230,7 +231,7 @@ describe("widget", () => {
     const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
     const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => false);
 
-    const mouse: WidgetMouseEvent = {
+    const mouse: MouseHandlerEvent = {
       x: 0,
       y: 1,
       button: 1,
@@ -252,7 +253,7 @@ describe("widget", () => {
     const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
     const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => true);
 
-    const mouse: WidgetMouseEvent = {
+    const mouse: MouseHandlerEvent = {
       x: 0,
       y: 1,
       button: 1,

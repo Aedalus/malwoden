@@ -93,7 +93,7 @@ describe("MouseHandler", () => {
     const h = new MouseHandler();
     const c = new MouseContext()
       .onMouseUp(() => left++)
-      .onMouseDown(() => right++, 2);
+      .onMouseDown(() => right++);
 
     h.setContext(c);
 
@@ -143,49 +143,32 @@ describe("MouseHandler", () => {
     c.onMouseDown(() => onDown++);
     c.onMouseUp(() => onUp++);
 
-    expect(c["onDown"].has(0)).toBeTruthy();
-    expect(c["onUp"].has(0)).toBeTruthy();
+    expect(c["_onDown"]).toHaveLength(1);
+    expect(c["_onUp"]).toHaveLength(1);
 
     c.clearMouseDown();
     c.clearMouseUp();
 
-    expect(c["onDown"].has(0)).toBeFalsy;
-    expect(c["onUp"].has(0)).toBeFalsy;
+    expect(c["_onDown"]).toHaveLength(0);
+    expect(c["_onUp"]).toHaveLength(0);
   });
 
   it("Won't error if context doesn't have a callback", () => {
     const c = new MouseContext();
-    c.callOnMouseDown({ x: 0, y: 0 });
-    c.callOnMouseUp({ x: 0, y: 0 });
+    c.callOnMouseDown({ x: 0, y: 0, button: 0, type: "mousedown" });
+    c.callOnMouseDown({ x: 0, y: 0, button: 0, type: "mouseup" });
   });
 
   it("Can call callbacks directly", () => {
-    let up = 0;
-    let down = 0;
-    let up_2 = 0;
-    let down_2 = 0;
+    let count = 0;
     const c = new MouseContext()
-      .onMouseUp(() => up++)
-      .onMouseUp(() => up_2++, 2)
-      .onMouseDown(() => down++)
-      .onMouseDown(() => down_2++, 2);
+      .onMouseUp(() => (count = count + 1))
+      .onMouseDown(() => (count = count - 1));
 
-    const check = (a: number, b: number, c: number, d: number) => {
-      expect(up).toEqual(a);
-      expect(up_2).toEqual(b);
-      expect(down).toEqual(c);
-      expect(down_2).toEqual(d);
-    };
-    check(0, 0, 0, 0);
-
-    c.callOnMouseUp({ x: 0, y: 0 });
-    check(1, 0, 0, 0);
-    c.callOnMouseUp({ x: 0, y: 0 }, 2);
-    check(1, 1, 0, 0);
-    c.callOnMouseDown({ x: 0, y: 0 });
-    check(1, 1, 1, 0);
-    c.callOnMouseDown({ x: 0, y: 0 }, 2);
-    check(1, 1, 1, 1);
+    c.callOnMouseUp({ x: 0, y: 0, button: 0, type: "mouseup" });
+    expect(count).toEqual(1);
+    c.callOnMouseDown({ x: 0, y: 0, button: 0, type: "mousedown" });
+    expect(count).toEqual(0);
   });
 
   it("Can tell if a mouse button is held down", () => {
@@ -209,5 +192,33 @@ describe("MouseHandler", () => {
     h["onMouseUpEvent"](new MouseEvent("mouseup", { button: 2 }));
     expect(h.isMouseDown()).toBeFalsy();
     expect(h.isMouseDown(2)).toBeFalsy();
+  });
+
+  it("can clear callbacks", () => {
+    const c = new MouseContext();
+    const f1 = () => {};
+    const f2 = () => {};
+    const f3 = () => {};
+    const f4 = () => {};
+
+    c.onMouseDown(f1);
+    c.onMouseDown(f2);
+    c.onMouseUp(f3);
+    c.onMouseUp(f4);
+
+    expect(c["_onDown"]).toEqual([f1, f2]);
+    expect(c["_onUp"]).toEqual([f3, f4]);
+
+    c.clearMouseDown(f1);
+    c.clearMouseUp(f3);
+
+    expect(c["_onDown"]).toEqual([f2]);
+    expect(c["_onUp"]).toEqual([f4]);
+
+    c.clearMouseDown();
+    c.clearMouseUp();
+
+    expect(c["_onDown"]).toEqual([]);
+    expect(c["_onUp"]).toEqual([]);
   });
 });
