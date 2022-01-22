@@ -64,10 +64,6 @@ export abstract class BaseTerminal {
     }
   }
 
-  port(pos: Vector2, width: number, height: number) {
-    return new PortTerminal(pos, { x: width, y: height }, this);
-  }
-
   drawCharCode(
     pos: Vector2,
     charCode: number,
@@ -78,45 +74,6 @@ export abstract class BaseTerminal {
   }
 
   abstract drawGlyph(pos: Vector2, glyph: Glyph): void;
-}
-
-export abstract class RenderableTerminal extends BaseTerminal {
-  abstract render(): void;
-
-  abstract pixelToChar(pixel: Vector2): Vector2;
-
+  abstract windowToTilePoint(pixel: Vector2): Vector2;
   abstract delete(): void;
-}
-
-export class PortTerminal extends BaseTerminal {
-  private readonly _x: number;
-  private readonly _y: number;
-  readonly portSize: Vector2;
-
-  readonly root: BaseTerminal;
-
-  constructor(pos: Vector2, size: Vector2, root: BaseTerminal) {
-    super({ width: size.x, height: size.y });
-    this._x = pos.x;
-    this._y = pos.y;
-    this.portSize = size;
-    this.root = root;
-  }
-
-  drawGlyph(pos: Vector2, glyph: Glyph) {
-    if (pos.x < 0 || pos.x >= this.width) return;
-    if (pos.y < 0 || pos.y >= this.height) return;
-    this.root.drawGlyph({ x: this._x + pos.x, y: this._y + pos.y }, glyph);
-  }
-
-  port(pos: Vector2, width: number, height: number) {
-    return new PortTerminal(
-      {
-        x: this._x + pos.x,
-        y: this._y + pos.y,
-      },
-      { x: width, y: height },
-      this.root
-    );
-  }
 }

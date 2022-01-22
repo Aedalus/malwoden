@@ -3,4 +3,5 @@ export { ContainerWidget, ContainerWidgetState } from "./container-widget";
 export { LabelWidget, LabelWidgetState } from "./label-widget";
 export { PanelWidget, PanelWidgetState } from "./panel-widget";
 export { TextWidget, TextWidgetState } from "./text-widget";
-export { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
+export { Widget, WidgetConfig } from "./widget";
+export { ButtonWidget, ButtonWidgetState } from "./button-widget";

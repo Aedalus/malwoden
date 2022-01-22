@@ -1,7 +1,14 @@
 import { Vector2 } from "../struct";
 import * as Calc from "../calc";
-import { MouseHandler, MouseHandlerEvent } from "../input";
-import { Terminal } from "../malwoden";
+import {
+  KeyboardContext,
+  KeyboardHandler,
+  MouseContext,
+  MouseContextCallback,
+  MouseHandler,
+  MouseHandlerEvent,
+} from "../input";
+import { BaseTerminal, Glyph } from "../terminal";
 
 /**
  * Generic used to create widget constructors.
@@ -16,14 +23,6 @@ export interface WidgetConfig<S> {
  */
 export interface WidgetUpdateFunc<S> {
   (): Partial<S>;
-}
-
-/**
- * Passed through widgets for draw methods.
- */
-export interface WidgetDrawCtx {
-  terminal: Terminal.BaseTerminal;
-  mouse?: MouseHandler;
 }
 
 /**
@@ -43,6 +42,20 @@ export abstract class Widget<S> {
   protected children: Widget<any>[] = [];
   protected state: S;
   protected disabled = false;
+
+  // Expected only on root
+  protected mouseRegistration?: {
+    mouseContext: MouseContext;
+    mouseOnUp: MouseContextCallback;
+    mouseOnDown: MouseContextCallback;
+  };
+
+  protected keyboardContext?: KeyboardContext;
+
+  // Passed down from parent -> child on register
+  protected terminal?: BaseTerminal;
+  protected mouseHandler?: MouseHandler;
+  protected keyboardHandler?: KeyboardHandler;
 
   /**
    * Creates a new Widget.
@@ -69,6 +82,34 @@ export abstract class Widget<S> {
     for (const c of this.children) {
       c.updateAbsoluteOrigin();
     }
+  }
+
+  /**
+   * Sets the terminal for this widget and all children widgets. Will be passed
+   * to any children added in the future as well.
+   * @param terminal - Leave empty to clear
+   * @returns this
+   */
+  setTerminal(terminal?: BaseTerminal): this {
+    this.terminal = terminal;
+    for (const c of this.children) {
+      c.setTerminal(terminal);
+    }
+    return this;
+  }
+
+  /**
+   * Sets the mouseHandler for this widget and all children widgets. Will be passed
+   * to any children added in the future as well.
+   * @param mouseHandler - Leave empty to clear
+   * @returns this
+   */
+  setMouseHandler(mouseHandler?: MouseHandler): this {
+    this.mouseHandler = mouseHandler;
+    for (const c of this.children) {
+      c.setMouseHandler(mouseHandler);
+    }
+    return this;
   }
 
   /**
@@ -196,12 +237,14 @@ export abstract class Widget<S> {
     }
     child.parent = this;
     child.updateAbsoluteOrigin();
+    child.setTerminal(this.terminal);
+    child.setMouseHandler(this.mouseHandler);
     this.children.push(child);
     return child;
   }
 
   /**
-   * Removes a child widget from the parent widget.
+   * Removes a child widget from the parent widget. Clears inherited Terminal/MouseHandler/KeyboardHandler
    * @param child The child widget
    * @returns The child widget if found, undefined otherwise.
    */
@@ -216,6 +259,11 @@ export abstract class Widget<S> {
       }
     }
     this.children = newChildren;
+
+    if (foundChild) {
+      foundChild.setTerminal(undefined);
+      foundChild.setMouseHandler(undefined);
+    }
     return foundChild as T;
   }
 
@@ -253,41 +301,64 @@ export abstract class Widget<S> {
   /**
    * Calls the draw() method of this widget and all children widgets recursively.
    * If a widget is disabled it will stop the cascade.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
    */
-  cascadeDraw(ctx: WidgetDrawCtx): void {
+  cascadeDraw(): void {
     if (this.isDisabled()) return;
-    this.draw(ctx);
+    this.draw();
     for (const c of this.children) {
-      c.cascadeDraw(ctx);
+      c.cascadeDraw();
     }
   }
 
   /**
    * Draws on to the given terminal using the widget's current state. Will not draw if disabled.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
    * @returns
    */
-  draw(ctx: WidgetDrawCtx): void {
+  draw(): void {
     if (this.isDisabled()) return;
-    this.onDraw(ctx);
+    this.onDraw();
   }
 
-  cascadeClick(mouse: MouseHandlerEvent): boolean {
+  registerMouseContext(mouseContext: MouseContext): this {
+    this.clearMouseContext();
+    this.mouseRegistration = {
+      mouseContext,
+      mouseOnUp: this.cascadeMouseClick.bind(this),
+      mouseOnDown: this.cascadeMouseClick.bind(this),
+    };
+
+    mouseContext.onMouseUp(this.mouseRegistration.mouseOnUp);
+    mouseContext.onMouseDown(this.mouseRegistration.mouseOnDown);
+
+    return this;
+  }
+
+  clearMouseContext(): this {
+    if (this.mouseRegistration) {
+      this.mouseRegistration.mouseContext.clearMouseUp(
+        this.mouseRegistration.mouseOnUp
+      );
+      this.mouseRegistration.mouseContext.clearMouseDown(
+        this.mouseRegistration.mouseOnDown
+      );
+    }
+    this.mouseRegistration = undefined;
+    return this;
+  }
+
+  cascadeMouseClick(mouse: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
     for (let i = this.children.length - 1; i >= 0; i--) {
       const c = this.children[i];
-      const captured = c.cascadeClick(mouse);
+      const captured = c.cascadeMouseClick(mouse);
       if (captured) return true;
     }
-    return this.click(mouse);
+    return this.onMouseClick(mouse);
   }
 
-  click(mouse: MouseHandlerEvent): boolean {
+  mouseClick(mouse: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
-    return this.onClick(mouse);
+    return this.onMouseClick(mouse);
   }
 
   /**
@@ -296,14 +367,26 @@ export abstract class Widget<S> {
    * @param absolutePosition Vector2 - The absolute position of the rendering terminal
    * @returns boolean - Capture the event
    */
-  onClick(mouse: MouseHandlerEvent): boolean {
+  onMouseClick(mouse: MouseHandlerEvent): boolean {
     return false;
   }
 
   /**
-   * A method to be implemented by widgets to render to the terminal.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
+   * Draws a glyph on the terminal using a position local to the widget.
+   * @param pos - A local position
+   * @param glyph - The glyph to draw
+   * @returns
    */
-  abstract onDraw(ctx: WidgetDrawCtx): void;
+  drawGlyph(pos: Vector2, glyph: Glyph) {
+    if (!this.terminal) return;
+    this.terminal.drawGlyph(
+      { x: this.absoluteOrigin.x + pos.x, y: this.absoluteOrigin.y + pos.y },
+      glyph
+    );
+  }
+
+  /**
+   * A method to be implemented by widgets to render to the terminal.
+   */
+  abstract onDraw(): void;
 }

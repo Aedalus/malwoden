@@ -23,9 +23,8 @@ export class LabelWidgetExample implements IExample {
     });
 
     // Create a Container to hold other widgets!
-    this.gui = new GUI.ContainerWidget({
-      initialState: {},
-    });
+    // Set a terminal at the root of the widgets.
+    this.gui = new GUI.ContainerWidget().setTerminal(this.terminal);
 
     this.gui.addChild(
       new GUI.TextWidget({
@@ -48,7 +47,7 @@ export class LabelWidgetExample implements IExample {
 
     this.labelWidget.setUpdateFunc(() => {
       const m = this.mouse.getPos();
-      const p = this.terminal.pixelToChar(m);
+      const p = this.terminal.screenToTilePoint(m);
       this.labelWidget.setOrigin(p);
 
       return {
@@ -65,7 +64,7 @@ export class LabelWidgetExample implements IExample {
     this.terminal.clear();
 
     this.gui.cascadeUpdate();
-    this.gui.cascadeDraw({ terminal: this.terminal });
+    this.gui.cascadeDraw();
     this.terminal.render();
 
     this.animRef = requestAnimationFrame(() => this.loop());

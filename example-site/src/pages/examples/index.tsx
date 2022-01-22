@@ -29,6 +29,8 @@ import { RangeFinderExample } from "../../examples/pathfinding/range-finder";
 import { BasicWidgetExample } from "../../examples/gui/basic-widget";
 import { BarWidgetExample } from "../../examples/gui/bar-widget";
 import { LabelWidgetExample } from "../../examples/gui/label-widget";
+import { ButtonWidgetExample } from "../../examples/gui/button-widget";
+import { CustomWidgetExample } from "../../examples/gui/custom-widget";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,6 +134,16 @@ const MenuData: IMenuData = {
       name: "Label Widget",
       example: LabelWidgetExample,
       srclink: "gui/label-widget.ts",
+    },
+    "button-widget": {
+      name: "Button Widgets",
+      example: ButtonWidgetExample,
+      srclink: "gui/button-widget.ts",
+    },
+    "custom-widget": {
+      name: "Custom Widgets",
+      example: CustomWidgetExample,
+      srclink: "gui/custom-widget.ts",
     },
   },
   Pathfinding: {

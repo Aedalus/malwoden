@@ -50,7 +50,7 @@ describe("TextWidget", () => {
       initialState: { text: "Hello World" },
     });
 
-    w.onDraw({ terminal });
+    w.onDraw();
   });
 
   it("Can truncate text", () => {
@@ -59,7 +59,7 @@ describe("TextWidget", () => {
       initialState: { text: "Hello World", truncateAfter: 8 },
     });
 
-    w.onDraw({ terminal });
+    w.onDraw();
   });
 
   it("Can wrap text", () => {
@@ -68,6 +68,6 @@ describe("TextWidget", () => {
       initialState: { text: "Hello World", wrapAt: 8 },
     });
 
-    w.onDraw({ terminal });
+    w.onDraw();
   });
 });

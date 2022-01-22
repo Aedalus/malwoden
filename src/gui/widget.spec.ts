@@ -1,9 +1,9 @@
 import { MouseHandlerEvent } from "../input";
 import { MemoryTerminal } from "../terminal/memory-terminal";
-import { Widget, WidgetDrawCtx } from "./widget";
+import { Widget } from "./widget";
 
 class TestWidget<S> extends Widget<S> {
-  onDraw(ctx: WidgetDrawCtx): void {}
+  onDraw(): void {}
 }
 
 const ntw = () => new TestWidget({ initialState: {} });
@@ -167,7 +167,6 @@ describe("widget", () => {
   });
 
   it("can cascade draw", () => {
-    const terminal = new MemoryTerminal({ width: 10, height: 10 });
     const p = new TestWidget({ initialState: { n: 0 } });
     const c = new TestWidget({ initialState: { n: 0 } });
 
@@ -176,7 +175,7 @@ describe("widget", () => {
 
     c.setParent(p);
 
-    p.cascadeDraw({ terminal });
+    p.cascadeDraw();
 
     expect(pSpy).toHaveBeenCalledTimes(1);
     expect(cSpy).toHaveBeenCalledTimes(1);
@@ -186,12 +185,12 @@ describe("widget", () => {
     const p = ntw();
     const c = ntw();
 
-    const pSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cSpy = jest.spyOn(c, "onClick").mockImplementation(() => false);
+    const pSpy = jest.spyOn(p, "onMouseClick").mockImplementation(() => false);
+    const cSpy = jest.spyOn(c, "onMouseClick").mockImplementation(() => false);
 
     c.setParent(p);
 
-    p.cascadeClick({ button: 0, type: "mousedown", x: 1, y: 1 });
+    p.cascadeMouseClick({ button: 0, type: "mousedown", x: 1, y: 1 });
 
     expect(pSpy).toHaveBeenCalledTimes(1);
     expect(cSpy).toHaveBeenCalledTimes(1);
@@ -200,9 +199,9 @@ describe("widget", () => {
   it("will return false on baseline onClick", () => {
     const p = ntw();
 
-    expect(p.onClick({ x: 0, y: 0, button: 0, type: "mousedown" })).toEqual(
-      false
-    );
+    expect(
+      p.onMouseClick({ x: 0, y: 0, button: 0, type: "mousedown" })
+    ).toEqual(false);
   });
 
   it("can set the origin in the constructor", () => {
@@ -220,16 +219,20 @@ describe("widget", () => {
     const pDrawSpy = jest.spyOn(p, "onDraw").mockImplementation(() => {});
     const cDrawSpy = jest.spyOn(c, "onDraw").mockImplementation(() => {});
 
-    p.cascadeDraw({ terminal });
+    p.cascadeDraw();
 
-    p.draw({ terminal });
-    c.draw({ terminal });
+    p.draw();
+    c.draw();
 
     expect(pDrawSpy).toHaveBeenCalledTimes(0);
     expect(cDrawSpy).toHaveBeenCalledTimes(0);
 
-    const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => false);
+    const pClickSpy = jest
+      .spyOn(p, "onMouseClick")
+      .mockImplementation(() => false);
+    const cClickSpy = jest
+      .spyOn(c, "onMouseClick")
+      .mockImplementation(() => false);
 
     const mouse: MouseHandlerEvent = {
       x: 0,
@@ -237,9 +240,9 @@ describe("widget", () => {
       button: 1,
       type: "mousedown",
     };
-    p.cascadeClick(mouse);
-    p.click(mouse);
-    c.click(mouse);
+    p.cascadeMouseClick(mouse);
+    p.mouseClick(mouse);
+    c.mouseClick(mouse);
 
     expect(pClickSpy).toHaveBeenCalledTimes(0);
     expect(cClickSpy).toHaveBeenCalledTimes(0);
@@ -250,8 +253,12 @@ describe("widget", () => {
     const c = ntw();
     c.setParent(p);
 
-    const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => true);
+    const pClickSpy = jest
+      .spyOn(p, "onMouseClick")
+      .mockImplementation(() => false);
+    const cClickSpy = jest
+      .spyOn(c, "onMouseClick")
+      .mockImplementation(() => true);
 
     const mouse: MouseHandlerEvent = {
       x: 0,
@@ -260,7 +267,7 @@ describe("widget", () => {
       type: "mousedown",
     };
 
-    p.cascadeClick(mouse);
+    p.cascadeMouseClick(mouse);
 
     expect(pClickSpy).toHaveBeenCalledTimes(0);
     expect(cClickSpy).toHaveBeenCalledTimes(1);

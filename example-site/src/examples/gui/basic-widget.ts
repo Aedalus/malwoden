@@ -20,9 +20,7 @@ export class BasicWidgetExample implements IExample {
     });
 
     // Create a Container to hold other widgets!
-    this.gui = new GUI.ContainerWidget({
-      initialState: {},
-    });
+    this.gui = new GUI.ContainerWidget().setTerminal(this.terminal);
 
     this.mainPanel = new GUI.PanelWidget({
       origin: { x: 3, y: 3 },
@@ -60,8 +58,8 @@ export class BasicWidgetExample implements IExample {
     this.terminal.clear();
 
     // Add a simple animation
-    const curveX = Math.cos(Date.now() / 2000) * 4 + 2;
-    const curveY = Math.cos(Date.now() / 2000) * 4 + 2;
+    const curveX = Math.cos(Date.now() / 4000) * 4 + 2;
+    const curveY = Math.cos(Date.now() / 4000) * 4 + 2;
 
     this.mainPanel.setOrigin({
       x: 3 + Math.round(curveX),
@@ -69,7 +67,7 @@ export class BasicWidgetExample implements IExample {
     });
 
     this.gui.cascadeUpdate();
-    this.gui.cascadeDraw({ terminal: this.terminal });
+    this.gui.cascadeDraw();
     this.terminal.render();
 
     this.animRef = requestAnimationFrame(() => this.loop());

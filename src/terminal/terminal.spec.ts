@@ -1,11 +1,15 @@
-import { format } from "path";
 import { Table, Vector2 } from "../struct";
-import { CharCode } from "./char-code";
 import { Color } from "./color";
 import { Glyph } from "./glyph";
 import { BaseTerminal, TerminalConfig } from "./terminal";
 
 class TestTerminal extends BaseTerminal {
+  windowToTilePoint(pixel: Vector2): Vector2 {
+    throw new Error("Method not implemented.");
+  }
+  delete(): void {
+    throw new Error("Method not implemented.");
+  }
   table: Table<Glyph>;
   constructor(config: TerminalConfig) {
     super(config);
@@ -99,55 +103,5 @@ describe("BaseTerminal", () => {
     const t = new TestTerminal({ width: 5, height: 5 });
     t.writeAt({ x: 0, y: 0 }, "Hello!");
     expect(t.table.get({ x: 5, y: 0 })).toEqual(undefined);
-  });
-});
-
-describe("PortTerminal", () => {
-  it("Can create a new port terminal", () => {
-    const t = new TestTerminal({ width: 10, height: 10 });
-
-    const p = t.port({ x: 5, y: 5 }, 2, 3);
-
-    expect(p.width).toEqual(2);
-    expect(p.height).toEqual(3);
-  });
-
-  it("Can draw a new glyph", () => {
-    const t = new TestTerminal({ width: 10, height: 10 });
-
-    const p = t.port({ x: 5, y: 5 }, 2, 3);
-    p.drawGlyph({ x: 1, y: 2 }, Glyph.fromCharCode(CharCode.at));
-
-    expect(
-      t.table.get({ x: 6, y: 7 })?.isEqual(Glyph.fromCharCode(CharCode.at))
-    ).toBeTruthy();
-    expect(p.width).toEqual(2);
-    expect(p.height).toEqual(3);
-  });
-
-  it("Can create a nested port terminal", () => {
-    const t = new TestTerminal({ width: 10, height: 10 });
-    const p1 = t.port({ x: 1, y: 1 }, 5, 5);
-    const p2 = p1.port({ x: 1, y: 1 }, 2, 2);
-
-    p2.drawGlyph({ x: 0, y: 0 }, new Glyph(" "));
-
-    expect(t.table.get({ x: 2, y: 2 })?.isEqual(new Glyph(" "))).toBeTruthy();
-  });
-
-  it("Will not draw if outside the port", () => {
-    const t = new TestTerminal({ width: 10, height: 10 });
-    const p = t.port({ x: 5, y: 5 }, 4, 4);
-
-    p.drawGlyph({ x: -1, y: 0 }, new Glyph("x"));
-    p.drawGlyph({ x: 5, y: 0 }, new Glyph("x"));
-    p.drawGlyph({ x: 0, y: -1 }, new Glyph("x"));
-    p.drawGlyph({ x: 0, y: 5 }, new Glyph("x"));
-
-    for (let x = 0; x < t.table.width; x++) {
-      for (let y = 0; y < t.table.height; y++) {
-        expect(t.table.get({ x, y })).toBeUndefined();
-      }
-    }
   });
 });

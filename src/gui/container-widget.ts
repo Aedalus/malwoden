@@ -1,5 +1,5 @@
 import { WidgetConfig } from ".";
-import { Widget, WidgetDrawCtx } from "./widget";
+import { Widget } from "./widget";
 
 export interface ContainerWidgetState {}
 
@@ -14,7 +14,7 @@ export class ContainerWidget extends Widget<ContainerWidgetState> {
     });
   }
 
-  onDraw(ctx: WidgetDrawCtx): void {
+  onDraw(): void {
     return;
   }
 }

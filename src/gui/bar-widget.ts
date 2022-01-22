@@ -1,5 +1,5 @@
 import { CharCode, Color, Glyph } from "../terminal";
-import { Widget, WidgetConfig, WidgetDrawCtx } from "./widget";
+import { Widget, WidgetConfig } from "./widget";
 
 export type RoundMode = "up" | "down" | "default";
 
@@ -60,7 +60,9 @@ export class BarWidget extends Widget<BarWidgetState> {
     };
   }
 
-  onDraw(ctx: WidgetDrawCtx): void {
+  onDraw(): void {
+    if (!this.terminal) return;
+
     const origin = this.getAbsoluteOrigin();
     const percent =
       (this.state.currentValue - this.state.minValue!) /
@@ -74,9 +76,9 @@ export class BarWidget extends Widget<BarWidgetState> {
     for (let x = origin.x; x <= origin.x + this.state.width; x++) {
       const p = (x - origin.x) / this.state.width;
       if (p <= roundedPercent) {
-        ctx.terminal.drawGlyph({ x, y: origin.y }, this.state.foreGlyph);
+        this.terminal.drawGlyph({ x, y: origin.y }, this.state.foreGlyph);
       } else {
-        ctx.terminal.drawGlyph({ x, y: origin.y }, this.state.backGlyph);
+        this.terminal.drawGlyph({ x, y: origin.y }, this.state.backGlyph);
       }
     }
   }

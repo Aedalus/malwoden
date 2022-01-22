@@ -111,7 +111,7 @@ export class AStarExample implements IExample {
 
     // Draw Mouse
     const mousePos = this.mouse.getPos();
-    const tilePos = this.terminal.pixelToChar(mousePos);
+    const tilePos = this.terminal.screenToTilePoint(mousePos);
     this.terminal.drawCharCode(tilePos, CharCode.asterisk, Color.Cyan);
 
     this.updatePath(tilePos);
