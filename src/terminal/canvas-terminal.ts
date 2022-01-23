@@ -1,4 +1,4 @@
-import { RenderableTerminal, TerminalConfig } from "./terminal";
+import { TerminalConfig, BaseTerminal } from "./terminal";
 import { Display } from "./display";
 import { Glyph } from "./glyph";
 import { Vector2 } from "../struct/vector";
@@ -21,7 +21,7 @@ interface CanvasTerminalConfig extends TerminalConfig {
 /**
  * Renders a display by writing fonts to a canvas.
  */
-export class CanvasTerminal extends RenderableTerminal {
+export class CanvasTerminal extends BaseTerminal {
   readonly display: Display;
   private readonly canvas: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
@@ -122,10 +122,7 @@ export class CanvasTerminal extends RenderableTerminal {
     });
   }
 
-  /**
-   * Returns the character position given a pixel coordinate.
-   */
-  pixelToChar(pixel: Vector2): Vector2 {
+  windowToTilePoint(pixel: Vector2): Vector2 {
     const rect = this.canvas.getBoundingClientRect();
     return {
       x: Math.floor((pixel.x - rect.left) / this.charWidth),

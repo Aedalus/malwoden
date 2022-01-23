@@ -1,6 +1,6 @@
 import { WidgetConfig } from ".";
 import { Color } from "../terminal";
-import { Widget, WidgetDrawCtx } from "./widget";
+import { Widget } from "./widget";
 
 export function truncateText(config: {
   text: string;
@@ -92,7 +92,9 @@ export class TextWidget extends Widget<TextWidgetState> {
     });
   }
 
-  onDraw(ctx: WidgetDrawCtx): void {
+  onDraw(): void {
+    if (!this.terminal) return;
+
     const origin = this.getAbsoluteOrigin();
 
     const text = this.getText();
@@ -100,7 +102,7 @@ export class TextWidget extends Widget<TextWidgetState> {
 
     for (let y = 0; y < lines.length; y++) {
       const line = lines[y];
-      ctx.terminal.writeAt(
+      this.terminal.writeAt(
         { x: origin.x, y: origin.y + y },
         line,
         this.state.foreColor,

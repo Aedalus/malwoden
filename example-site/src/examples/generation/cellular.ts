@@ -27,6 +27,7 @@ export class CellularAutomataExample implements IExample {
     });
     this.builder.randomize(0.6);
     this.builder.doSimulationStep(3);
+    this.builder.connect(0);
     this.map = this.builder.getMap();
 
     this.animRef = requestAnimationFrame(() => this.loop());

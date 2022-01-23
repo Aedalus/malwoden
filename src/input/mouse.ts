@@ -91,14 +91,20 @@ export class MouseHandler {
   /**
    * Sets the active mouse context
    * @param context MouseContext
+   * @returns this
    */
-  setContext(context: MouseContext) {
+  setContext(context: MouseContext): this {
     this.context = context;
+    return this;
   }
 
-  /** Clears the active mouse context */
-  clearContext() {
+  /**
+   * Clears the active mouse context
+   * @returns this
+   */
+  clearContext(): this {
     this.context = undefined;
+    return this;
   }
 }
 
