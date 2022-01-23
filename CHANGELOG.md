@@ -1,3 +1,13 @@
+## 0.5.0 (2022-01-23)
+
+- feat(calc): Added methods for vector addition/subtraction ([1befe77](https://github.com/Aedalus/malwoden/commit/1befe77))
+- feat(gui): Overhaul of GUI module (#97) ([d1929fc](https://github.com/Aedalus/malwoden/commit/d1929fc)), closes [#97](https://github.com/Aedalus/malwoden/issues/97)
+- feat(gui/buttons): Added a button widget to the GUI module (#106) ([52ab456](https://github.com/Aedalus/malwoden/commit/52ab456)), closes [#106](https://github.com/Aedalus/malwoden/issues/106)
+- refactor(example-website): removed all react syntax from website examples for clarity ([fbba696](https://github.com/Aedalus/malwoden/commit/fbba696))
+- refactor(generation): Standardized generation interface. ([ffc2bfc](https://github.com/Aedalus/malwoden/commit/ffc2bfc))
+- refactor(input): Made mouse/keyboard modules more consistent. Added listening to 'any' click/key. (# ([41e09ae](https://github.com/Aedalus/malwoden/commit/41e09ae)), closes [#103](https://github.com/Aedalus/malwoden/issues/103)
+- refactor(util): Changed the util module to 'struct' to better reflect function ([96d0393](https://github.com/Aedalus/malwoden/commit/96d0393))
+
 ## 0.4.0 (2021-11-15)
 
 - feat(input/keyboard): Added waitForKeyUp and waitForKeyDown promise based methods (#78) ([f7754d2](https://github.com/Aedalus/malwoden/commit/f7754d2)), closes [#78](https://github.com/Aedalus/malwoden/issues/78)
