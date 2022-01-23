@@ -16,7 +16,7 @@ export class BasicGameExample implements IExample {
   mount: HTMLElement;
   animRef: number;
   terminal: Terminal.RetroTerminal;
-  mapTerminal: Terminal.PortTerminal;
+  mapWidget: GUI.Widget<any>;
   rng = new Rand.AleaRNG();
   openPositions: Vector2[] = [];
 
@@ -40,11 +40,6 @@ export class BasicGameExample implements IExample {
       charHeight: 16,
       mountNode: this.mount,
     });
-    this.mapTerminal = this.terminal.port(
-      { x: 17, y: 1 },
-      this.map_width,
-      this.map_height
-    );
 
     // Generate Map
     const gen = new Generation.CellularAutomataBuilder<number>({
@@ -87,15 +82,8 @@ export class BasicGameExample implements IExample {
 
     keyboard.setContext(movement);
 
-    this.gui = this.createGUI();
-
-    this.animRef = requestAnimationFrame(() => this.loop());
-  }
-
-  // Sets up common GUI elements we'll render each frame
-  createGUI(): GUI.Widget<any> {
-    // Create a new container for the UI
-    const container = new GUI.ContainerWidget();
+    // Create a new container for the UI, set the terminal at the root of the GUI
+    this.gui = new GUI.ContainerWidget().setTerminal(this.terminal);
 
     new GUI.PanelWidget({
       initialState: {
@@ -103,14 +91,20 @@ export class BasicGameExample implements IExample {
         height: 22,
         borderStyle: "double-bar",
       },
-    }).setParent(container);
+    }).setParent(this.gui);
+
+    // Create a widget for our map
+    // We can use this to draw relative
+    this.mapWidget = new GUI.ContainerWidget({
+      origin: { x: 17, y: 1 },
+    }).setParent(this.gui);
 
     new GUI.TextWidget({
       origin: { x: 2, y: 0 },
       initialState: {
         text: " Player ",
       },
-    }).setParent(container);
+    }).setParent(this.gui);
 
     new GUI.TextWidget({
       origin: { x: 2, y: 2 },
@@ -122,7 +116,7 @@ export class BasicGameExample implements IExample {
       .setUpdateFunc(() => ({
         text: `HP: ${this.player.hp}/10`,
       }))
-      .setParent(container);
+      .setParent(this.gui);
 
     new GUI.TextWidget({
       origin: { x: 2, y: 4 },
@@ -134,7 +128,7 @@ export class BasicGameExample implements IExample {
       .setUpdateFunc(() => ({
         text: `Gold : ${this.player.coins}`,
       }))
-      .setParent(container);
+      .setParent(this.gui);
 
     new GUI.PanelWidget({
       origin: { x: 16, y: 0 },
@@ -143,7 +137,7 @@ export class BasicGameExample implements IExample {
         height: 22,
         borderStyle: "double-bar",
       },
-    }).setParent(container);
+    }).setParent(this.gui);
 
     new GUI.PanelWidget({
       origin: { x: 0, y: 22 },
@@ -152,9 +146,10 @@ export class BasicGameExample implements IExample {
         height: 8,
         borderStyle: "double-bar",
       },
-    }).setParent(container);
+    }).setParent(this.gui);
 
-    return container;
+    // Start the game!
+    this.animRef = requestAnimationFrame(() => this.loop());
   }
 
   addLog(txt: string) {
@@ -190,7 +185,7 @@ export class BasicGameExample implements IExample {
 
     // Draw common elements
     this.gui.cascadeUpdate();
-    this.gui.cascadeDraw({ terminal: this.terminal });
+    this.gui.cascadeDraw();
 
     // Logs
     for (let i = 0; i < this.logs.length; i++) {
@@ -198,24 +193,23 @@ export class BasicGameExample implements IExample {
     }
 
     // Draw Map
+    const wallGlyph = Glyph.fromCharCode(CharCode.blackSpadeSuit, Color.Green);
+    const spaceGlyph = Glyph.fromCharCode(CharCode.space, Color.White);
+
     for (let x = 0; x < this.map.width; x++) {
       for (let y = 0; y < this.map.height; y++) {
         const isWall = this.map.get({ x, y });
-        this.mapTerminal.drawCharCode(
-          { x, y },
-          isWall ? CharCode.blackSpadeSuit : CharCode.space,
-          isWall ? Color.Green : Color.White
-        );
+        this.mapWidget.drawGlyph({ x, y }, isWall ? wallGlyph : spaceGlyph);
       }
     }
 
     // Coin
-    this.mapTerminal.drawGlyph(
+    this.mapWidget.drawGlyph(
       this.coin,
       Glyph.fromCharCode(CharCode.oLower, Color.Yellow)
     );
     // Player Entity
-    this.mapTerminal.drawGlyph(
+    this.mapWidget.drawGlyph(
       this.player,
       Glyph.fromCharCode(CharCode.at, Color.Yellow)
     );

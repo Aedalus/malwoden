@@ -6,14 +6,17 @@ describe("PanelWidget", () => {
     const terminal = new MemoryTerminal({ width: 20, height: 20 });
     const p = new PanelWidget({ initialState: { width: 10, height: 10 } });
 
-    p.onDraw({ terminal });
+    p.onDraw();
+    p.setTerminal(terminal);
+    p.onDraw();
   });
+
   it("Can render a border panel", () => {
     const terminal = new MemoryTerminal({ width: 20, height: 20 });
     const p = new PanelWidget({
       initialState: { width: 10, height: 10, borderStyle: "double-bar" },
     });
-
-    p.onDraw({ terminal });
+    p.setTerminal(terminal);
+    p.onDraw();
   });
 });

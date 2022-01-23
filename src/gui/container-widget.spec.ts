@@ -9,6 +9,9 @@ describe("ContainerWidget", () => {
   it("will render nothing", () => {
     const terminal = new MemoryTerminal({ width: 10, height: 10 });
     const w = new ContainerWidget();
-    w.onDraw({ terminal });
+
+    w.onDraw();
+    w.setTerminal(terminal);
+    w.onDraw();
   });
 });

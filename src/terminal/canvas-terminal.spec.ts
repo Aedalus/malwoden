@@ -161,7 +161,7 @@ describe("RetroTerminal", () => {
       font,
     });
     term["charWidth"] = 16;
-    const pos = term.pixelToChar({ x: 16, y: 25 });
+    const pos = term.windowToTilePoint({ x: 16, y: 25 });
 
     expect(pos).toEqual({ x: 1, y: 1 });
   });

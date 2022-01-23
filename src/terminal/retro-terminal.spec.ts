@@ -177,7 +177,7 @@ describe("RetroTerminal", () => {
       charHeight: 10,
       imageURL: "/public/tilemap.png",
     });
-    const pos = term.pixelToChar({ x: 10, y: 10 });
+    const pos = term.windowToTilePoint({ x: 10, y: 10 });
 
     expect(pos).toEqual({ x: 1, y: 1 });
   });

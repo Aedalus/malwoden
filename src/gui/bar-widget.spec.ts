@@ -12,6 +12,7 @@ describe("getRoundedPercent", () => {
 describe("BarWidget", () => {
   it("Can draw a bar", () => {
     const terminal = new MemoryTerminal({ width: 10, height: 10 });
+
     const w = new BarWidget({
       initialState: {
         maxValue: 10,
@@ -19,6 +20,8 @@ describe("BarWidget", () => {
       },
     });
 
-    w.onDraw({ terminal });
+    w.onDraw();
+    w.setTerminal(terminal);
+    w.onDraw();
   });
 });

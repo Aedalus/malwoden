@@ -23,9 +23,8 @@ export class BarWidgetExample implements IExample {
     });
 
     // Create a Container to hold other widgets!
-    this.gui = new GUI.ContainerWidget({
-      initialState: {},
-    });
+    // We set a terminal at the root of our Widgets
+    this.gui = new GUI.ContainerWidget().setTerminal(this.terminal);
 
     this.mainPanel = new GUI.PanelWidget({
       origin: { x: 3, y: 3 },
@@ -126,7 +125,7 @@ export class BarWidgetExample implements IExample {
     this.playerMana = Math.abs(Math.sin(Date.now() / 2000) * 10);
 
     this.gui.cascadeUpdate();
-    this.gui.cascadeDraw({ terminal: this.terminal });
+    this.gui.cascadeDraw();
     this.terminal.render();
 
     this.animRef = requestAnimationFrame(() => this.loop());

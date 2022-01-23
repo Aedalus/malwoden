@@ -1,4 +1,4 @@
-import { RenderableTerminal, TerminalConfig } from "./terminal";
+import { TerminalConfig, BaseTerminal } from "./terminal";
 
 import { Display } from "./display";
 import { Color } from "./color";
@@ -14,7 +14,7 @@ interface RetroTerminalConfig extends TerminalConfig {
   mountNode?: HTMLElement;
 }
 
-export class RetroTerminal extends RenderableTerminal {
+export class RetroTerminal extends BaseTerminal {
   private readonly _display: Display;
 
   private readonly _canvas: HTMLCanvasElement;
@@ -118,7 +118,7 @@ export class RetroTerminal extends RenderableTerminal {
     });
   }
 
-  pixelToChar(pixel: Vector2): Vector2 {
+  windowToTilePoint(pixel: Vector2): Vector2 {
     const rect = this._canvas.getBoundingClientRect();
     return {
       x: Math.floor((pixel.x - rect.left) / this._charWidth),

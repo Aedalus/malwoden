@@ -1,14 +1,18 @@
-import { MouseHandlerEvent } from "../input";
+import { MouseContext, MouseHandler, MouseHandlerEvent } from "../input";
 import { MemoryTerminal } from "../terminal/memory-terminal";
-import { Widget, WidgetDrawCtx } from "./widget";
+import { Widget } from "./widget";
+import { Glyph } from "../terminal";
+import { setupTestDom } from "../input/test-utils.spec";
 
 class TestWidget<S> extends Widget<S> {
-  onDraw(ctx: WidgetDrawCtx): void {}
+  onDraw(): void {}
 }
 
 const ntw = () => new TestWidget({ initialState: {} });
 
 describe("widget", () => {
+  beforeEach(setupTestDom);
+
   it("Can add/remove a child", () => {
     const parent = ntw();
     const childA = ntw();
@@ -167,7 +171,6 @@ describe("widget", () => {
   });
 
   it("can cascade draw", () => {
-    const terminal = new MemoryTerminal({ width: 10, height: 10 });
     const p = new TestWidget({ initialState: { n: 0 } });
     const c = new TestWidget({ initialState: { n: 0 } });
 
@@ -176,7 +179,7 @@ describe("widget", () => {
 
     c.setParent(p);
 
-    p.cascadeDraw({ terminal });
+    p.cascadeDraw();
 
     expect(pSpy).toHaveBeenCalledTimes(1);
     expect(cSpy).toHaveBeenCalledTimes(1);
@@ -186,12 +189,12 @@ describe("widget", () => {
     const p = ntw();
     const c = ntw();
 
-    const pSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cSpy = jest.spyOn(c, "onClick").mockImplementation(() => false);
+    const pSpy = jest.spyOn(p, "onMouseClick").mockImplementation(() => false);
+    const cSpy = jest.spyOn(c, "onMouseClick").mockImplementation(() => false);
 
     c.setParent(p);
 
-    p.cascadeClick({ button: 0, type: "mousedown", x: 1, y: 1 });
+    p.cascadeMouseClick({ button: 0, type: "mousedown", x: 1, y: 1 });
 
     expect(pSpy).toHaveBeenCalledTimes(1);
     expect(cSpy).toHaveBeenCalledTimes(1);
@@ -200,9 +203,9 @@ describe("widget", () => {
   it("will return false on baseline onClick", () => {
     const p = ntw();
 
-    expect(p.onClick({ x: 0, y: 0, button: 0, type: "mousedown" })).toEqual(
-      false
-    );
+    expect(
+      p.onMouseClick({ x: 0, y: 0, button: 0, type: "mousedown" })
+    ).toEqual(false);
   });
 
   it("can set the origin in the constructor", () => {
@@ -220,16 +223,20 @@ describe("widget", () => {
     const pDrawSpy = jest.spyOn(p, "onDraw").mockImplementation(() => {});
     const cDrawSpy = jest.spyOn(c, "onDraw").mockImplementation(() => {});
 
-    p.cascadeDraw({ terminal });
+    p.cascadeDraw();
 
-    p.draw({ terminal });
-    c.draw({ terminal });
+    p.draw();
+    c.draw();
 
     expect(pDrawSpy).toHaveBeenCalledTimes(0);
     expect(cDrawSpy).toHaveBeenCalledTimes(0);
 
-    const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => false);
+    const pClickSpy = jest
+      .spyOn(p, "onMouseClick")
+      .mockImplementation(() => false);
+    const cClickSpy = jest
+      .spyOn(c, "onMouseClick")
+      .mockImplementation(() => false);
 
     const mouse: MouseHandlerEvent = {
       x: 0,
@@ -237,9 +244,9 @@ describe("widget", () => {
       button: 1,
       type: "mousedown",
     };
-    p.cascadeClick(mouse);
-    p.click(mouse);
-    c.click(mouse);
+    p.cascadeMouseClick(mouse);
+    p.mouseClick(mouse);
+    c.mouseClick(mouse);
 
     expect(pClickSpy).toHaveBeenCalledTimes(0);
     expect(cClickSpy).toHaveBeenCalledTimes(0);
@@ -250,8 +257,12 @@ describe("widget", () => {
     const c = ntw();
     c.setParent(p);
 
-    const pClickSpy = jest.spyOn(p, "onClick").mockImplementation(() => false);
-    const cClickSpy = jest.spyOn(c, "onClick").mockImplementation(() => true);
+    const pClickSpy = jest
+      .spyOn(p, "onMouseClick")
+      .mockImplementation(() => false);
+    const cClickSpy = jest
+      .spyOn(c, "onMouseClick")
+      .mockImplementation(() => true);
 
     const mouse: MouseHandlerEvent = {
       x: 0,
@@ -260,9 +271,79 @@ describe("widget", () => {
       type: "mousedown",
     };
 
-    p.cascadeClick(mouse);
+    p.cascadeMouseClick(mouse);
 
     expect(pClickSpy).toHaveBeenCalledTimes(0);
     expect(cClickSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("Can register a mouse context", () => {
+    const c = new MouseContext();
+    const w = ntw();
+    w.registerMouseContext(c);
+
+    expect(w["mouseRegistration"]).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseContext).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseOnDown).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseOnUp).toBeTruthy();
+
+    w.clearMouseContext();
+    expect(w["mouseRegistration"]).toBeFalsy();
+  });
+
+  it("Can act on a mouseClick", () => {
+    const w = ntw();
+
+    const pClickSpy = jest
+      .spyOn(w, "onMouseClick")
+      .mockImplementation(() => false);
+
+    const event: MouseHandlerEvent = {
+      x: 0,
+      y: 0,
+      type: "mousedown",
+      button: 0,
+    };
+    w.mouseClick(event);
+    expect(pClickSpy).toHaveBeenCalledTimes(1);
+
+    w.setDisabled();
+    w.mouseClick(event);
+    expect(pClickSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("Can draw a glyph relative to it's position", () => {
+    const t = new MemoryTerminal({ width: 10, height: 10 });
+    const w = ntw().setOrigin({ x: 1, y: 1 }).setTerminal(t);
+
+    const g = new Glyph("f");
+    w.drawGlyph({ x: 0, y: 0 }, g);
+    expect(t.glyphs.get({ x: 1, y: 1 })).toEqual(g);
+
+    // test without terminal
+    w.setTerminal();
+    w.drawGlyph({ x: 1, y: 1 }, g);
+    expect(t.glyphs.get({ x: 2, y: 2 })).toBeUndefined();
+  });
+
+  it("can set/unset terminal/mouseHandler from children", () => {
+    const t = new MemoryTerminal({ width: 10, height: 10 });
+    const h = new MouseHandler();
+    const p = ntw().setTerminal(t).setMouseHandler(h);
+    const c = ntw().setParent(p);
+
+    expect(p["mouseHandler"]).toBeTruthy();
+    expect(p["terminal"]).toBeTruthy();
+
+    expect(c["mouseHandler"]).toBeTruthy();
+    expect(c["terminal"]).toBeTruthy();
+
+    p.removeChild(c);
+
+    expect(c["mouseHandler"]).toBeFalsy();
+    expect(c["terminal"]).toBeFalsy();
+
+    // won't error out on second call
+    expect(p.removeChild(c)).toBeUndefined();
   });
 });

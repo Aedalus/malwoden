@@ -4,6 +4,11 @@ import { Glyph } from "./glyph";
 import { TerminalConfig } from "./terminal";
 
 export class MemoryTerminal extends BaseTerminal {
+  windowToTilePoint(pixel: Vector2): Vector2 {
+    return pixel;
+  }
+  delete(): void {}
+
   glyphs: Table<Glyph>;
 
   constructor(config: TerminalConfig) {

@@ -1,7 +1,14 @@
 import { Vector2 } from "../struct";
 import * as Calc from "../calc";
-import { MouseHandler, MouseHandlerEvent } from "../input";
-import { Terminal } from "../malwoden";
+import {
+  KeyboardContext,
+  KeyboardHandler,
+  MouseContext,
+  MouseContextCallback,
+  MouseHandler,
+  MouseHandlerEvent,
+} from "../input";
+import { BaseTerminal, Glyph } from "../terminal";
 
 /**
  * Generic used to create widget constructors.
@@ -16,14 +23,6 @@ export interface WidgetConfig<S> {
  */
 export interface WidgetUpdateFunc<S> {
   (): Partial<S>;
-}
-
-/**
- * Passed through widgets for draw methods.
- */
-export interface WidgetDrawCtx {
-  terminal: Terminal.BaseTerminal;
-  mouse?: MouseHandler;
 }
 
 /**
@@ -44,6 +43,20 @@ export abstract class Widget<S> {
   protected state: S;
   protected disabled = false;
 
+  // Expected only on root
+  protected mouseRegistration?: {
+    mouseContext: MouseContext;
+    mouseOnUp: MouseContextCallback;
+    mouseOnDown: MouseContextCallback;
+  };
+
+  protected keyboardContext?: KeyboardContext;
+
+  // Passed down from parent -> child on register
+  protected terminal?: BaseTerminal;
+  protected mouseHandler?: MouseHandler;
+  protected keyboardHandler?: KeyboardHandler;
+
   /**
    * Creates a new Widget.
    * @param config - WidgetConfig
@@ -55,29 +68,62 @@ export abstract class Widget<S> {
     this.updateAbsoluteOrigin();
   }
 
+  // ---------------------------------------------------------------------------
+  // Primary Getters/Setters
+  // ---------------------------------------------------------------------------
+
   /**
-   * Updates the absoluteOrigin position, called
-   * whenever a widget's local origin has moved.
+   * Sets the terminal for this widget and all children widgets. Will be passed
+   * to any children added in the future as well.
+   * @param terminal - Leave empty to clear
+   * @returns this
    */
-  protected updateAbsoluteOrigin(): void {
-    if (this.parent === undefined) {
-      this.absoluteOrigin = { ...this.origin };
-    } else {
-      const parentAbs = this.parent.absoluteOrigin;
-      this.absoluteOrigin = Calc.Vector.add(parentAbs, this.origin);
-    }
+  setTerminal(terminal?: BaseTerminal): this {
+    this.terminal = terminal;
     for (const c of this.children) {
-      c.updateAbsoluteOrigin();
+      c.setTerminal(terminal);
     }
+    return this;
+  }
+
+  registerMouseContext(mouseContext: MouseContext): this {
+    this.clearMouseContext();
+    this.mouseRegistration = {
+      mouseContext,
+      mouseOnUp: this.cascadeMouseClick.bind(this),
+      mouseOnDown: this.cascadeMouseClick.bind(this),
+    };
+
+    mouseContext.onMouseUp(this.mouseRegistration.mouseOnUp);
+    mouseContext.onMouseDown(this.mouseRegistration.mouseOnDown);
+
+    return this;
+  }
+
+  clearMouseContext(): this {
+    if (this.mouseRegistration) {
+      this.mouseRegistration.mouseContext.clearMouseUp(
+        this.mouseRegistration.mouseOnUp
+      );
+      this.mouseRegistration.mouseContext.clearMouseDown(
+        this.mouseRegistration.mouseOnDown
+      );
+    }
+    this.mouseRegistration = undefined;
+    return this;
   }
 
   /**
-   * Adds the widget to a parent.
-   * @param parent
-   * @returns this - The child widget
+   * Sets the mouseHandler for this widget and all children widgets. Will be passed
+   * to any children added in the future as well.
+   * @param mouseHandler - Leave empty to clear
+   * @returns this
    */
-  setParent<T extends Widget<any>>(parent: T): this {
-    parent.addChild(this);
+  setMouseHandler(mouseHandler?: MouseHandler): this {
+    this.mouseHandler = mouseHandler;
+    for (const c of this.children) {
+      c.setMouseHandler(mouseHandler);
+    }
     return this;
   }
 
@@ -99,6 +145,20 @@ export abstract class Widget<S> {
     Object.assign(this.state, state);
     return this;
   }
+
+  /**
+   * Sets the disabled state.
+   * @param disabled - Default true
+   * @returns - The Widget
+   */
+  setDisabled(disabled: boolean = true): this {
+    this.disabled = disabled;
+    return this;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Position Related
+  // ---------------------------------------------------------------------------
 
   /**
    * Sets the local origin of the widget relative to it's parent,
@@ -129,41 +189,11 @@ export abstract class Widget<S> {
   }
 
   /**
-   * Sets the disabled state.
-   * @param disabled - Default true
-   * @returns - The Widget
-   */
-  setDisabled(disabled: boolean = true): this {
-    this.disabled = disabled;
-    return this;
-  }
-
-  /**
    * Returns a Vector2 relative to true 0,0, which is usually the top left of the terminal.
    * @returns - Vector2
    */
   getAbsoluteOrigin(): Vector2 {
     return this.absoluteOrigin;
-  }
-
-  /**
-   * Set a function to run whenever update or cascadeUpdate is called. Generally this is used
-   * with closures/currying to transform game state to function state.
-   * @param updateFunc - The function called on update
-   * @returns The widget
-   */
-  setUpdateFunc(updateFunc: WidgetUpdateFunc<S>): this {
-    this.updateFunc = updateFunc;
-    return this;
-  }
-
-  /**
-   * Clears the function run on update.
-   * @returns The Widget
-   */
-  clearUpdateFunc(): this {
-    this.updateFunc = undefined;
-    return this;
   }
 
   /**
@@ -185,6 +215,36 @@ export abstract class Widget<S> {
     return Calc.Vector.subtract(absolutePosition, this.absoluteOrigin);
   }
 
+  // ---------------------------------------------------------------------------
+  // Parent/Child Functions
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Updates the absoluteOrigin position, called
+   * whenever a widget's local origin has moved.
+   */
+  protected updateAbsoluteOrigin(): void {
+    if (this.parent === undefined) {
+      this.absoluteOrigin = { ...this.origin };
+    } else {
+      const parentAbs = this.parent.absoluteOrigin;
+      this.absoluteOrigin = Calc.Vector.add(parentAbs, this.origin);
+    }
+    for (const c of this.children) {
+      c.updateAbsoluteOrigin();
+    }
+  }
+
+  /**
+   * Adds the widget to a parent.
+   * @param parent
+   * @returns this - The child widget
+   */
+  setParent<T extends Widget<any>>(parent: T): this {
+    parent.addChild(this);
+    return this;
+  }
+
   /**
    * Adds a child widget to this widget. Removes any existing parent from the child first.
    * @param child - The child widget
@@ -196,12 +256,14 @@ export abstract class Widget<S> {
     }
     child.parent = this;
     child.updateAbsoluteOrigin();
+    child.setTerminal(this.terminal);
+    child.setMouseHandler(this.mouseHandler);
     this.children.push(child);
     return child;
   }
 
   /**
-   * Removes a child widget from the parent widget.
+   * Removes a child widget from the parent widget. Clears inherited Terminal/MouseHandler/KeyboardHandler
    * @param child The child widget
    * @returns The child widget if found, undefined otherwise.
    */
@@ -216,7 +278,36 @@ export abstract class Widget<S> {
       }
     }
     this.children = newChildren;
+
+    if (foundChild) {
+      foundChild.setTerminal(undefined);
+      foundChild.setMouseHandler(undefined);
+    }
     return foundChild as T;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Updating
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Set a function to run whenever update or cascadeUpdate is called. Generally this is used
+   * with closures/currying to transform game state to function state.
+   * @param updateFunc - The function called on update
+   * @returns The widget
+   */
+  setUpdateFunc(updateFunc: WidgetUpdateFunc<S>): this {
+    this.updateFunc = updateFunc;
+    return this;
+  }
+
+  /**
+   * Clears the function run on update.
+   * @returns The Widget
+   */
+  clearUpdateFunc(): this {
+    this.updateFunc = undefined;
+    return this;
   }
 
   /**
@@ -250,44 +341,60 @@ export abstract class Widget<S> {
     Object.assign(this.state, s);
   }
 
+  // ---------------------------------------------------------------------------
+  // Drawing
+  // ---------------------------------------------------------------------------
+
   /**
    * Calls the draw() method of this widget and all children widgets recursively.
    * If a widget is disabled it will stop the cascade.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
    */
-  cascadeDraw(ctx: WidgetDrawCtx): void {
+  cascadeDraw(): void {
     if (this.isDisabled()) return;
-    this.draw(ctx);
+    this.draw();
     for (const c of this.children) {
-      c.cascadeDraw(ctx);
+      c.cascadeDraw();
     }
   }
 
   /**
    * Draws on to the given terminal using the widget's current state. Will not draw if disabled.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
    * @returns
    */
-  draw(ctx: WidgetDrawCtx): void {
+  draw(): void {
     if (this.isDisabled()) return;
-    this.onDraw(ctx);
+    this.onDraw();
   }
 
-  cascadeClick(mouse: MouseHandlerEvent): boolean {
+  // ---------------------------------------------------------------------------
+  // Clicking
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Sends a mouse event through a tree of Widgets. If any widget's onMouseClick
+   * returns true, the event will be captured and stop cascading.
+   *
+   * Widgets are called in reverse order, so the last one to render will be
+   * the first one called for onMouseClick.
+   * @param mouse
+   */
+  cascadeMouseClick(event: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
     for (let i = this.children.length - 1; i >= 0; i--) {
       const c = this.children[i];
-      const captured = c.cascadeClick(mouse);
+      const captured = c.cascadeMouseClick(event);
       if (captured) return true;
     }
-    return this.click(mouse);
+    return this.onMouseClick(event);
   }
 
-  click(mouse: MouseHandlerEvent): boolean {
+  /**
+   * Calls onMouseClick if the widget is not disabled
+   * @param event - MouseHanderEvent
+   */
+  mouseClick(event: MouseHandlerEvent): boolean {
     if (this.isDisabled()) return false;
-    return this.onClick(mouse);
+    return this.onMouseClick(event);
   }
 
   /**
@@ -296,14 +403,29 @@ export abstract class Widget<S> {
    * @param absolutePosition Vector2 - The absolute position of the rendering terminal
    * @returns boolean - Capture the event
    */
-  onClick(mouse: MouseHandlerEvent): boolean {
+  onMouseClick(mouse: MouseHandlerEvent): boolean {
     return false;
+  }
+
+  // --------------------------------------------------------------------------
+  // Drawing
+  // --------------------------------------------------------------------------
+  /**
+   * Draws a glyph on the terminal using a position local to the widget.
+   * @param pos - A local position
+   * @param glyph - The glyph to draw
+   * @returns
+   */
+  drawGlyph(pos: Vector2, glyph: Glyph) {
+    if (!this.terminal) return;
+    this.terminal.drawGlyph(
+      { x: this.absoluteOrigin.x + pos.x, y: this.absoluteOrigin.y + pos.y },
+      glyph
+    );
   }
 
   /**
    * A method to be implemented by widgets to render to the terminal.
-   * @param ctx.terminal Terminal - A terminal to draw on
-   * @param ctx.mouse MouseHandler - An optional mouse handler for computing position
    */
-  abstract onDraw(ctx: WidgetDrawCtx): void;
+  abstract onDraw(): void;
 }

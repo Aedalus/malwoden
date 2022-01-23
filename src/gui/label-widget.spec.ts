@@ -8,10 +8,13 @@ describe("LabelWidget", () => {
       initialState: { text: "Hello!", direction: "left" },
     });
 
-    w.onDraw({ terminal });
+    w.onDraw();
+
+    w.setTerminal(terminal);
+    w.onDraw();
 
     w.setState({ direction: "right" });
 
-    w.onDraw({ terminal });
+    w.onDraw();
   });
 });

@@ -1,7 +1,7 @@
 import { WidgetConfig } from ".";
 import { BaseTerminal, CharCode } from "../terminal";
 import { Color } from "../terminal/color";
-import { Widget, WidgetDrawCtx } from "./widget";
+import { Widget } from "./widget";
 
 export interface LabelWidgetState {
   /** The text to display, should be short. */
@@ -70,11 +70,12 @@ export class LabelWidget extends Widget<LabelWidgetState> {
     );
   }
 
-  onDraw(ctx: WidgetDrawCtx): void {
+  onDraw(): void {
+    if (!this.terminal) return;
     if (this.state.direction === "left") {
-      this.renderLeftLabel(ctx.terminal);
+      this.renderLeftLabel(this.terminal);
     } else {
-      this.renderRightLabel(ctx.terminal);
+      this.renderRightLabel(this.terminal);
     }
   }
 }
