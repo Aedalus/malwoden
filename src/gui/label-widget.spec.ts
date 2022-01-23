@@ -10,7 +10,7 @@ describe("LabelWidget", () => {
 
     w.onDraw();
 
-    w.setTerminal();
+    w.setTerminal(terminal);
     w.onDraw();
 
     w.setState({ direction: "right" });

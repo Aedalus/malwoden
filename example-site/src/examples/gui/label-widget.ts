@@ -47,7 +47,7 @@ export class LabelWidgetExample implements IExample {
 
     this.labelWidget.setUpdateFunc(() => {
       const m = this.mouse.getPos();
-      const p = this.terminal.screenToTilePoint(m);
+      const p = this.terminal.windowToTilePoint(m);
       this.labelWidget.setOrigin(p);
 
       return {

@@ -111,7 +111,7 @@ export class DijkstraExample implements IExample {
 
     // Draw Mouse
     const mousePos = this.mouse.getPos();
-    const tilePos = this.terminal.screenToTilePoint(mousePos);
+    const tilePos = this.terminal.windowToTilePoint(mousePos);
     this.terminal.drawCharCode(tilePos, CharCode.asterisk, Color.Cyan);
 
     this.updatePath(tilePos);

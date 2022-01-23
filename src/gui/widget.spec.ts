@@ -1,6 +1,8 @@
-import { MouseHandlerEvent } from "../input";
+import { MouseContext, MouseHandler, MouseHandlerEvent } from "../input";
 import { MemoryTerminal } from "../terminal/memory-terminal";
 import { Widget } from "./widget";
+import { Glyph } from "../terminal";
+import { setupTestDom } from "../input/test-utils.spec";
 
 class TestWidget<S> extends Widget<S> {
   onDraw(): void {}
@@ -9,6 +11,8 @@ class TestWidget<S> extends Widget<S> {
 const ntw = () => new TestWidget({ initialState: {} });
 
 describe("widget", () => {
+  beforeEach(setupTestDom);
+
   it("Can add/remove a child", () => {
     const parent = ntw();
     const childA = ntw();
@@ -271,5 +275,75 @@ describe("widget", () => {
 
     expect(pClickSpy).toHaveBeenCalledTimes(0);
     expect(cClickSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("Can register a mouse context", () => {
+    const c = new MouseContext();
+    const w = ntw();
+    w.registerMouseContext(c);
+
+    expect(w["mouseRegistration"]).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseContext).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseOnDown).toBeTruthy();
+    expect(w["mouseRegistration"]?.mouseOnUp).toBeTruthy();
+
+    w.clearMouseContext();
+    expect(w["mouseRegistration"]).toBeFalsy();
+  });
+
+  it("Can act on a mouseClick", () => {
+    const w = ntw();
+
+    const pClickSpy = jest
+      .spyOn(w, "onMouseClick")
+      .mockImplementation(() => false);
+
+    const event: MouseHandlerEvent = {
+      x: 0,
+      y: 0,
+      type: "mousedown",
+      button: 0,
+    };
+    w.mouseClick(event);
+    expect(pClickSpy).toHaveBeenCalledTimes(1);
+
+    w.setDisabled();
+    w.mouseClick(event);
+    expect(pClickSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("Can draw a glyph relative to it's position", () => {
+    const t = new MemoryTerminal({ width: 10, height: 10 });
+    const w = ntw().setOrigin({ x: 1, y: 1 }).setTerminal(t);
+
+    const g = new Glyph("f");
+    w.drawGlyph({ x: 0, y: 0 }, g);
+    expect(t.glyphs.get({ x: 1, y: 1 })).toEqual(g);
+
+    // test without terminal
+    w.setTerminal();
+    w.drawGlyph({ x: 1, y: 1 }, g);
+    expect(t.glyphs.get({ x: 2, y: 2 })).toBeUndefined();
+  });
+
+  it("can set/unset terminal/mouseHandler from children", () => {
+    const t = new MemoryTerminal({ width: 10, height: 10 });
+    const h = new MouseHandler();
+    const p = ntw().setTerminal(t).setMouseHandler(h);
+    const c = ntw().setParent(p);
+
+    expect(p["mouseHandler"]).toBeTruthy();
+    expect(p["terminal"]).toBeTruthy();
+
+    expect(c["mouseHandler"]).toBeTruthy();
+    expect(c["terminal"]).toBeTruthy();
+
+    p.removeChild(c);
+
+    expect(c["mouseHandler"]).toBeFalsy();
+    expect(c["terminal"]).toBeFalsy();
+
+    // won't error out on second call
+    expect(p.removeChild(c)).toBeUndefined();
   });
 });

@@ -34,11 +34,15 @@ import { CustomWidgetExample } from "../../examples/gui/custom-widget";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    maxWidth: 250,
+    width: 250,
     backgroundColor: theme.palette.background.paper,
     borderRight: "1px solid #ddd",
-    paddingBottom: "0",
+    // paddingBottom: "0",
+    top: 65,
+    bottom: 0,
+    overflowY: "scroll",
+    overflowX: "hidden",
+    position: "fixed",
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -50,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "20px",
     marginTop: "20px",
     height: "100%",
+  },
+  content: {
+    position: "fixed",
+    left: "250px",
   },
 }));
 
@@ -188,12 +196,9 @@ export default function Examples() {
   );
 
   useEffect(() => {
-    console.log("Use Effect!");
     if (runningExample.current) {
       runningExample.current.cleanup();
     }
-
-    console.log("Running example");
 
     runningExample.current = new selected.example();
   }, [params.exampleId]);
@@ -229,24 +234,26 @@ export default function Examples() {
         ))}
       </List>
 
-      {selected && (
-        <Card className={classes.exampleCard}>
-          <CardContent>
-            <div id="example"></div>
-          </CardContent>
-          <CardActions
-            style={{ float: "right", marginTop: "-15px", marginRight: "5px" }}
-          >
-            <Button
-              // size="small"
-              href={`https://github.com/Aedalus/malwoden/tree/master/example-site/src/examples/${selected.srclink}`}
-              endIcon={<GitHubIcon />}
+      <div className={classes.content}>
+        {selected && (
+          <Card className={classes.exampleCard}>
+            <CardContent>
+              <div id="example"></div>
+            </CardContent>
+            <CardActions
+              style={{ float: "right", marginTop: "-15px", marginRight: "5px" }}
             >
-              View Source
-            </Button>
-          </CardActions>
-        </Card>
-      )}
+              <Button
+                // size="small"
+                href={`https://github.com/Aedalus/malwoden/tree/master/example-site/src/examples/${selected.srclink}`}
+                endIcon={<GitHubIcon />}
+              >
+                View Source
+              </Button>
+            </CardActions>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

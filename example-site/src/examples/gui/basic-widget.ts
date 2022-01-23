@@ -58,8 +58,8 @@ export class BasicWidgetExample implements IExample {
     this.terminal.clear();
 
     // Add a simple animation
-    const curveX = Math.cos(Date.now() / 4000) * 4 + 2;
-    const curveY = Math.cos(Date.now() / 4000) * 4 + 2;
+    const curveX = Math.sin(Date.now() / 4000) * 4 + 2;
+    const curveY = Math.sin(Date.now() / 4000) * 4 + 2;
 
     this.mainPanel.setOrigin({
       x: 3 + Math.round(curveX),

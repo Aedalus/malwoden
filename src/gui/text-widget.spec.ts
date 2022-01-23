@@ -51,6 +51,8 @@ describe("TextWidget", () => {
     });
 
     w.onDraw();
+    w.setTerminal(terminal);
+    w.onDraw();
   });
 
   it("Can truncate text", () => {
@@ -59,6 +61,8 @@ describe("TextWidget", () => {
       initialState: { text: "Hello World", truncateAfter: 8 },
     });
 
+    w.onDraw();
+    w.setTerminal(terminal);
     w.onDraw();
   });
 
@@ -69,5 +73,16 @@ describe("TextWidget", () => {
     });
 
     w.onDraw();
+    w.setTerminal();
+    w.onDraw();
+  });
+
+  it("Can get lines", () => {
+    const w = new TextWidget({ initialState: { text: "Hello World" } });
+
+    expect(w["getLines"]("Hello World")).toEqual(["Hello World"]);
+
+    w.setState({ wrapAt: 3 });
+    expect(w["getLines"]("Hello World")).toEqual(["Hello", "World"]);
   });
 });

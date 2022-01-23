@@ -21,11 +21,11 @@ export class MouseInputFontExample implements IExample {
     this.mouse = new Input.MouseHandler();
     const c = new Input.MouseContext()
       .onMouseDown((pos) => {
-        const termPos = this.terminal.screenToTilePoint(pos);
+        const termPos = this.terminal.windowToTilePoint(pos);
         this.clickMessage = `mousedown on ${termPos.x}, ${termPos.y}`;
       })
       .onMouseUp((pos) => {
-        const termPos = this.terminal.screenToTilePoint(pos);
+        const termPos = this.terminal.windowToTilePoint(pos);
         this.clickMessage = `mouseup on ${termPos.x}, ${termPos.y}`;
       });
     this.mouse.setContext(c);
@@ -38,7 +38,7 @@ export class MouseInputFontExample implements IExample {
 
     // Draw mouse position
     const mousePos = this.mouse.getPos();
-    const char = this.terminal.screenToTilePoint(mousePos);
+    const char = this.terminal.windowToTilePoint(mousePos);
     this.terminal.drawCharCode(char, CharCode.at, Color.Yellow);
 
     // Draw mouse message

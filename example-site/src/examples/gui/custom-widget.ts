@@ -40,7 +40,7 @@ export class CustomWidgetExample implements IExample {
       origin: { x: 1, y: 4 },
       initialState: {
         text:
-          "You can easily create GUI elements to fit your game, but use them easily with other widgets",
+          "Using custom widgets can help to bring your own styles, while providing a flexible framework.",
         wrapAt: 48,
       },
     }).setParent(this.gui);

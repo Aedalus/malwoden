@@ -15,10 +15,6 @@ The core of the terminal package is based heavily on Bob Nystrom's amazing [mali
 
 If you're looking for graphics outside basic ASCII/CP437, [phaser](https://phaser.io/) and [pixi](https://www.pixijs.com/) are both worth checking out.
 
-## Alpha
-
-This library is still in alpha. While many of the features are working well, the api is not fully finalized yet. We welcome any feedback on the design and implementation so far, and hope to launch a public beta early 2021.
-
 ---
 
 ## Installation

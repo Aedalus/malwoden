@@ -3,57 +3,10 @@ import { MouseHandler, MouseHandlerEvent } from "../input";
 import { MemoryTerminal } from "../terminal/memory-terminal";
 import { ButtonWidget, HoverState } from "./button-widget";
 import { Color } from "../terminal";
+import { setupTestDom } from "../input/test-utils.spec";
 
 describe("ButtonWidget", () => {
-  beforeEach(() => {
-    const dom = new JSDOM();
-    //@ts-ignore
-    global.document = dom.window.document;
-    //@ts-ignore
-    global.window = dom.window;
-    //@ts-ignore
-    global.Image = window.Image;
-    //@ts-ignore
-    global.MouseEvent = window.MouseEvent;
-
-    //@ts-ignore
-    window.HTMLCanvasElement.prototype.getContext = function () {
-      return {
-        fillRect: function () {},
-        clearRect: function () {},
-        getImageData: function (x: number, y: number, w: number, h: number) {
-          return {
-            data: new Array(w * h * 4),
-          };
-        },
-        putImageData: function () {},
-        createImageData: function () {
-          return [];
-        },
-        setTransform: function () {},
-        drawImage: function () {},
-        save: function () {},
-        fillText: function () {},
-        restore: function () {},
-        beginPath: function () {},
-        moveTo: function () {},
-        lineTo: function () {},
-        closePath: function () {},
-        stroke: function () {},
-        translate: function () {},
-        scale: function () {},
-        rotate: function () {},
-        arc: function () {},
-        fill: function () {},
-        measureText: function () {
-          return { width: 0 };
-        },
-        transform: function () {},
-        rect: function () {},
-        clip: function () {},
-      };
-    };
-  });
+  beforeEach(setupTestDom);
 
   it("can draw a basic button", () => {
     const t = new MemoryTerminal({ width: 10, height: 10 });
