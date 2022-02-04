@@ -48,6 +48,14 @@ export default function ButtonAppBar() {
           <Link
             variant="button"
             color="textPrimary"
+            href="https://tutorial.malwoden.com"
+            className={classes.link}
+          >
+            Tutorial
+          </Link>
+          <Link
+            variant="button"
+            color="textPrimary"
             href="/examples"
             className={classes.link}
           >
