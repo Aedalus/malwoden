@@ -1,4 +1,4 @@
-# Malwoden - Alpha
+# Malwoden
 
 ![alt text](./coverage/badge-lines.svg)
 ![alt text](./coverage/badge-statements.svg)
