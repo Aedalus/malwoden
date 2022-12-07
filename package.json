@@ -117,7 +117,7 @@
     "jest-config": "^26.6.3",
     "jest-coverage-badges": "^1.1.2",
     "jsdom": "^16.4.0",
-    "lint-staged": "^8.0.0",
+    "lint-staged": "^13.1.0",
     "lodash.camelcase": "^4.3.0",
     "madge": "^4.0.1",
     "prettier": "^2.2.1",
